@@ -12,6 +12,7 @@ namespace Lykke.Services.OperationsHistory.Job.Handlers
     {
         private readonly ILog _log;
         private readonly IHistoryLogEntryRepository _repo;
+
         public NewHistoryEntryHandler(ILog log, IHistoryLogEntryRepository repo)
         {
             _log = log;
@@ -23,11 +24,21 @@ namespace Lykke.Services.OperationsHistory.Job.Handlers
         {
             if (!Validate(message))
             {
-                context.MoveMessageToPoison();
+                ToPoison(context);
                 return;
             }
 
-            await _repo.AddAsync(
+            await ToRepository(message);
+        }
+
+        public virtual void ToPoison(QueueTriggeringContext context)
+        {
+            context.MoveMessageToPoison();
+        }
+
+        public virtual Task ToRepository(HistoryQueueEntry message)
+        {
+            return _repo.AddAsync(
                 message.DateTime,
                 message.Amount,
                 message.Currency,
