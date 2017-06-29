@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
-using Autofac.Core;
-using Autofac.Extensions.DependencyInjection;
 using AzureStorage.Queue;
 using AzureStorage.Tables;
 using Common.Log;

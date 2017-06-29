@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.IO;
 using System.Runtime.Loader;
 using System.Threading;
-using System.Threading.Tasks;
-using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Lykke.JobTriggers.Triggers;
 using Lykke.Services.OperationsHistory.Core.Settings.Job;

@@ -1,26 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Common.Log;
 using Lykke.JobTriggers.Triggers.Attributes;
 using Lykke.JobTriggers.Triggers.Bindings;
 using Lykke.Services.OperationsHistory.Core;
+using Lykke.Services.OperationsHistory.Core.Entities;
+using Lykke.Services.OperationsHistory.Job.Model;
 
 namespace Lykke.Services.OperationsHistory.Job.Handlers
 {
     public class NewHistoryEntryHandler
     {
         private readonly ILog _log;
-        public NewHistoryEntryHandler(ILog log)
+        private readonly IHistoryLogEntryRepository _repo;
+        public NewHistoryEntryHandler(ILog log, IHistoryLogEntryRepository repo)
         {
             _log = log;
+            _repo = repo;
         }
 
         [QueueTrigger(Constants.InQueueName, 100, true)]
-        public async Task ProcessNewEntry(string message, QueueTriggeringContext context)
+        public async Task ProcessNewEntry(HistoryQueueEntry message, QueueTriggeringContext context)
         {
-            await _log.WriteInfoAsync(GetType().Name, "NULL", "NULL", message);
+            if (!Validate(message))
+            {
+                context.MoveMessageToPoison();
+                return;
+            }
+
+            await _repo.AddAsync(
+                message.DateTime,
+                message.Amount,
+                message.Currency,
+                message.ClientId,
+                message.CustomData,
+                message.OpType);
+        }
+
+        public static bool Validate(HistoryQueueEntry message)
+        {
+            if (string.IsNullOrEmpty(message.Currency))
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(message.ClientId))
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(message.OpType))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

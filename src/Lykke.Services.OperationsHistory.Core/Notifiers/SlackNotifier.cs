@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage.Queue;
-using Common;
 using Lykke.JobTriggers.Abstractions;
 using Newtonsoft.Json;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
 
@@ -13,13 +12,13 @@ namespace Lykke.Services.OperationsHistory.Core.Entities
         {
             _table = table;
         }
-        public Task AddAsync(DateTime dateTime, decimal amount, string currency, string clientId, string customData)
+        public Task AddAsync(DateTime dateTime, decimal amount, string currency, string clientId, string customData, string opType)
         {
             return _table.InsertAsync(HistoryLogEntryEntity.Create(
-                dateTime, amount, currency, clientId, customData));
+                dateTime, amount, currency, clientId, customData, opType));
         }
 
-        public async Task<IEnumerable<IHistoryLogEntryEntity>> GetAllAsync()
+        public async Task<IEnumerable<IHistoryLogEntryEntity>> GetAllAsync(string clientId)
         {
             return await _table.GetDataAsync();
         }
