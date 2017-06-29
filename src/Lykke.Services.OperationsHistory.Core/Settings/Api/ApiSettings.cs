@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Lykke.Services.OperationsHistory.Core
+namespace Lykke.Services.OperationsHistory.Core.Settings.Api
 {
-    public class Class1
+    public class ApiSettings
     {
-        public Class1()
-        {
-        }
     }
 }

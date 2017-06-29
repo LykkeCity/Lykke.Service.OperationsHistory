@@ -9,6 +9,8 @@ namespace Lykke.Services.OperationsHistory.Job
     {
         public static void Main(string[] args)
         {
+            var job = new HistoryJob();
+            job.Run();
         }
     }
 }

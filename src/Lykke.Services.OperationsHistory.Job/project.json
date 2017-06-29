@@ -1,19 +1,28 @@
-﻿{
+{
   "version": "1.0.0-*",
   "buildOptions": {
     "emitEntryPoint": true
   },
 
   "dependencies": {
-    "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.1"
-    }
+    "Lykke.AzureStorage": "1.2.24",
+    "Lykke.Common": "1.1.76",
+    "Lykke.JobTriggers": "1.1.6",
+    "Lykke.Services.OperationsHistory.Core": "1.0.0-*",
+    "Microsoft.Extensions.Configuration": "2.0.0-preview1-final",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.2",
+    "Microsoft.Extensions.Configuration.FileExtensions": "1.1.2",
+    "Microsoft.Extensions.Configuration.Json": "1.1.2",
+    "Microsoft.NETCore.App": "1.1.2"
   },
 
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "imports": "dnxcore50"
     }
+  },
+
+  "runtimes": {
+    "win81-x64": {}
   }
 }

@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.Loader;
+using System.Threading;
+using System.Threading.Tasks;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Lykke.JobTriggers.Triggers;
+using Lykke.Services.OperationsHistory.Core.Settings.Job;
+using Lykke.Services.OperationsHistory.Core.Settings.Repository;
+using Microsoft.Extensions.Configuration;
+
+namespace Lykke.Services.OperationsHistory.Job
+{
+    public class HistoryJob
+    {
+        public IConfigurationRoot Configuration { get; }
+        public HistoryJob()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+        }
+
+        private static JobSettingsRoot ReadConfiguration(string url)
+        {
+            return new SettingsRepositoryRemote<JobSettingsRoot>(url).Get();
+        }
+
+        public void Run()
+        {
+            var settings = ReadConfiguration(Configuration.GetConnectionString("Settings"));
+            var container = new ServiceBinder()
+                .ConfigureContainer(settings)
+                .Build();
+
+            var triggers = new TriggerHost(new AutofacServiceProvider(container));
+
+            var end = new ManualResetEvent(false);
+
+            AssemblyLoadContext.Default.Unloading += ctx =>
+            {
+                triggers.Cancel();
+                end.WaitOne();
+            };
+
+            triggers.Start().Wait();
+            end.Set();
+        }
+    }
+}
