@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Lykke.Services.OperationsHistory.Core.Tests")]
+[assembly: AssemblyTitle("Lykke.Services.OperationsHistory.Job.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Lykke.Services.OperationsHistory.Core.Tests")]
+[assembly: AssemblyProduct("Lykke.Services.OperationsHistory.Job.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("9e63bb23-474b-4838-b526-9c144dd39e0a")]
+[assembly: Guid("e4c60e3b-5695-4710-80c3-ff9a7d5b38b9")]
 
 // Version information for an assembly consists of the following four values:
 //
