@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <AssemblyName>Lykke.Services.OperationsHistory.Job</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>Lykke.Services.OperationsHistory.Job</PackageId>
+    <RuntimeIdentifiers>win81-x64</RuntimeIdentifiers>
+    <RuntimeFrameworkVersion>1.1.2</RuntimeFrameworkVersion>
+    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lykke.Services.OperationsHistory.Core\Lykke.Services.OperationsHistory.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lykke.AzureStorage" Version="1.2.24" />
+    <PackageReference Include="Lykke.Common" Version="1.1.76" />
+    <PackageReference Include="Lykke.JobTriggers" Version="1.1.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0-preview1-final" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.2" />
+  </ItemGroup>
+
+</Project>

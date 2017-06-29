@@ -1,22 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D7259EBD-E023-4BFB-86C6-50F8EA1D414A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0F8A67BF-09A3-4E72-A4DB-56055D8AED4B}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Lykke.Services.OperationsHistory.Api", "src\Lykke.Services.OperationsHistory.Api\Lykke.Services.OperationsHistory.Api.xproj", "{2AF58716-AE49-48CE-B8E6-1C0A61FD2CE7}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Lykke.Services.OperationsHistory.Job", "src\Lykke.Services.OperationsHistory.Job\Lykke.Services.OperationsHistory.Job.xproj", "{D66F0978-098B-447D-AD62-F3F0D57A8A0B}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Lykke.Services.OperationsHistory.Core", "src\Lykke.Services.OperationsHistory.Core\Lykke.Services.OperationsHistory.Core.xproj", "{C050620A-0361-478D-A386-6203AFBCF522}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C09F92FC-42CB-49F0-B18D-0A1374C69C68}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Services.OperationsHistory.Api", "src\Lykke.Services.OperationsHistory.Api\Lykke.Services.OperationsHistory.Api.csproj", "{2AF58716-AE49-48CE-B8E6-1C0A61FD2CE7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Services.OperationsHistory.Job", "src\Lykke.Services.OperationsHistory.Job\Lykke.Services.OperationsHistory.Job.csproj", "{D66F0978-098B-447D-AD62-F3F0D57A8A0B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Services.OperationsHistory.Core", "src\Lykke.Services.OperationsHistory.Core\Lykke.Services.OperationsHistory.Core.csproj", "{C050620A-0361-478D-A386-6203AFBCF522}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Services.OperationsHistory.Job.Tests", "tests\Lykke.Services.OperationsHistory.Job.Tests\Lykke.Services.OperationsHistory.Job.Tests.csproj", "{E4C60E3B-5695-4710-80C3-FF9A7D5B38B9}"
 EndProject
