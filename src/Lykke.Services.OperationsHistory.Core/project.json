@@ -3,7 +3,7 @@
 
   "dependencies": {
     "Lykke.AzureStorage": "1.2.24",
-    "Lykke.JobTriggers": "1.1.6",
+    "Lykke.JobTriggers": "1.1.9",
     "NETStandard.Library": "1.6.1",
     "Newtonsoft.Json": "10.0.3"
   },

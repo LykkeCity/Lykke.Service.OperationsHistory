@@ -7,7 +7,7 @@
   "dependencies": {
     "Lykke.AzureStorage": "1.2.24",
     "Lykke.Common": "1.1.76",
-    "Lykke.JobTriggers": "1.1.6",
+    "Lykke.JobTriggers": "1.1.9",
     "Lykke.Services.OperationsHistory.Core": "1.0.0-*",
     "Microsoft.Extensions.Configuration": "2.0.0-preview1-final",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.2",

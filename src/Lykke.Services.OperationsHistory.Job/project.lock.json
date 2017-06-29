@@ -118,7 +118,7 @@
           "lib/netstandard1.6/Lykke.Common.dll": {}
         }
       },
-      "Lykke.JobTriggers/1.1.6": {
+      "Lykke.JobTriggers/1.1.9": {
         "type": "package",
         "dependencies": {
           "Autofac": "4.4.0",
@@ -2929,7 +2929,7 @@
         "framework": ".NETCoreApp,Version=v1.1",
         "dependencies": {
           "Lykke.AzureStorage": "1.2.24",
-          "Lykke.JobTriggers": "1.1.6",
+          "Lykke.JobTriggers": "1.1.9",
           "NETStandard.Library": "1.6.1",
           "Newtonsoft.Json": "10.0.3"
         },
@@ -3026,7 +3026,7 @@
           "lib/netstandard1.6/Lykke.Common.dll": {}
         }
       },
-      "Lykke.JobTriggers/1.1.6": {
+      "Lykke.JobTriggers/1.1.9": {
         "type": "package",
         "dependencies": {
           "Autofac": "4.4.0",
@@ -6006,7 +6006,7 @@
         "framework": ".NETCoreApp,Version=v1.1",
         "dependencies": {
           "Lykke.AzureStorage": "1.2.24",
-          "Lykke.JobTriggers": "1.1.6",
+          "Lykke.JobTriggers": "1.1.9",
           "NETStandard.Library": "1.6.1",
           "Newtonsoft.Json": "10.0.3"
         },
@@ -6093,12 +6093,12 @@
         "lib/netstandard1.6/Lykke.Common.dll"
       ]
     },
-    "Lykke.JobTriggers/1.1.6": {
-      "sha512": "f3EfXkF3M/AtzVUR9OFDi6Qq33dX2fGUEdYJ5URy7K66qLyfpweqImJbGsGX1LD5kdfD3JzIkNDTHsMkhg+xfg==",
+    "Lykke.JobTriggers/1.1.9": {
+      "sha512": "tjkLSQvVh2oPA3UwvDVLqcHoYbw/QbZDu0gczq8i3qMagivRzJpB3RIGt/62Cub8erv3GTl6DogiOZ6wLqXOQQ==",
       "type": "package",
-      "path": "Lykke.JobTriggers/1.1.6",
+      "path": "Lykke.JobTriggers/1.1.9",
       "files": [
-        "Lykke.JobTriggers.1.1.6.nupkg.sha512",
+        "Lykke.JobTriggers.1.1.9.nupkg.sha512",
         "Lykke.JobTriggers.nuspec",
         "lib/netcoreapp1.1/Lykke.JobTriggers.dll"
       ]
@@ -12476,7 +12476,7 @@
     "": [
       "Lykke.AzureStorage >= 1.2.24",
       "Lykke.Common >= 1.1.76",
-      "Lykke.JobTriggers >= 1.1.6",
+      "Lykke.JobTriggers >= 1.1.9",
       "Lykke.Services.OperationsHistory.Core >= 1.0.0-*",
       "Microsoft.Extensions.Configuration >= 2.0.0-preview1-final",
       "Microsoft.Extensions.Configuration.EnvironmentVariables >= 1.1.2",
