@@ -2,14 +2,13 @@
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.JobTriggers.Triggers.Bindings;
-using Lykke.Services.OperationsHistory.Core.Entities;
-using Lykke.Services.OperationsHistory.Job.Handlers;
-using Lykke.Services.OperationsHistory.Job.Model;
+using Lykke.Service.OperationsHistory.Core.Entities;
+using Lykke.Service.OperationsHistory.Job.Handlers;
+using Lykke.Service.OperationsHistory.Job.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
-namespace Lykke.Services.OperationsHistory.Job.Tests
+namespace Lykke.Service.OperationsHistory.Job.Tests
 {
     [TestClass]
     public class NewHistoryEntryHandlerTests

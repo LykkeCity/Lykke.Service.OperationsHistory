@@ -1,4 +1,4 @@
-﻿namespace Lykke.Services.OperationsHistory.Core.Settings.Job
+﻿namespace Lykke.Service.OperationsHistory.Core.Settings.Job
 {
     public class JobSettingsRoot
     {

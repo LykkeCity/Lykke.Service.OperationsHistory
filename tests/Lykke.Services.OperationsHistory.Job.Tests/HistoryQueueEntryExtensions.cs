@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Lykke.Services.OperationsHistory.Job.Model;
+﻿using Lykke.Service.OperationsHistory.Job.Model;
 
-namespace Lykke.Services.OperationsHistory.Job.Tests
+namespace Lykke.Service.OperationsHistory.Job.Tests
 {
     public static class HistoryQueueEntryExtensions
     {

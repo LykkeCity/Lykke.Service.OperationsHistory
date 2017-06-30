@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace Lykke.Services.OperationsHistory.Core.Settings.Repository
+namespace Lykke.Service.OperationsHistory.Core.Settings.Repository
 {
     public class SettingsRepositoryRemote<T>: ISettingsRepository<T>
     {

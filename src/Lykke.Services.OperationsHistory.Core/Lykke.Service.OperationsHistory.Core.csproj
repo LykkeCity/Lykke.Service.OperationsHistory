@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <AssemblyName>Lykke.Services.OperationsHistory.Core</AssemblyName>
+    <AssemblyName>Lykke.Service.OperationsHistory.Core</AssemblyName>
     <PackageId>Lykke.Services.OperationsHistory.Core</PackageId>
     <RuntimeIdentifiers>win81-x64</RuntimeIdentifiers>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>

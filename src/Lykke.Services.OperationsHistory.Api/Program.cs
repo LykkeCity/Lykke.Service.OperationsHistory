@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.AspNetCore.Hosting;
 
-namespace Lykke.Services.OperationsHistory.Api
+namespace Lykke.Service.OperationsHistory.Api
 {
     public class Program
     {

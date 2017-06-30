@@ -2,11 +2,11 @@
 using Common.Log;
 using Lykke.JobTriggers.Triggers.Attributes;
 using Lykke.JobTriggers.Triggers.Bindings;
-using Lykke.Services.OperationsHistory.Core;
-using Lykke.Services.OperationsHistory.Core.Entities;
-using Lykke.Services.OperationsHistory.Job.Model;
+using Lykke.Service.OperationsHistory.Core;
+using Lykke.Service.OperationsHistory.Core.Entities;
+using Lykke.Service.OperationsHistory.Job.Model;
 
-namespace Lykke.Services.OperationsHistory.Job.Handlers
+namespace Lykke.Service.OperationsHistory.Job.Handlers
 {
     public class NewHistoryEntryHandler
     {

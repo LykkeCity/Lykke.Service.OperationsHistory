@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Lykke.Services.OperationsHistory.Core.Notifiers
+namespace Lykke.Service.OperationsHistory.Core.Notifiers
 {
     public interface ISlackNotifier
     {
