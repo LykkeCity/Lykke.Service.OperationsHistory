@@ -8,7 +8,7 @@ using Lykke.Service.OperationsHistory.Job.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace Lykke.Service.OperationsHistory.Job.Tests
+namespace Lykke.Service.OperationsHistory.Tests
 {
     [TestClass]
     public class NewHistoryEntryHandlerTests

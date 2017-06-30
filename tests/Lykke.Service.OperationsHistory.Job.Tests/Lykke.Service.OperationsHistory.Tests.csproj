@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>    
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp1.1</TargetFramework>    
+    <AssemblyName>Lykke.Service.OperationsHistory.Tests</AssemblyName>    
+    <RootNamespace>Lykke.Service.OperationsHistory.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

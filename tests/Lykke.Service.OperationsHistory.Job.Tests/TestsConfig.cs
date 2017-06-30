@@ -5,7 +5,7 @@ using Common.Log;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Lykke.Service.OperationsHistory.Job.Tests
+namespace Lykke.Service.OperationsHistory.Tests
 {
     [TestClass]
     public class TestsConfig
