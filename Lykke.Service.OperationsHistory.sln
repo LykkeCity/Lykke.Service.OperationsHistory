@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C09F92FC-42CB-49F0-B18D-0A1374C69C68}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Api", "src\Lykke.Services.OperationsHistory.Api\Lykke.Service.OperationsHistory.Api.csproj", "{2AF58716-AE49-48CE-B8E6-1C0A61FD2CE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Api", "src\Lykke.Service.OperationsHistory.Api\Lykke.Service.OperationsHistory.Api.csproj", "{2AF58716-AE49-48CE-B8E6-1C0A61FD2CE7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Job", "src\Lykke.Services.OperationsHistory.Job\Lykke.Service.OperationsHistory.Job.csproj", "{D66F0978-098B-447D-AD62-F3F0D57A8A0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Job", "src\Lykke.Service.OperationsHistory.Job\Lykke.Service.OperationsHistory.Job.csproj", "{D66F0978-098B-447D-AD62-F3F0D57A8A0B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Core", "src\Lykke.Services.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj", "{C050620A-0361-478D-A386-6203AFBCF522}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Core", "src\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj", "{C050620A-0361-478D-A386-6203AFBCF522}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Job.Tests", "tests\Lykke.Services.OperationsHistory.Job.Tests\Lykke.Service.OperationsHistory.Job.Tests.csproj", "{F3C285F1-FD40-4190-AC09-F4491AF3F276}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Job.Tests", "tests\Lykke.Service.OperationsHistory.Job.Tests\Lykke.Service.OperationsHistory.Job.Tests.csproj", "{F3C285F1-FD40-4190-AC09-F4491AF3F276}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
