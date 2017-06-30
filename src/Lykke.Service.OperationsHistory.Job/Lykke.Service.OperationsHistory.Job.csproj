@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>Lykke.Service.OperationsHistory.Job</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>Lykke.Services.OperationsHistory.Job</PackageId>
+    <PackageId>Lykke.Service.OperationsHistory.Job</PackageId>
     <RuntimeIdentifiers>win81-x64</RuntimeIdentifiers>
     <RuntimeFrameworkVersion>1.1.2</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lykke.Services.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
+    <ProjectReference Include="..\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
   </ItemGroup>
 
 </Project>
