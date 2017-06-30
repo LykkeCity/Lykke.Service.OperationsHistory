@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHis
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Core", "src\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj", "{C050620A-0361-478D-A386-6203AFBCF522}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Job.Tests", "tests\Lykke.Service.OperationsHistory.Job.Tests\Lykke.Service.OperationsHistory.Job.Tests.csproj", "{F3C285F1-FD40-4190-AC09-F4491AF3F276}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Tests", "tests\Lykke.Service.OperationsHistory.Job.Tests\Lykke.Service.OperationsHistory.Tests.csproj", "{F3C285F1-FD40-4190-AC09-F4491AF3F276}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

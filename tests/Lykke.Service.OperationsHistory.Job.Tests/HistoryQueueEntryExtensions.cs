@@ -1,6 +1,6 @@
 ﻿using Lykke.Service.OperationsHistory.Job.Model;
 
-namespace Lykke.Service.OperationsHistory.Job.Tests
+namespace Lykke.Service.OperationsHistory.Tests
 {
     public static class HistoryQueueEntryExtensions
     {
