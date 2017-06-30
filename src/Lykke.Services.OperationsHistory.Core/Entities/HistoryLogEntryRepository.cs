@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AzureStorage;
 
-namespace Lykke.Services.OperationsHistory.Core.Entities
+namespace Lykke.Service.OperationsHistory.Core.Entities
 {
     public class HistoryLogEntryRepository: IHistoryLogEntryRepository
     {

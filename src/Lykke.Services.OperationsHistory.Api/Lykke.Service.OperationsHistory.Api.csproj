@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <AssemblyName>Lykke.Services.OperationsHistory.Api</AssemblyName>
+    <AssemblyName>Lykke.Service.OperationsHistory.Api</AssemblyName>
     <OutputType>Exe</OutputType>
     <PackageId>Lykke.Services.OperationsHistory.Api</PackageId>
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>

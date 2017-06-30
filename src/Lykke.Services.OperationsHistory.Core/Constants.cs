@@ -1,4 +1,4 @@
-﻿namespace Lykke.Services.OperationsHistory.Core
+﻿namespace Lykke.Service.OperationsHistory.Core
 {
     public class Constants
     {

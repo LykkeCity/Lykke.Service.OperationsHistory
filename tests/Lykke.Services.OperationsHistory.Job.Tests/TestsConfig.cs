@@ -2,12 +2,10 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Common.Log;
-using Lykke.JobTriggers.Abstractions;
-using Lykke.Services.OperationsHistory.Core.Entities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Lykke.Services.OperationsHistory.Job.Tests
+namespace Lykke.Service.OperationsHistory.Job.Tests
 {
     [TestClass]
     public class TestsConfig

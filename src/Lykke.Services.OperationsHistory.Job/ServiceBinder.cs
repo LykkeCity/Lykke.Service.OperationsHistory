@@ -5,13 +5,13 @@ using AzureStorage.Tables;
 using Common.Log;
 using Lykke.JobTriggers.Abstractions;
 using Lykke.JobTriggers.Extenstions;
-using Lykke.Services.OperationsHistory.Core;
-using Lykke.Services.OperationsHistory.Core.Entities;
-using Lykke.Services.OperationsHistory.Core.Notifiers;
-using Lykke.Services.OperationsHistory.Core.Settings.Job;
-using Lykke.Services.OperationsHistory.Job.Handlers;
+using Lykke.Service.OperationsHistory.Core;
+using Lykke.Service.OperationsHistory.Core.Entities;
+using Lykke.Service.OperationsHistory.Core.Notifiers;
+using Lykke.Service.OperationsHistory.Core.Settings.Job;
+using Lykke.Service.OperationsHistory.Job.Handlers;
 
-namespace Lykke.Services.OperationsHistory.Job
+namespace Lykke.Service.OperationsHistory.Job
 {
     public class ServiceBinder
     {

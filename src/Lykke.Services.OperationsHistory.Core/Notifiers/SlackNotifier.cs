@@ -4,7 +4,7 @@ using AzureStorage.Queue;
 using Lykke.JobTriggers.Abstractions;
 using Newtonsoft.Json;
 
-namespace Lykke.Services.OperationsHistory.Core.Notifiers
+namespace Lykke.Service.OperationsHistory.Core.Notifiers
 {
     public class SlackNotifier: ISlackNotifier, IPoisionQueueNotifier
     {

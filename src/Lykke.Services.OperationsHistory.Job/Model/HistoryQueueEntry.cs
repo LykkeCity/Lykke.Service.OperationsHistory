@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lykke.Services.OperationsHistory.Job.Model
+namespace Lykke.Service.OperationsHistory.Job.Model
 {
     public class HistoryQueueEntry
     {

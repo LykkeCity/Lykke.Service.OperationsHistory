@@ -1,4 +1,4 @@
-﻿namespace Lykke.Services.OperationsHistory.Job
+﻿namespace Lykke.Service.OperationsHistory.Job
 {
     public class Program
     {

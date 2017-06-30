@@ -3,11 +3,11 @@ using System.Runtime.Loader;
 using System.Threading;
 using Autofac.Extensions.DependencyInjection;
 using Lykke.JobTriggers.Triggers;
-using Lykke.Services.OperationsHistory.Core.Settings.Job;
-using Lykke.Services.OperationsHistory.Core.Settings.Repository;
+using Lykke.Service.OperationsHistory.Core.Settings.Job;
+using Lykke.Service.OperationsHistory.Core.Settings.Repository;
 using Microsoft.Extensions.Configuration;
 
-namespace Lykke.Services.OperationsHistory.Job
+namespace Lykke.Service.OperationsHistory.Job
 {
     public class HistoryJob
     {

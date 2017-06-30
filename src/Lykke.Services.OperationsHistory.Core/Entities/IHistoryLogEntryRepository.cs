@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Lykke.Services.OperationsHistory.Core.Entities
+namespace Lykke.Service.OperationsHistory.Core.Entities
 {
     public interface IHistoryLogEntryRepository
     {

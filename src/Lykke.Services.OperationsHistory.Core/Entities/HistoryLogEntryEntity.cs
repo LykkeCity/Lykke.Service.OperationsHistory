@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace Lykke.Services.OperationsHistory.Core.Entities
+namespace Lykke.Service.OperationsHistory.Core.Entities
 {
     public class HistoryLogEntryEntity: TableEntity, IHistoryLogEntryEntity
     {
