@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
+    <ProjectReference Include="..\src\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

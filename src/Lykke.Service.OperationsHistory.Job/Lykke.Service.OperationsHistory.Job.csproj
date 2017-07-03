@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
+    <ProjectReference Include="..\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
