@@ -1,0 +1,16 @@
+﻿version: '2'
+
+services:
+  operationshistory:
+    image: lykkedev/operationshistory:dev
+#    ports:
+#     - "${WEB_SITE_PORT}:80"
+    environment:
+     - ConnectionStrings__Settings=${uriString}
+#     - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+    networks:
+      - commondockernet
+
+networks:
+  commondockernet:
+    external: true
