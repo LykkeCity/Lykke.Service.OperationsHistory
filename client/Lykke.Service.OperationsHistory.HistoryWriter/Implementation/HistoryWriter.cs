@@ -5,6 +5,7 @@ using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.HistoryWriter.Abstractions;
 using Lykke.Service.OperationsHistory.HistoryWriter.Exceptions;
 using Lykke.Service.OperationsHistory.HistoryWriter.Model;
+ using Newtonsoft.Json;
 
 namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
 {
@@ -93,7 +94,8 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
         {
             try
             {
-                await Queue.PutMessageAsync(newEntry);
+                var json = JsonConvert.SerializeObject(newEntry);
+                await Queue.PutRawMessageAsync(json);
             }
             catch (Exception e)
             {
