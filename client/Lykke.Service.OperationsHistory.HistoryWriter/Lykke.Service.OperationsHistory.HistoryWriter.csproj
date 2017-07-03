@@ -6,6 +6,10 @@
     <Company>Lykke</Company>
     <Description />
     <Copyright>@2017 - Lykke</Copyright>
+    <PackageLicenseUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory/blob/master/client/Lykke.Service.OperationsHistory.HistoryWriter/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory/blob/master/client/Lykke.Service.OperationsHistory.HistoryWriter/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
