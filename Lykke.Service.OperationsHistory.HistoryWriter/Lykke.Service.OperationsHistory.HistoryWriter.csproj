@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <Authors>Lykke</Authors>
+    <Company>Lykke</Company>
+    <Description />
+    <Copyright>@2017 - Lykke</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.6\Lykke.Service.OperationsHistory.HistoryWriter.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Lykke.AzureStorage">
+      <HintPath>..\..\..\Users\atarutin\.nuget\packages\lykke.azurestorage\1.2.24\lib\netstandard1.6\Lykke.AzureStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="Lykke.Common">
+      <HintPath>..\..\..\Users\atarutin\.nuget\packages\lykke.common\1.1.76\lib\netstandard1.6\Lykke.Common.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

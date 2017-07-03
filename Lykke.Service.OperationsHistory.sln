@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHis
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Tests", "tests\Lykke.Service.OperationsHistory.Tests\Lykke.Service.OperationsHistory.Tests.csproj", "{F3C285F1-FD40-4190-AC09-F4491AF3F276}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{F3901739-474B-4268-8651-227A46CA2502}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.OperationsHistory.HistoryWriter", "Lykke.Service.OperationsHistory.HistoryWriter\Lykke.Service.OperationsHistory.HistoryWriter.csproj", "{882822F9-513D-42F5-A0E7-452C2C6E7F65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,10 @@ Global
 		{F3C285F1-FD40-4190-AC09-F4491AF3F276}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3C285F1-FD40-4190-AC09-F4491AF3F276}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3C285F1-FD40-4190-AC09-F4491AF3F276}.Release|Any CPU.Build.0 = Release|Any CPU
+		{882822F9-513D-42F5-A0E7-452C2C6E7F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{882822F9-513D-42F5-A0E7-452C2C6E7F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{882822F9-513D-42F5-A0E7-452C2C6E7F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{882822F9-513D-42F5-A0E7-452C2C6E7F65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,5 +56,6 @@ Global
 		{D66F0978-098B-447D-AD62-F3F0D57A8A0B} = {D7259EBD-E023-4BFB-86C6-50F8EA1D414A}
 		{C050620A-0361-478D-A386-6203AFBCF522} = {D7259EBD-E023-4BFB-86C6-50F8EA1D414A}
 		{F3C285F1-FD40-4190-AC09-F4491AF3F276} = {C09F92FC-42CB-49F0-B18D-0A1374C69C68}
+		{882822F9-513D-42F5-A0E7-452C2C6E7F65} = {F3901739-474B-4268-8651-227A46CA2502}
 	EndGlobalSection
 EndGlobal
