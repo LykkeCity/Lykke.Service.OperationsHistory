@@ -13,6 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Lykke.AzureStorage">
       <HintPath>..\..\..\Users\atarutin\.nuget\packages\lykke.azurestorage\1.2.24\lib\netstandard1.6\Lykke.AzureStorage.dll</HintPath>
     </Reference>

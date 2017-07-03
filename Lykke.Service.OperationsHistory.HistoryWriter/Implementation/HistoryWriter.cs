@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AzureStorage.Queue;
+using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.HistoryWriter.Abstractions;
 using Lykke.Service.OperationsHistory.HistoryWriter.Exceptions;
 using Lykke.Service.OperationsHistory.HistoryWriter.Model;
@@ -23,7 +24,7 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
             {
                 if (_queue == null)
                 {
-                    _queue = new AzureQueueExt(_connectionString, String.Empty);
+                    _queue = new AzureQueueExt(_connectionString, Constants.InQueueName);
                 }
 
                 return _queue;
