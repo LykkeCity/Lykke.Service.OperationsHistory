@@ -7,7 +7,7 @@ using Lykke.JobTriggers.Abstractions;
 using Lykke.JobTriggers.Extenstions;
 using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Entities;
-using Lykke.Service.OperationsHistory.Core.Notifiers;
+using Lykke.Service.OperationsHistory.Job.Notifiers;
 using Lykke.Service.OperationsHistory.Core.Settings.Job;
 using Lykke.Service.OperationsHistory.Job.Handlers;
 
