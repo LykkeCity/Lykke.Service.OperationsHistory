@@ -20,11 +20,8 @@
 
   <ItemGroup>
     <PackageReference Include="Lykke.AzureStorage" Version="1.2.24" />
+    <PackageReference Include="Lykke.Service.OperationsHistory.Core" Version="1.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
   </ItemGroup>
 
 </Project>
