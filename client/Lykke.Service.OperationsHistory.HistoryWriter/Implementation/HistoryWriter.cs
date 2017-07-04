@@ -104,5 +104,3 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
         }
     }
 }
-
-// minor change to check TC buildv
