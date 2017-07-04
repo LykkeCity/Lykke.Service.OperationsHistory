@@ -49,5 +49,3 @@ namespace Lykke.Service.OperationsHistory.Job
         }
     }
 }
-
-// test cnages to check nuget package publication
