@@ -17,7 +17,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         {
             return new HistoryQueueEntry
             {
-                Amount = 10m,
+                Amount = 10d,
                 ClientId = "any client id",
                 Currency = "USD",
                 CustomData = "any custom data",

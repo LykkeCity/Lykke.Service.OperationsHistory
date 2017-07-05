@@ -12,7 +12,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
         {
             _table = table;
         }
-        public Task AddAsync(DateTime dateTime, decimal amount, string currency, string clientId, string customData, string opType)
+        public Task AddAsync(DateTime dateTime, double amount, string currency, string clientId, string customData, string opType)
         {
             return _table.InsertAsync(HistoryLogEntryEntity.Create(
                 dateTime, amount, currency, clientId, customData, opType));

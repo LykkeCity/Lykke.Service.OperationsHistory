@@ -14,7 +14,7 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Model
         /// <summary>
         /// Total amount of the operation
         /// </summary>
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
         /// <summary>
         /// Currency of the operation
         /// </summary>
