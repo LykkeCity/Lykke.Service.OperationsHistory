@@ -1,6 +1,6 @@
-﻿namespace Lykke.Service.OperationsHistory.Core
+﻿namespace Lykke.Service.OperationsHistory.Core.Settings.Api
 {
-    public class AppSettings
+    public class ApiSettings
     {
         public OperationsHistorySettings OperationsHistoryService { get; set; }
         public SlackNotificationsSettings SlackNotifications { get; set; }

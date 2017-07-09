@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Common.Log;
-using Lykke.Service.OperationsHistory.Core;
+using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lykke.Service.OperationsHistory.Modules

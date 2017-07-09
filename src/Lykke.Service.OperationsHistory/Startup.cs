@@ -7,6 +7,7 @@ using Lykke.Common.ApiLibrary.Middleware;
 using Lykke.Common.ApiLibrary.Swagger;
 using Lykke.Logs;
 using Lykke.Service.OperationsHistory.Core;
+using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using Lykke.Service.OperationsHistory.Modules;
 using Lykke.SettingsReader;
 using Lykke.SlackNotification.AzureQueue;
@@ -50,8 +51,8 @@ namespace Lykke.Service.OperationsHistory
 
             var builder = new ContainerBuilder();
             var appSettings = Environment.IsDevelopment()
-                ? Configuration.Get<AppSettings>()
-                : HttpSettingsLoader.Load<AppSettings>(Configuration.GetValue<string>("SettingsUrl"));
+                ? Configuration.Get<ApiSettings>()
+                : HttpSettingsLoader.Load<ApiSettings>(Configuration.GetValue<string>("SettingsUrl"));
             var log = CreateLogWithSlack(services, appSettings);
 
             builder.RegisterModule(new ServiceModule(appSettings.OperationsHistoryService, log));
@@ -80,7 +81,7 @@ namespace Lykke.Service.OperationsHistory
             });
         }
 
-        private static ILog CreateLogWithSlack(IServiceCollection services, AppSettings settings)
+        private static ILog CreateLogWithSlack(IServiceCollection services, ApiSettings settings)
         {
             LykkeLogToAzureStorage logToAzureStorage = null;
 
