@@ -6,7 +6,7 @@ using Lykke.Service.OperationsHistory.Models;
 
 namespace Lykke.Service.OperationsHistory.Services
 {
-    public interface IHistoryManager
+    public interface IHistoryCache
     {
         Task<IEnumerable<HistoryEntryResponse>> GetAllAsync(string clientId, int page);
         Task<IEnumerable<HistoryEntryResponse>> GetAllAsync(string clientId, string assetId, string operatonType, int page);

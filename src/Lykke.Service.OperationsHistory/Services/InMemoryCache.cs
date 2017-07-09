@@ -7,10 +7,10 @@ using Lykke.Service.OperationsHistory.Models;
 
 namespace Lykke.Service.OperationsHistory.Services
 {
-    public class HistoryManager: IHistoryManager
+    public class InMemoryCache: IHistoryCache
     {
         private readonly ILog _logger;
-        public HistoryManager(ILog logger)
+        public InMemoryCache(ILog logger)
         {
             _logger = logger;
         }

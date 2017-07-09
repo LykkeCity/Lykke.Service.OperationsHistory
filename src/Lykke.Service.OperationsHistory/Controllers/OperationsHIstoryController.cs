@@ -21,10 +21,10 @@ namespace Lykke.Service.OperationsHistory.Controllers
         private readonly string _pageOutOfRange = "Out of range value";
         #endregion
 
-        private readonly IHistoryManager _manager;
-        public OperationsHistoryController(IHistoryManager manager)
+        private readonly IHistoryCache _cache;
+        public OperationsHistoryController(IHistoryCache cache)
         {
-            _manager = manager;
+            _cache = cache;
         }
 
         [HttpGet("all")]
@@ -39,7 +39,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
             }
 
-            return Ok(await _manager.GetAllAsync(clientId, page));
+            return Ok(await _cache.GetAllAsync(clientId, page));
         }
 
         [HttpGet("allByOpTypeAndAssetId")]
@@ -64,7 +64,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
             }
 
-            return Ok(await _manager.GetAllAsync(clientId, assetId, operationType, page));
+            return Ok(await _cache.GetAllAsync(clientId, assetId, operationType, page));
         }
 
         [HttpGet("allByOpType")]
@@ -84,7 +84,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
             }
 
-            return Ok(await _manager.GetAllByOpTypeAsync(clientId, operationType, page));
+            return Ok(await _cache.GetAllByOpTypeAsync(clientId, operationType, page));
         }
 
         [HttpGet("allByAsset")]
@@ -104,7 +104,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
             }
 
-            return Ok(await _manager.GetAllByAssetAsync(clientId, assetId, page));
+            return Ok(await _cache.GetAllByAssetAsync(clientId, assetId, page));
         }
     }
 }

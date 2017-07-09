@@ -31,7 +31,7 @@ namespace Lykke.Service.OperationsHistory.Modules
                 .As<ILog>()
                 .SingleInstance();
 
-            builder.RegisterType<HistoryManager>().As<IHistoryManager>();
+            builder.RegisterType<InMemoryCache>().As<IHistoryCache>();
 
             builder.Populate(_services);
         }
