@@ -2,6 +2,7 @@
 using Autofac.Extensions.DependencyInjection;
 using Common.Log;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
+using Lykke.Service.OperationsHistory.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lykke.Service.OperationsHistory.Modules
@@ -30,7 +31,7 @@ namespace Lykke.Service.OperationsHistory.Modules
                 .As<ILog>()
                 .SingleInstance();
 
-            // TODO: Add your dependencies here
+            builder.RegisterType<HistoryManager>().As<IHistoryManager>();
 
             builder.Populate(_services);
         }

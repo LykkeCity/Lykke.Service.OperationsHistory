@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Models;
+using Lykke.Service.OperationsHistory.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lykke.Service.OperationsHistory.Controllers
@@ -13,19 +14,97 @@ namespace Lykke.Service.OperationsHistory.Controllers
     [Route("api/[controller]")]
     public class OperationsHistoryController: Controller
     {
-        [HttpGet("{clientId}")]
-        public async Task<IActionResult> GetOperationsHistory(string clientId, int page)
+        #region error messages
+        private readonly string _clientRequiredMsg = "Client id is required";
+        private readonly string _opTypeRequired = "Operation type parameter is required";
+        private readonly string _assetRequired = "Asset id parameter is required";
+        private readonly string _pageOutOfRange = "Out of range value";
+        #endregion
+
+        private readonly IHistoryManager _manager;
+        public OperationsHistoryController(IHistoryManager manager)
+        {
+            _manager = manager;
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetOperationsHistory([FromQuery]string clientId, [FromQuery]int page)
         {
             if (string.IsNullOrWhiteSpace(clientId))
             {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), "Client id is required"));
+                return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
             }
             if (page < 0)
             {
-                return BadRequest(ErrorResponse.Create(nameof(page), "Out of range value"));
+                return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
             }
 
-            return Ok($"Testing clientid = {clientId}, page = {page}");
+            return Ok(await _manager.GetAllAsync(clientId, page));
+        }
+
+        [HttpGet("allByOpTypeAndAssetId")]
+        public async Task<IActionResult> GetOperationsHistory([FromQuery] string clientId,
+            [FromQuery] string operationType, [FromQuery] string assetId,
+            [FromQuery] int page)
+        {
+            if (string.IsNullOrWhiteSpace(clientId))
+            {
+                return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
+            }
+            if (string.IsNullOrWhiteSpace(operationType))
+            {
+                return BadRequest(ErrorResponse.Create(nameof(operationType), _opTypeRequired));
+            }
+            if (string.IsNullOrWhiteSpace(assetId))
+            {
+                return BadRequest(ErrorResponse.Create(nameof(assetId), _assetRequired));
+            }
+            if (page < 0)
+            {
+                return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
+            }
+
+            return Ok(await _manager.GetAllAsync(clientId, assetId, operationType, page));
+        }
+
+        [HttpGet("allByOpType")]
+        public async Task<IActionResult> GetOperationsHistoryByOpType([FromQuery] string clientId, 
+            [FromQuery] string operationType, [FromQuery] int page)
+        {
+            if (string.IsNullOrWhiteSpace(clientId))
+            {
+                return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
+            }
+            if (string.IsNullOrWhiteSpace(operationType))
+            {
+                return BadRequest(ErrorResponse.Create(nameof(operationType), _opTypeRequired));
+            }
+            if (page < 0)
+            {
+                return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
+            }
+
+            return Ok(await _manager.GetAllByOpTypeAsync(clientId, operationType, page));
+        }
+
+        [HttpGet("allByAsset")]
+        public async Task<IActionResult> GetOperationsHistoryByAsset([FromQuery] string clientId,
+            [FromQuery] string assetId, [FromQuery] int page)
+        {
+            if (string.IsNullOrWhiteSpace(clientId))
+            {
+                return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
+            }
+            if (string.IsNullOrWhiteSpace(assetId))
+            {
+                return BadRequest(ErrorResponse.Create(nameof(assetId), _assetRequired));
+            }
+            if (page < 0)
+            {
+                return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
+            }
+
+            return Ok(await _manager.GetAllByAssetAsync(clientId, assetId, page));
         }
     }
 }
