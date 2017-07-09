@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Models;
 using Lykke.Service.OperationsHistory.Services;
+using Lykke.Service.OperationsHistory.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Lykke.Service.OperationsHistory.Controllers
@@ -28,13 +26,13 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         [HttpGet("all")]
-        public async Task<IActionResult> GetOperationsHistory([FromQuery]string clientId, [FromQuery]int page)
+        public async Task<IActionResult> GetOperationsHistory([FromQuery]string clientId, [FromQuery]int page = 1)
         {
-            if (string.IsNullOrWhiteSpace(clientId))
+            if (!ParametersValidator.ValidateClientId(clientId))
             {
                 return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
             }
-            if (page < 0)
+            if (!ParametersValidator.ValidatePageIndex(page))
             {
                 return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
             }
@@ -45,21 +43,21 @@ namespace Lykke.Service.OperationsHistory.Controllers
         [HttpGet("allByOpTypeAndAssetId")]
         public async Task<IActionResult> GetOperationsHistory([FromQuery] string clientId,
             [FromQuery] string operationType, [FromQuery] string assetId,
-            [FromQuery] int page)
+            [FromQuery] int page = 1)
         {
-            if (string.IsNullOrWhiteSpace(clientId))
+            if (!ParametersValidator.ValidateClientId(clientId))
             {
                 return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
             }
-            if (string.IsNullOrWhiteSpace(operationType))
+            if (!ParametersValidator.ValidateOperationType(operationType))
             {
                 return BadRequest(ErrorResponse.Create(nameof(operationType), _opTypeRequired));
             }
-            if (string.IsNullOrWhiteSpace(assetId))
+            if (!ParametersValidator.ValidateAssetId(assetId))
             {
                 return BadRequest(ErrorResponse.Create(nameof(assetId), _assetRequired));
             }
-            if (page < 0)
+            if (!ParametersValidator.ValidatePageIndex(page))
             {
                 return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
             }
@@ -69,17 +67,17 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
         [HttpGet("allByOpType")]
         public async Task<IActionResult> GetOperationsHistoryByOpType([FromQuery] string clientId, 
-            [FromQuery] string operationType, [FromQuery] int page)
+            [FromQuery] string operationType, [FromQuery] int page = 1)
         {
-            if (string.IsNullOrWhiteSpace(clientId))
+            if (!ParametersValidator.ValidateClientId(clientId))
             {
                 return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
             }
-            if (string.IsNullOrWhiteSpace(operationType))
+            if (!ParametersValidator.ValidateOperationType(operationType))
             {
                 return BadRequest(ErrorResponse.Create(nameof(operationType), _opTypeRequired));
             }
-            if (page < 0)
+            if (!ParametersValidator.ValidatePageIndex(page))
             {
                 return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
             }
@@ -89,17 +87,17 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
         [HttpGet("allByAsset")]
         public async Task<IActionResult> GetOperationsHistoryByAsset([FromQuery] string clientId,
-            [FromQuery] string assetId, [FromQuery] int page)
+            [FromQuery] string assetId, [FromQuery] int page = 1)
         {
-            if (string.IsNullOrWhiteSpace(clientId))
+            if (!ParametersValidator.ValidateClientId(clientId))
             {
                 return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
             }
-            if (string.IsNullOrWhiteSpace(assetId))
+            if (!ParametersValidator.ValidateAssetId(assetId))
             {
                 return BadRequest(ErrorResponse.Create(nameof(assetId), _assetRequired));
             }
-            if (page < 0)
+            if (!ParametersValidator.ValidatePageIndex(page))
             {
                 return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
             }

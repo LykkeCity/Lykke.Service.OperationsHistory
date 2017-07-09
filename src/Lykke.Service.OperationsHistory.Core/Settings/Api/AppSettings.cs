@@ -9,6 +9,14 @@
     public class OperationsHistorySettings
     {
         public DbSettings Db { get; set; }
+        /// <summary>
+        /// Cache expiration in seconds
+        /// </summary>
+        public int CacheExpiration { get; set; }
+        /// <summary>
+        /// The maximum amout of values returned per 1 page
+        /// </summary>
+        public int ValuesPerPage { get; set; }
     }
 
     public class DbSettings

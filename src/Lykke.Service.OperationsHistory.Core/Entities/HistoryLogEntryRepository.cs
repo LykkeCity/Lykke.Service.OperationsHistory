@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AzureStorage;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.OperationsHistory.Core.Entities
 {
@@ -20,7 +21,8 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
 
         public async Task<IEnumerable<IHistoryLogEntryEntity>> GetAllAsync(string clientId)
         {
-            return await _table.GetDataAsync();
+            var query = new TableQuery<HistoryLogEntryEntity>().Where($"ClientId eq '{clientId}'");
+            return await _table.WhereAsync(query);
         }
     }
 }

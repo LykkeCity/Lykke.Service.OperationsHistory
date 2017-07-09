@@ -1,8 +1,14 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
+using AzureStorage.Tables;
 using Common.Log;
+using Lykke.Service.OperationsHistory.Core;
+using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
+using Lykke.Service.OperationsHistory.Models;
 using Lykke.Service.OperationsHistory.Services;
+using Lykke.Service.OperationsHistory.Services.InMemoryCache;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lykke.Service.OperationsHistory.Modules
@@ -31,7 +37,20 @@ namespace Lykke.Service.OperationsHistory.Modules
                 .As<ILog>()
                 .SingleInstance();
 
-            builder.RegisterType<InMemoryCache>().As<IHistoryCache>();
+            builder.RegisterInstance(_settings).SingleInstance();
+
+            builder.RegisterType<InMemoryCache>().As<IHistoryCache>().SingleInstance();
+
+            builder.RegisterInstance(new HistoryLogEntryRepository(new AzureTableStorage<HistoryLogEntryEntity>(
+                    _settings.Db.LogsConnString,
+                    Constants.OutTableName,
+                    _log)))
+                .As<IHistoryLogEntryRepository>();
+
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<IHistoryLogEntryEntity, HistoryEntryResponse>();
+            });
 
             builder.Populate(_services);
         }
