@@ -13,10 +13,10 @@ namespace Lykke.Service.OperationsHistory.Controllers
     public class OperationsHistoryController: Controller
     {
         #region error messages
-        private readonly string _clientRequiredMsg = "Client id is required";
-        private readonly string _opTypeRequired = "Operation type parameter is required";
-        private readonly string _assetRequired = "Asset id parameter is required";
-        private readonly string _pageOutOfRange = "Out of range value";
+        public static readonly string ClientRequiredMsg = "Client id is required";
+        public static readonly string OpTypeRequired = "Operation type parameter is required";
+        public static readonly string AssetRequired = "Asset id parameter is required";
+        public static readonly string PageOutOfRange = "Out of range value";
         #endregion
 
         private readonly IHistoryCache _cache;
@@ -30,11 +30,11 @@ namespace Lykke.Service.OperationsHistory.Controllers
         {
             if (!ParametersValidator.ValidateClientId(clientId))
             {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
+                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
             }
             if (!ParametersValidator.ValidatePageIndex(page))
             {
-                return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
+                return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
             }
 
             return Ok(await _cache.GetAllAsync(clientId, page));
@@ -47,19 +47,19 @@ namespace Lykke.Service.OperationsHistory.Controllers
         {
             if (!ParametersValidator.ValidateClientId(clientId))
             {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
+                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
             }
             if (!ParametersValidator.ValidateOperationType(operationType))
             {
-                return BadRequest(ErrorResponse.Create(nameof(operationType), _opTypeRequired));
+                return BadRequest(ErrorResponse.Create(nameof(operationType), OpTypeRequired));
             }
             if (!ParametersValidator.ValidateAssetId(assetId))
             {
-                return BadRequest(ErrorResponse.Create(nameof(assetId), _assetRequired));
+                return BadRequest(ErrorResponse.Create(nameof(assetId), AssetRequired));
             }
             if (!ParametersValidator.ValidatePageIndex(page))
             {
-                return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
+                return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
             }
 
             return Ok(await _cache.GetAllAsync(clientId, assetId, operationType, page));
@@ -71,15 +71,15 @@ namespace Lykke.Service.OperationsHistory.Controllers
         {
             if (!ParametersValidator.ValidateClientId(clientId))
             {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
+                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
             }
             if (!ParametersValidator.ValidateOperationType(operationType))
             {
-                return BadRequest(ErrorResponse.Create(nameof(operationType), _opTypeRequired));
+                return BadRequest(ErrorResponse.Create(nameof(operationType), OpTypeRequired));
             }
             if (!ParametersValidator.ValidatePageIndex(page))
             {
-                return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
+                return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
             }
 
             return Ok(await _cache.GetAllByOpTypeAsync(clientId, operationType, page));
@@ -91,15 +91,15 @@ namespace Lykke.Service.OperationsHistory.Controllers
         {
             if (!ParametersValidator.ValidateClientId(clientId))
             {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), _clientRequiredMsg));
+                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
             }
             if (!ParametersValidator.ValidateAssetId(assetId))
             {
-                return BadRequest(ErrorResponse.Create(nameof(assetId), _assetRequired));
+                return BadRequest(ErrorResponse.Create(nameof(assetId), AssetRequired));
             }
             if (!ParametersValidator.ValidatePageIndex(page))
             {
-                return BadRequest(ErrorResponse.Create(nameof(page), _pageOutOfRange));
+                return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
             }
 
             return Ok(await _cache.GetAllByAssetAsync(clientId, assetId, page));
