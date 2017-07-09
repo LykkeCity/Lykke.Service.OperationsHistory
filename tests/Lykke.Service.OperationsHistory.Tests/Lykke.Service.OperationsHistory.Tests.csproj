@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lykke.Service.OperationsHistory.Job\Lykke.Service.OperationsHistory.Job.csproj" />
+    <ProjectReference Include="..\..\src\Lykke.Service.OperationsHistory\Lykke.Service.OperationsHistory.csproj" />
   </ItemGroup>
 
   <ItemGroup>

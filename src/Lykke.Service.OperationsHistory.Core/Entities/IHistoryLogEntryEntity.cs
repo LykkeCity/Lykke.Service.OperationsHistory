@@ -9,5 +9,6 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
         string Currency { get; set; }
         string ClientId { get; set; }
         string CustomData { get; set; }
+        string OpType { get; set; }
     }
 }
