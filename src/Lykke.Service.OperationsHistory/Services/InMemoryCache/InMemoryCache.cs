@@ -72,7 +72,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
         }
 
-        private async Task<IEnumerable<IHistoryLogEntryEntity>> GetRecordsByClient(string clientId)
+        public async Task<IEnumerable<IHistoryLogEntryEntity>> GetRecordsByClient(string clientId)
         {
             var needUpdateOrCreate = true;
             if (_storage.TryGetValue(clientId, out CacheModel cachedValue))
