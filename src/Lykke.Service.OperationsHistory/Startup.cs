@@ -52,7 +52,7 @@ namespace Lykke.Service.OperationsHistory
             var builder = new ContainerBuilder();
             var appSettings = Environment.IsDevelopment()
                 ? Configuration.Get<ApiSettings>()
-                : HttpSettingsLoader.Load<ApiSettings>(Configuration.GetValue<string>("SettingsUrl"));
+                : HttpSettingsLoader.Load<ApiSettings>(Configuration.GetConnectionString("SettingsUrl"));
             var log = CreateLogWithSlack(services, appSettings);
 
             builder.RegisterModule(new ServiceModule(appSettings.OperationsHistoryService, log));
