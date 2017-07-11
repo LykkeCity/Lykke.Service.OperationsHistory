@@ -33,6 +33,18 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
         }
 
+        public async Task<IEnumerable<HistoryEntryResponse>> GetAllAsync(string clientId, int top, int skip)
+        {
+            var clientRecords = await GetRecordsByClient(clientId);
+
+            var pagedResult = clientRecords
+                .Skip(skip)
+                .Take(top)
+                .ToList();
+
+            return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
+        }
+
         public async Task<IEnumerable<HistoryEntryResponse>> GetAllPagedAsync(string clientId, string assetId, string operationType, int page)
         {
             var clientRecords = await GetRecordsByClient(clientId);
@@ -41,6 +53,19 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
                 .Where(r => r.Currency == assetId && r.OpType == operationType)
                 .Skip((page - 1) * _settings.ValuesPerPage)
                 .Take(_settings.ValuesPerPage)
+                .ToList();
+
+            return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
+        }
+
+        public async Task<IEnumerable<HistoryEntryResponse>> GetAllAsync(string clientId, string assetId, string operationType, int top, int skip)
+        {
+            var clientRecords = await GetRecordsByClient(clientId);
+
+            var pagedResult = clientRecords
+                .Where(r => r.Currency == assetId && r.OpType == operationType)
+                .Skip(skip)
+                .Take(top)
                 .ToList();
 
             return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
@@ -59,6 +84,19 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
         }
 
+        public async Task<IEnumerable<HistoryEntryResponse>> GetAllByOpTypeAsync(string clientId, string operationType, int top, int skip)
+        {
+            var clientRecords = await GetRecordsByClient(clientId);
+
+            var pagedResult = clientRecords
+                .Where(r => r.OpType == operationType)
+                .Skip(skip)
+                .Take(top)
+                .ToList();
+
+            return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
+        }
+
         public async Task<IEnumerable<HistoryEntryResponse>> GetAllByAssetPagedAsync(string clientId, string assetId, int page)
         {
             var clientRecords = await GetRecordsByClient(clientId);
@@ -67,6 +105,19 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
                 .Where(r => r.Currency == assetId)
                 .Skip((page - 1) * _settings.ValuesPerPage)
                 .Take(_settings.ValuesPerPage)
+                .ToList();
+
+            return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
+        }
+
+        public async Task<IEnumerable<HistoryEntryResponse>> GetAllByAssetAsync(string clientId, string assetId, int top, int skip)
+        {
+            var clientRecords = await GetRecordsByClient(clientId);
+
+            var pagedResult = clientRecords
+                .Where(r => r.Currency == assetId)
+                .Skip(skip)
+                .Take(top)
                 .ToList();
 
             return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
