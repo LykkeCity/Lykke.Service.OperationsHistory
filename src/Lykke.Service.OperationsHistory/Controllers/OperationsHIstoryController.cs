@@ -1,8 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Models;
 using Lykke.Service.OperationsHistory.Services;
 using Lykke.Service.OperationsHistory.Validation;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.SwaggerGen.Annotations;
 
 namespace Lykke.Service.OperationsHistory.Controllers
 {
@@ -28,6 +31,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         [HttpGet("allPaged")]
+        [SwaggerOperation("GetOperationsHistoryAllPaged")]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetOperationsHistory([FromQuery]string clientId, [FromQuery]int page = 1)
         {
             if (!ParametersValidator.ValidateClientId(clientId))
@@ -43,6 +49,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         [HttpGet("all")]
+        [SwaggerOperation("GetOperationsHistoryAll")]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetOperationsHistory([FromQuery] string clientId, [FromQuery] int top,
             [FromQuery] int skip)
         {
@@ -63,6 +72,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         [HttpGet("allByOpTypeAndAssetPaged")]
+        [SwaggerOperation("GetOperationsHistoryAllByOpTypeAndAssetPaged")]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetOperationsHistory([FromQuery] string clientId,
             [FromQuery] string operationType, [FromQuery] string assetId,
             [FromQuery] int page = 1)
@@ -88,6 +100,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         [HttpGet("allByOpTypeAndAsset")]
+        [SwaggerOperation("GetOperationsHistoryAllByOpTypeAndAsset")]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetOperationsHistory([FromQuery] string clientId,
             [FromQuery] string operationType, [FromQuery] string assetId,
             [FromQuery] int top, [FromQuery] int skip)
@@ -117,6 +132,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         [HttpGet("allByOpTypePaged")]
+        [SwaggerOperation("GetOperationsHistoryAllByOpTypePaged")]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetOperationsHistoryByOpType([FromQuery] string clientId, 
             [FromQuery] string operationType, [FromQuery] int page = 1)
         {
@@ -137,6 +155,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         [HttpGet("allByOpType")]
+        [SwaggerOperation("GetOperationsHistoryAllByOpType")]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetOperationsHistoryByOpType([FromQuery] string clientId,
             [FromQuery] string operationType, [FromQuery] int top, [FromQuery] int skip)
         {
@@ -161,6 +182,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         [HttpGet("allByAssetPaged")]
+        [SwaggerOperation("GetOperationsHistoryAllByAssetPaged")]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetOperationsHistoryByAsset([FromQuery] string clientId,
             [FromQuery] string assetId, [FromQuery] int page = 1)
         {
@@ -181,6 +205,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         [HttpGet("allByAsset")]
+        [SwaggerOperation("GetOperationsHistoryAllByAsset")]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetOperationsHistoryByAsset([FromQuery] string clientId,
             [FromQuery] string assetId, [FromQuery] int top, [FromQuery] int skip)
         {
