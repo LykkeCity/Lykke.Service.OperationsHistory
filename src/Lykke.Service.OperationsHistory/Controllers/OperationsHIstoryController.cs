@@ -25,7 +25,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
             _cache = cache;
         }
 
-        [HttpGet("all")]
+        [HttpGet("allPaged")]
         public async Task<IActionResult> GetOperationsHistory([FromQuery]string clientId, [FromQuery]int page = 1)
         {
             if (!ParametersValidator.ValidateClientId(clientId))
@@ -37,10 +37,17 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
             }
 
-            return Ok(await _cache.GetAllAsync(clientId, page));
+            return Ok(await _cache.GetAllPagedAsync(clientId, page));
         }
 
-        [HttpGet("allByOpTypeAndAssetId")]
+        //[HttpGet("all")]
+        //public async Task<IActionResult> GetOperationsHistory([FromQuery] string clientId, [FromQuery] int top,
+        //    [FromQuery] int skip)
+        //{
+            
+        //}
+
+        [HttpGet("allByOpTypeAndAssetPaged")]
         public async Task<IActionResult> GetOperationsHistory([FromQuery] string clientId,
             [FromQuery] string operationType, [FromQuery] string assetId,
             [FromQuery] int page = 1)
@@ -62,10 +69,10 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
             }
 
-            return Ok(await _cache.GetAllAsync(clientId, assetId, operationType, page));
+            return Ok(await _cache.GetAllPagedAsync(clientId, assetId, operationType, page));
         }
 
-        [HttpGet("allByOpType")]
+        [HttpGet("allByOpTypePaged")]
         public async Task<IActionResult> GetOperationsHistoryByOpType([FromQuery] string clientId, 
             [FromQuery] string operationType, [FromQuery] int page = 1)
         {
@@ -82,10 +89,10 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
             }
 
-            return Ok(await _cache.GetAllByOpTypeAsync(clientId, operationType, page));
+            return Ok(await _cache.GetAllByOpTypePagedAsync(clientId, operationType, page));
         }
 
-        [HttpGet("allByAsset")]
+        [HttpGet("allByAssetPaged")]
         public async Task<IActionResult> GetOperationsHistoryByAsset([FromQuery] string clientId,
             [FromQuery] string assetId, [FromQuery] int page = 1)
         {
@@ -102,7 +109,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
             }
 
-            return Ok(await _cache.GetAllByAssetAsync(clientId, assetId, page));
+            return Ok(await _cache.GetAllByAssetPagedAsync(clientId, assetId, page));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             _settings = setting;
             _storage = new Dictionary<string, CacheModel>();
         }
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllAsync(string clientId, int page)
+        public async Task<IEnumerable<HistoryEntryResponse>> GetAllPagedAsync(string clientId, int page)
         {
             var clientRecords = await GetRecordsByClient(clientId);
 
@@ -33,7 +33,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
         }
 
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllAsync(string clientId, string assetId, string operationType, int page)
+        public async Task<IEnumerable<HistoryEntryResponse>> GetAllPagedAsync(string clientId, string assetId, string operationType, int page)
         {
             var clientRecords = await GetRecordsByClient(clientId);
 
@@ -46,7 +46,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
         }
 
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllByOpTypeAsync(string clientId, string operationType, int page)
+        public async Task<IEnumerable<HistoryEntryResponse>> GetAllByOpTypePagedAsync(string clientId, string operationType, int page)
         {
             var clientRecords = await GetRecordsByClient(clientId);
 
@@ -59,7 +59,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
         }
 
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllByAssetAsync(string clientId, string assetId, int page)
+        public async Task<IEnumerable<HistoryEntryResponse>> GetAllByAssetPagedAsync(string clientId, string assetId, int page)
         {
             var clientRecords = await GetRecordsByClient(clientId);
 
