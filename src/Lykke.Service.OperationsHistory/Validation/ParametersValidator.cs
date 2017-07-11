@@ -25,5 +25,15 @@ namespace Lykke.Service.OperationsHistory.Validation
         {
             return !string.IsNullOrWhiteSpace(assetId);
         }
+
+        public static bool ValidateTop(int top)
+        {
+            return (top <= 1000) && (top >= 1);
+        }
+
+        public static bool ValidateSkip(int skip)
+        {
+            return skip >= 0;
+        }
     }
 }
