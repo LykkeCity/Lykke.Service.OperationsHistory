@@ -11,6 +11,7 @@
     <PackageLicenseUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory/blob/master/src/Lykke.Service.OperationsHistory.Core/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory/blob/master/src/Lykke.Service.OperationsHistory.Core/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory.git</RepositoryUrl>
+    <PackageIconUrl>https://avatars3.githubusercontent.com/u/14153330?v=3&amp;s=200</PackageIconUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
