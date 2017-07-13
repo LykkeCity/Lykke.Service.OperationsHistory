@@ -59,11 +59,11 @@ namespace Lykke.Service.OperationsHistory.Controllers
             {
                 return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
             }
-            if (!ParametersValidator.ValidatePageIndex(top))
+            if (!ParametersValidator.ValidateTop(top))
             {
                 return BadRequest(ErrorResponse.Create(nameof(top), TopOutOfRange));
             }
-            if (!ParametersValidator.ValidatePageIndex(skip))
+            if (!ParametersValidator.ValidateSkip(skip))
             {
                 return BadRequest(ErrorResponse.Create(nameof(skip), SkipOutOfRange));
             }
@@ -119,11 +119,11 @@ namespace Lykke.Service.OperationsHistory.Controllers
             {
                 return BadRequest(ErrorResponse.Create(nameof(assetId), AssetRequired));
             }
-            if (!ParametersValidator.ValidatePageIndex(skip))
+            if (!ParametersValidator.ValidateSkip(skip))
             {
                 return BadRequest(ErrorResponse.Create(nameof(skip), SkipOutOfRange));
             }
-            if (!ParametersValidator.ValidatePageIndex(top))
+            if (!ParametersValidator.ValidateTop(top))
             {
                 return BadRequest(ErrorResponse.Create(nameof(top), TopOutOfRange));
             }
@@ -169,11 +169,11 @@ namespace Lykke.Service.OperationsHistory.Controllers
             {
                 return BadRequest(ErrorResponse.Create(nameof(operationType), OpTypeRequired));
             }
-            if (!ParametersValidator.ValidatePageIndex(skip))
+            if (!ParametersValidator.ValidateSkip(skip))
             {
                 return BadRequest(ErrorResponse.Create(nameof(skip), SkipOutOfRange));
             }
-            if (!ParametersValidator.ValidatePageIndex(top))
+            if (!ParametersValidator.ValidateTop(top))
             {
                 return BadRequest(ErrorResponse.Create(nameof(top), TopOutOfRange));
             }
@@ -219,11 +219,11 @@ namespace Lykke.Service.OperationsHistory.Controllers
             {
                 return BadRequest(ErrorResponse.Create(nameof(assetId), AssetRequired));
             }
-            if (!ParametersValidator.ValidatePageIndex(skip))
+            if (!ParametersValidator.ValidateSkip(skip))
             {
                 return BadRequest(ErrorResponse.Create(nameof(skip), SkipOutOfRange));
             }
-            if (!ParametersValidator.ValidatePageIndex(top))
+            if (!ParametersValidator.ValidateTop(top))
             {
                 return BadRequest(ErrorResponse.Create(nameof(top), TopOutOfRange));
             }
