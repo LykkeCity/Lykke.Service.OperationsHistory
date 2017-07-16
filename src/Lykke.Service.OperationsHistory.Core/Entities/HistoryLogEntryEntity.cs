@@ -13,6 +13,8 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
         {
             return Guid.NewGuid().ToString();
         }
+
+        public string Id { get; set; }
         public DateTime DateTime { get; set; }
         public double Amount { get; set; }
         public string Currency { get; set; }
@@ -20,10 +22,11 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
         public string ClientId { get; set; }
         public string CustomData { get; set; }
 
-        public static HistoryLogEntryEntity Create(DateTime dateTime, double amount, string currency, string clientId, string customData, string opType)
+        public static HistoryLogEntryEntity Create(DateTime dateTime, double amount, string currency, string clientId, string customData, string opType, string id)
         {
             return new HistoryLogEntryEntity
             {
+                Id = id,
                 PartitionKey = GeneratePartitionKey(dateTime),
                 RowKey = GenerateRowKey(),
                 DateTime = dateTime,
