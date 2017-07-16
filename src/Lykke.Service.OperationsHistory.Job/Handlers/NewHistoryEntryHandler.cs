@@ -5,6 +5,7 @@ using Lykke.JobTriggers.Triggers.Bindings;
 using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Job.Model;
+using Newtonsoft.Json.Linq;
 
 namespace Lykke.Service.OperationsHistory.Job.Handlers
 {
@@ -38,13 +39,16 @@ namespace Lykke.Service.OperationsHistory.Job.Handlers
 
         public virtual Task ToRepository(HistoryQueueEntry message)
         {
+            dynamic o = JObject.Parse(message.CustomData);
+
             return _repo.AddAsync(
                 message.DateTime,
                 message.Amount,
                 message.Currency,
                 message.ClientId,
                 message.CustomData,
-                message.OpType);
+                message.OpType,
+                o.Id);
         }
 
         public static bool Validate(HistoryQueueEntry message)
