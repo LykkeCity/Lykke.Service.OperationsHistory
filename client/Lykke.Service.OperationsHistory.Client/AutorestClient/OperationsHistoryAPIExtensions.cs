@@ -331,5 +331,31 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 }
             }
 
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='editModel'>
+            /// </param>
+            public static ErrorResponse UpdateOperationsHistory(this IOperationsHistoryAPI operations, EditHistoryEntryModel editModel = default(EditHistoryEntryModel))
+            {
+                return operations.UpdateOperationsHistoryAsync(editModel).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='editModel'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<ErrorResponse> UpdateOperationsHistoryAsync(this IOperationsHistoryAPI operations, EditHistoryEntryModel editModel = default(EditHistoryEntryModel), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.UpdateOperationsHistoryWithHttpMessagesAsync(editModel, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
     }
 }
