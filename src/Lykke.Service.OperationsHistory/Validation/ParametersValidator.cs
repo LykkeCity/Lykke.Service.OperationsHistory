@@ -35,5 +35,10 @@ namespace Lykke.Service.OperationsHistory.Validation
         {
             return skip >= 0;
         }
+
+        public static bool ValidateId(string id)
+        {
+            return !string.IsNullOrWhiteSpace(id);
+        }
     }
 }

@@ -143,9 +143,9 @@ namespace Lykke.Service.OperationsHistory.Tests
             Assert.AreEqual(1, filtered.Count());
         }
 
-        private static Task<IEnumerable<IHistoryLogEntryEntity>> GetFakeRepositoryV1()
+        private static Task<IEnumerable<HistoryLogEntryEntity>> GetFakeRepositoryV1()
         {
-            var records = new List<IHistoryLogEntryEntity>()
+            var records = new List<HistoryLogEntryEntity>()
             {
                 new HistoryLogEntryEntity
                 {
@@ -179,9 +179,9 @@ namespace Lykke.Service.OperationsHistory.Tests
             return Task.FromResult(records.AsEnumerable());
         }
 
-        private static Task<IEnumerable<IHistoryLogEntryEntity>> GetFakeRepositoryV2()
+        private static Task<IEnumerable<HistoryLogEntryEntity>> GetFakeRepositoryV2()
         {
-            var records = new List<IHistoryLogEntryEntity>()
+            var records = new List<HistoryLogEntryEntity>()
             {
                 new HistoryLogEntryEntity
                 {

@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lykke.Service.OperationsHistory.Controllers;
+using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Models;
 using Lykke.Service.OperationsHistory.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,17 +16,19 @@ namespace Lykke.Service.OperationsHistory.Tests
     public class OperationsHistoryControllerTests
     {
         private IHistoryCache _cache;
+        private IHistoryLogEntryRepository _repo;
 
         [TestInitialize]
         public void Initialize()
         {
             _cache = new Mock<IHistoryCache>().Object;
+            _repo = new Mock<IHistoryLogEntryRepository>().Object;
         }
 
         [TestMethod]
         public async Task GetOperationsHistory_ClientIsNullOrEmpty_BadRequest()
         {
-            var controller = new OperationsHistoryController(_cache);
+            var controller = new OperationsHistoryController(_cache, _repo);
             var response = await controller.GetOperationsHistory("");
 
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
@@ -37,7 +41,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         [TestMethod]
         public async Task GetOperationsHistory_OpTypeIsNullOrEmpty_BadRequest()
         {
-            var controller = new OperationsHistoryController(_cache);
+            var controller = new OperationsHistoryController(_cache, _repo);
             var response = await controller.GetOperationsHistory("clientId", "", "assetId");
 
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
@@ -50,7 +54,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         [TestMethod]
         public async Task GetOperationsHistory_AssetIsNullOrEmpty_BadRequest()
         {
-            var controller = new OperationsHistoryController(_cache);
+            var controller = new OperationsHistoryController(_cache, _repo);
             var response = await controller.GetOperationsHistory("clientId", "opType", "");
 
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
@@ -63,7 +67,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         [TestMethod]
         public async Task GetOperationsHistoryByOpType_ClientIsNullOrEmpty_BadRequest()
         {
-            var controller = new OperationsHistoryController(_cache);
+            var controller = new OperationsHistoryController(_cache, _repo);
             var response = await controller.GetOperationsHistoryByOpType("", "opType");
 
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
@@ -76,7 +80,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         [TestMethod]
         public async Task GetOperationsHistoryByOpType_OpTypeIsNullOrEmpty_BadRequest()
         {
-            var controller = new OperationsHistoryController(_cache);
+            var controller = new OperationsHistoryController(_cache, _repo);
             var response = await controller.GetOperationsHistoryByOpType("clientId", "");
 
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
@@ -89,7 +93,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         [TestMethod]
         public async Task GetOperationsHistoryByAsset_ClientIsNullOrEmpty_BadRequest()
         {
-            var controller = new OperationsHistoryController(_cache);
+            var controller = new OperationsHistoryController(_cache, _repo);
             var response = await controller.GetOperationsHistoryByAsset("", "opType");
 
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
@@ -102,13 +106,31 @@ namespace Lykke.Service.OperationsHistory.Tests
         [TestMethod]
         public async Task GetOperationsHistoryByAsset_AssetIsNullOrEmpty_BadRequest()
         {
-            var controller = new OperationsHistoryController(_cache);
+            var controller = new OperationsHistoryController(_cache, _repo);
             var response = await controller.GetOperationsHistoryByAsset("clientId", "");
 
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
 
             var messages = GetErrorMessages(response, "assetId");
             var contains = messages?.Contains(OperationsHistoryController.AssetRequired);
+            Assert.IsTrue(contains ?? false);
+        }
+
+        [TestMethod]
+        public async Task UpdateOperationsHistory_IdIsNullOrEmpty_BadRequest()
+        {
+            var controller = new OperationsHistoryController(_cache, _repo);
+            var response = await controller.UpdateOperationsHistory(new EditHistoryEntryModel
+            {
+                Id = string.Empty,
+                State = 10,
+                BlockChainHash = String.Empty
+            });
+
+            Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
+
+            var messages = GetErrorMessages(response, "Id");
+            var contains = messages?.Contains(OperationsHistoryController.IdRequired);
             Assert.IsTrue(contains ?? false);
         }
 

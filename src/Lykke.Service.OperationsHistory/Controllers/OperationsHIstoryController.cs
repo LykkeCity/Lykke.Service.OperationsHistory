@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Models;
 using Lykke.Service.OperationsHistory.Services;
 using Lykke.Service.OperationsHistory.Validation;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Swashbuckle.SwaggerGen.Annotations;
 
 namespace Lykke.Service.OperationsHistory.Controllers
@@ -19,15 +22,19 @@ namespace Lykke.Service.OperationsHistory.Controllers
         public static readonly string ClientRequiredMsg = "Client id is required";
         public static readonly string OpTypeRequired = "Operation type parameter is required";
         public static readonly string AssetRequired = "Asset id parameter is required";
+        public static readonly string IdRequired = "Id parameter is required";
         public static readonly string PageOutOfRange = "Out of range value";
         public static readonly string TopOutOfRange = "Top parameter is out of range. Maximum value is 1000.";
         public static readonly string SkipOutOfRange = "Skip parameter is out of range (should be >= 0).";
         #endregion
 
         private readonly IHistoryCache _cache;
-        public OperationsHistoryController(IHistoryCache cache)
+        private readonly IHistoryLogEntryRepository _repository;
+
+        public OperationsHistoryController(IHistoryCache cache, IHistoryLogEntryRepository repository)
         {
             _cache = cache;
+            _repository = repository;
         }
 
         [HttpGet("allPaged")]
@@ -229,6 +236,32 @@ namespace Lykke.Service.OperationsHistory.Controllers
             }
 
             return Ok(await _cache.GetAllByAssetAsync(clientId, assetId, top, skip));
+        }
+
+        [HttpPost("update")]
+        [SwaggerOperation("UpdateOperationsHistory")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UpdateOperationsHistory([FromBody] EditHistoryEntryModel editModel)
+        {
+            if (!ParametersValidator.ValidateId(editModel.Id))
+            {
+                return BadRequest(ErrorResponse.Create(nameof(editModel.Id), IdRequired));
+            }
+
+            var recordsById = await _repository.GetById(editModel.Id);
+            foreach (var historyLogEntryEntity in recordsById)
+            {
+                dynamic parsedData = JObject.Parse(historyLogEntryEntity.CustomData);
+
+                parsedData.State = editModel.State;
+                parsedData.BlockChainHash = editModel.BlockChainHash;
+
+                var updatedJson = parsedData.ToString(Formatting.None);
+                await _repository.UpdateAsync(editModel.Id, updatedJson);
+            }
+
+            return Ok();
         }
     }
 }
