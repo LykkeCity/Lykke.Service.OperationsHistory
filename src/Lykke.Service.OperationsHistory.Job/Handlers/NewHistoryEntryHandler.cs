@@ -48,7 +48,7 @@ namespace Lykke.Service.OperationsHistory.Job.Handlers
                 message.ClientId,
                 message.CustomData,
                 message.OpType,
-                o.Id);
+                o.Id.ToString());
         }
 
         public static bool Validate(HistoryQueueEntry message)
