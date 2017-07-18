@@ -230,5 +230,12 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             return Ok(await _cache.GetAllByAssetAsync(clientId, assetId, top, skip));
         }
+
+        //[HttpPost("update")]
+        //[SwaggerOperation("UpdateOperationsHistory")]
+        //public async Task<IActionResult> UpdateOperationsHistory([FromBody] EditHistoryEntryModel editModel)
+        //{
+            
+        //}
     }
 }
