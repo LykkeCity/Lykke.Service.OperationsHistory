@@ -165,5 +165,15 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// </param>
         Task<HttpOperationResponse<object>> GetOperationsHistoryAllByAssetWithHttpMessagesAsync(string clientId = default(string), string assetId = default(string), int? top = default(int?), int? skip = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <param name='editModel'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<ErrorResponse>> UpdateOperationsHistoryWithHttpMessagesAsync(EditHistoryEntryModel editModel = default(EditHistoryEntryModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
     }
 }
