@@ -25,6 +25,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         public static readonly string IdRequired = "Id parameter is required";
         public static readonly string PageOutOfRange = "Out of range value";
         public static readonly string TopOutOfRange = "Top parameter is out of range. Maximum value is 1000.";
+        public static readonly string StateOutOfRange = "State parameter is out of range [0; 4]";
         public static readonly string SkipOutOfRange = "Skip parameter is out of range (should be >= 0).";
         #endregion
 
@@ -239,8 +240,12 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         /// <summary>
-        /// Updated the record in a history by id provided with edit model provided
+        /// Updates a record in a history by id provided with edit model provided
         /// </summary>
+        /// <param name="editModel">
+        /// editModel.Id - Id of the record, 
+        /// editModel.BlockChainHash - new BlockChainHash, 
+        /// editModel.State - new State (valid values: InProcessOnchain(0), SettledOnchain(1), InProcessOffchain(2), SettledOffchain(3), SettledNoChain(4))</param>
         /// <returns></returns>
         [HttpPost("update")]
         [SwaggerOperation("UpdateOperationsHistory")]
@@ -251,6 +256,10 @@ namespace Lykke.Service.OperationsHistory.Controllers
             if (!ParametersValidator.ValidateId(editModel.Id))
             {
                 return BadRequest(ErrorResponse.Create(nameof(editModel.Id), IdRequired));
+            }
+            if (!ParametersValidator.ValidateState(editModel.State))
+            {
+                return BadRequest(ErrorResponse.Create(nameof(editModel.State), StateOutOfRange));
             }
 
             var recordsById = await _repository.GetById(editModel.Id);
