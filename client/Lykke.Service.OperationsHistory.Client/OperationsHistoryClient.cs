@@ -14,16 +14,13 @@ namespace Lykke.Service.OperationsHistory.Client
     {
         private readonly ILog _log;
         private OperationsHistoryAPI _apiClient;
+        private readonly IMapper _mapper;
 
         public OperationsHistoryClient(string serviceUrl, ILog log)
         {
             _log = log;
+            _mapper = CreateMapper();
             _apiClient = new OperationsHistoryAPI(new Uri(serviceUrl));
-
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<HistoryEntryResponse, HistoryRecordModel>();
-            });
         }
 
         public void Dispose()
@@ -99,6 +96,17 @@ namespace Lykke.Service.OperationsHistory.Client
             return PrepareClientResponse(response);
         }
 
+        public static IMapper CreateMapper()
+        {
+            var mapperConfiguration = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<HistoryEntryResponse, HistoryRecordModel>()
+                    .ForMember(dest => dest.ClientId, opt => opt.Ignore());
+            });
+
+            return mapperConfiguration.CreateMapper();
+        }
+
         private OperationsHistoryResponse PrepareClientResponse(HttpOperationResponse<object> serviceResponse)
         {
             var error = serviceResponse.Body as ErrorResponse;
@@ -119,7 +127,7 @@ namespace Lykke.Service.OperationsHistory.Client
             {
                 return new OperationsHistoryResponse
                 {
-                    Records = Mapper.Map<IList<HistoryRecordModel>>(result)
+                    Records = _mapper.Map<IList<HistoryRecordModel>>(result)
                 };
             }
 
