@@ -238,6 +238,10 @@ namespace Lykke.Service.OperationsHistory.Controllers
             return Ok(await _cache.GetAllByAssetAsync(clientId, assetId, top, skip));
         }
 
+        /// <summary>
+        /// Updated the record in a history by id provided with edit model provided
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("update")]
         [SwaggerOperation("UpdateOperationsHistory")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
