@@ -40,5 +40,10 @@ namespace Lykke.Service.OperationsHistory.Validation
         {
             return !string.IsNullOrWhiteSpace(id);
         }
+
+        public static bool ValidateState(int id)
+        {
+            return id >= 0 && id <= 4;
+        }
     }
 }
