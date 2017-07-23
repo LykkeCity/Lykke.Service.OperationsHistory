@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <PackageId>Lykke.Service.OperationsHistory.Core</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Lykke</Authors>
+    <Company>Lykke</Company>
+    <Description />
+    <Copyright>@2017 - Lykke</Copyright>
+    <PackageLicenseUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory/blob/master/src/Lykke.Service.OperationsHistory.Core/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory/blob/master/src/Lykke.Service.OperationsHistory.Core/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory.git</RepositoryUrl>
+    <PackageIconUrl>https://avatars3.githubusercontent.com/u/14153330?v=3&amp;s=200</PackageIconUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lykke.AzureStorage" Version="1.2.24" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <PackageId>Lykke.Service.OperationsHistory.HistoryWriter</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Lykke</Authors>
+    <Company>Lykke</Company>
+    <Description />
+    <Copyright>@2017 - Lykke</Copyright>
+    <PackageLicenseUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory/blob/master/client/Lykke.Service.OperationsHistory.HistoryWriter/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory/blob/master/client/Lykke.Service.OperationsHistory.HistoryWriter/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/LykkeCity/Lykke.Service.OperationsHistory.git</RepositoryUrl>
+    <PackageIconUrl>https://avatars3.githubusercontent.com/u/14153330?v=3&amp;s=200</PackageIconUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard1.6\Lykke.Service.OperationsHistory.HistoryWriter.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lykke.AzureStorage" Version="1.2.24" />
+    <PackageReference Include="Lykke.Service.OperationsHistory.Core" Version="1.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+</Project>
