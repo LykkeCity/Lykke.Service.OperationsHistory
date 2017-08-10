@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -111,7 +112,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         public async Task GetAllAsync_FilterByAssetAndOperation_Success()
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
-            mockedRepo.Setup(m => m.GetAllAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
+            mockedRepo.Setup(m => m.GetAllAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1());
             var cache = new InMemoryCache(mockedRepo.Object, _settings);
 
             var filtered = await cache.GetAllPagedAsync("any", "CHF", "OpType2", 1);
@@ -143,9 +144,9 @@ namespace Lykke.Service.OperationsHistory.Tests
             Assert.AreEqual(1, filtered.Count());
         }
 
-        private static Task<IEnumerable<HistoryLogEntryEntity>> GetFakeRepositoryV1()
+        private static Task<IList<HistoryLogEntryEntity>> GetFakeRepositoryV1()
         {
-            var records = new List<HistoryLogEntryEntity>()
+            IList<HistoryLogEntryEntity> records = new List<HistoryLogEntryEntity>
             {
                 new HistoryLogEntryEntity
                 {
@@ -176,12 +177,12 @@ namespace Lykke.Service.OperationsHistory.Tests
                 }
             };
 
-            return Task.FromResult(records.AsEnumerable());
+            return Task.FromResult(records);
         }
 
-        private static Task<IEnumerable<HistoryLogEntryEntity>> GetFakeRepositoryV2()
+        private static Task<IList<HistoryLogEntryEntity>> GetFakeRepositoryV2()
         {
-            var records = new List<HistoryLogEntryEntity>()
+            IList<HistoryLogEntryEntity> records = new List<HistoryLogEntryEntity>()
             {
                 new HistoryLogEntryEntity
                 {
@@ -221,7 +222,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                 }
             };
 
-            return Task.FromResult(records.AsEnumerable());
+            return Task.FromResult(records);
         }
     }
 }
