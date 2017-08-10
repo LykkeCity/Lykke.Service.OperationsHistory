@@ -23,30 +23,20 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
                 dateTime, amount, currency, clientId, customData, opType, id));
         }
 
-        public async Task<IEnumerable<HistoryLogEntryEntity>> UpdateAsync(string id, string customData)
+        public async Task<HistoryLogEntryEntity> UpdateAsync(string id, string customData)
         {
             var existing = await GetById(id);
-            var tasks = new List<Task<HistoryLogEntryEntity>>();
-            foreach (var historyLogEntryEntity in existing)
-            {
-                tasks.Add(_table.ReplaceAsync(historyLogEntryEntity.PartitionKey, historyLogEntryEntity.RowKey, itm =>
-                {
-                    itm.CustomData = customData;
-                    return itm;
-                }));
-            }
 
-            return await Task.WhenAll(tasks);
+            return await _table.ReplaceAsync(existing.PartitionKey, existing.RowKey, itm =>
+            {
+                itm.CustomData = customData;
+                return itm;
+            });
         }
 
-        public async Task<IEnumerable<HistoryLogEntryEntity>> UpdateBlockchainHashAsync(string id, string hash)
+        public async Task<HistoryLogEntryEntity> UpdateBlockchainHashAsync(string id, string hash)
         {
-            var existing = (await GetById(id)).FirstOrDefault();
-
-            if (existing == null)
-            {
-                throw new Exception($"Log entry with id={id} doesn't exist");
-            }
+            var existing = await GetById(id);
 
             dynamic o = JObject.Parse(existing.CustomData);
             o.BlockChainHash = hash;
@@ -54,14 +44,9 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             return await UpdateAsync(id, o.ToString());
         }
 
-        public async Task<IEnumerable<HistoryLogEntryEntity>> UpdateStateAsync(string id, int state)
+        public async Task<HistoryLogEntryEntity> UpdateStateAsync(string id, int state)
         {
-            var existing = (await GetById(id)).FirstOrDefault();
-
-            if (existing == null)
-            {
-                throw new Exception($"Log entry with id={id} doesn't exist");
-            }
+            var existing = await GetById(id);
 
             dynamic o = JObject.Parse(existing.CustomData);
             o.State = state;
@@ -69,16 +54,29 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             return await UpdateAsync(id, o.ToString());
         }
 
-        public async Task<IEnumerable<HistoryLogEntryEntity>> GetAllAsync(string clientId)
+        public async Task<IList<HistoryLogEntryEntity>> GetAllAsync(string clientId)
         {
             var query = new TableQuery<HistoryLogEntryEntity>().Where($"ClientId eq '{clientId}'");
-            return await _table.WhereAsync(query);
+            return (await _table.WhereAsync(query)).ToList();
         }
 
-        public async Task<IEnumerable<HistoryLogEntryEntity>> GetById(string id)
+        public async Task<HistoryLogEntryEntity> GetById(string id)
         {
             var query = new TableQuery<HistoryLogEntryEntity>().Where($"Id eq '{id}'");
-            return await _table.WhereAsync(query);
+
+            var records = (await _table.WhereAsync(query)).ToList();
+
+            if (records.Count == 0)
+            {
+                throw new Exception($"No record with id={id} in history log");
+            }
+            if (records.Count > 1)
+            {
+                throw new Exception($"Multiple records for id={id} in history log (Count={records.Count})");
+            }
+
+            return records.First();
         }
+
     }
 }
