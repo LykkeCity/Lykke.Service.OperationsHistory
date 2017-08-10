@@ -90,7 +90,19 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
         /// <returns></returns>
         public async Task UpdateBlockChainHash(string id, string hash)
         {
-            await _repo.UpdateBlockchainHashAsync(id, hash);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            try
+            {
+                await _repo.UpdateBlockchainHashAsync(id, hash);
+            }
+            catch (Exception e)
+            {
+                throw new UpdateHistoryEntryException("Repository UpdateBlockchainHashAsync exception", e);
+            }
         }
         /// <summary>
         /// Updates log entry state value
@@ -100,7 +112,19 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
         /// <returns></returns>
         public async Task UpdateState(string id, int state)
         {
-            await _repo.UpdateStateAsync(id, state);
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            try
+            {
+                await _repo.UpdateStateAsync(id, state);
+            }
+            catch (Exception e)
+            {
+                throw new UpdateHistoryEntryException("Repository UpdateStateAsync exception", e);
+            }
         }
         /// <summary>
         /// Validating new history entry
@@ -141,7 +165,7 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
             }
             catch (Exception e)
             {
-                throw new NewHistoryEntryException("Queue.PutMessageAsync exception", e);
+                throw new NewHistoryEntryException("Queue.PutRawMessageAsync exception", e);
             }
         }
     }
