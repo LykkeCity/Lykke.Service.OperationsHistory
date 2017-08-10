@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>Lykke.Service.OperationsHistory.Job</AssemblyName>
     <OutputType>Exe</OutputType>
+    <Version>1.0.1</Version>
     <PackageId>Lykke.Service.OperationsHistory.Job</PackageId>
     <RuntimeIdentifiers>win81-x64</RuntimeIdentifiers>
     <RuntimeFrameworkVersion>1.1.2</RuntimeFrameworkVersion>
