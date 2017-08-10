@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
 using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json.Linq;
 
 namespace Lykke.Service.OperationsHistory.Core.Entities
 {
@@ -36,6 +37,36 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             }
 
             return await Task.WhenAll(tasks);
+        }
+
+        public async Task<IEnumerable<HistoryLogEntryEntity>> UpdateBlockchainHashAsync(string id, string hash)
+        {
+            var existing = (await GetById(id)).FirstOrDefault();
+
+            if (existing == null)
+            {
+                throw new Exception($"Log entry with id={id} doesn't exist");
+            }
+
+            dynamic o = JObject.Parse(existing.CustomData);
+            o.BlockChainHash = hash;
+
+            return await UpdateAsync(id, o.ToString());
+        }
+
+        public async Task<IEnumerable<HistoryLogEntryEntity>> UpdateStateAsync(string id, int state)
+        {
+            var existing = (await GetById(id)).FirstOrDefault();
+
+            if (existing == null)
+            {
+                throw new Exception($"Log entry with id={id} doesn't exist");
+            }
+
+            dynamic o = JObject.Parse(existing.CustomData);
+            o.State = state;
+
+            return await UpdateAsync(id, o.ToString());
         }
 
         public async Task<IEnumerable<HistoryLogEntryEntity>> GetAllAsync(string clientId)
