@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AzureStorage;
 using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Lykke.Service.OperationsHistory.Core.Entities
@@ -41,7 +42,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             dynamic o = JObject.Parse(existing.CustomData);
             o.BlockChainHash = hash;
 
-            return await UpdateAsync(id, o.ToString());
+            return await UpdateAsync(id, o.ToString(Formatting.None));
         }
 
         public async Task<HistoryLogEntryEntity> UpdateStateAsync(string id, int state)
@@ -51,7 +52,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             dynamic o = JObject.Parse(existing.CustomData);
             o.State = state;
 
-            return await UpdateAsync(id, o.ToString());
+            return await UpdateAsync(id, o.ToString(Formatting.None));
         }
 
         public async Task<IList<HistoryLogEntryEntity>> GetAllAsync(string clientId)

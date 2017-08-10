@@ -262,17 +262,15 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(nameof(editModel.State), StateOutOfRange));
             }
 
-            var recordsById = await _repository.GetById(editModel.Id);
-            foreach (var historyLogEntryEntity in recordsById)
-            {
-                dynamic parsedData = JObject.Parse(historyLogEntryEntity.CustomData);
+            var recordById = await _repository.GetById(editModel.Id);
 
-                parsedData.State = editModel.State;
-                parsedData.BlockChainHash = editModel.BlockChainHash;
+            dynamic parsedData = JObject.Parse(recordById.CustomData);
 
-                var updatedJson = parsedData.ToString(Formatting.None);
-                await _repository.UpdateAsync(editModel.Id, updatedJson);
-            }
+            parsedData.State = editModel.State;
+            parsedData.BlockChainHash = editModel.BlockChainHash;
+
+            var updatedJson = parsedData.ToString(Formatting.None);
+            await _repository.UpdateAsync(editModel.Id, updatedJson);
 
             return Ok();
         }
