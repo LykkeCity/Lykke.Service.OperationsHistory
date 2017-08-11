@@ -20,8 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lykke.AzureStorage" Version="1.2.24" />
-    <PackageReference Include="Lykke.Service.OperationsHistory.Core" Version="1.0.9" />
+    <PackageReference Include="Lykke.AzureStorage" Version="1.2.33" />
+    <PackageReference Include="Lykke.Service.OperationsHistory.Core" Version="1.0.11" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
