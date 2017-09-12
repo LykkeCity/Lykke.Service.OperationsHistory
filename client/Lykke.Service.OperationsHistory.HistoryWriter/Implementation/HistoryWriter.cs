@@ -20,38 +20,19 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
         private readonly string _connectionString;
         private AzureQueueExt _queue;
         private HistoryLogEntryRepository _repo;
-        private ILog _log;
+        private readonly ILog _log;
         /// <summary>
         /// Represents history queue
         /// </summary>
-        protected AzureQueueExt Queue
-        {
-            get
-            {
-                if (_queue == null)
-                {
-                    _queue = new AzureQueueExt(_connectionString, Constants.InQueueName);
-                }
+        protected AzureQueueExt Queue => _queue ?? (_queue = new AzureQueueExt(_connectionString, Constants.InQueueName));
 
-                return _queue;
-            }
-        }
         /// <summary>
         /// History log repository
         /// </summary>
-        protected HistoryLogEntryRepository Repository
-        {
-            get
-            {
-                if (_repo == null)
-                {
-                    _repo = new HistoryLogEntryRepository(new AzureTableStorage<HistoryLogEntryEntity>(
-                        _connectionString, Constants.OutTableName, _log));
-                }
+        protected HistoryLogEntryRepository Repository =>
+            _repo ?? (_repo = new HistoryLogEntryRepository(
+                new AzureTableStorage<HistoryLogEntryEntity>(_connectionString, Constants.OutTableName, _log)));
 
-                return _repo;
-            }
-        }
         /// <summary>
         /// Initializes a new instance of the HistoryWriter with the given Azure connection 
         /// string and ILog implementation
@@ -59,6 +40,7 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
         ///     - ArgumentNullException
         /// </summary>
         /// <param name="connectionString">Azure account connection string</param>
+        /// <param name="log"></param>
         public HistoryWriter(string connectionString, ILog log)
         {
             if (String.IsNullOrEmpty(connectionString))
@@ -97,7 +79,7 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
 
             try
             {
-                await _repo.UpdateBlockchainHashAsync(id, hash);
+                await Repository.UpdateBlockchainHashAsync(id, hash);
             }
             catch (Exception e)
             {
@@ -119,7 +101,7 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
 
             try
             {
-                await _repo.UpdateStateAsync(id, state);
+                await Repository.UpdateStateAsync(id, state);
             }
             catch (Exception e)
             {
