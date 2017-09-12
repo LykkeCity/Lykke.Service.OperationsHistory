@@ -6,7 +6,6 @@ using Common.Log;
 using Lykke.Common.ApiLibrary.Middleware;
 using Lykke.Common.ApiLibrary.Swagger;
 using Lykke.Logs;
-using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using Lykke.Service.OperationsHistory.Modules;
 using Lykke.SettingsReader;
@@ -74,11 +73,19 @@ namespace Lykke.Service.OperationsHistory
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUi();
+            app.UseStaticFiles();
 
-            appLifetime.ApplicationStopped.Register(() =>
-            {
-                ApplicationContainer.Dispose();
-            });
+            appLifetime.ApplicationStopping.Register(StopApplication);
+            appLifetime.ApplicationStopped.Register(CleanUp);
+        }
+
+        private void StopApplication()
+        {
+        }
+
+        private void CleanUp()
+        {
+            ApplicationContainer.Dispose();
         }
 
         private static ILog CreateLogWithSlack(IServiceCollection services, ApiSettings settings)
