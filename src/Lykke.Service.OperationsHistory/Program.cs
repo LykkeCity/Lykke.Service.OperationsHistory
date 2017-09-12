@@ -10,17 +10,12 @@ namespace Lykke.Service.OperationsHistory
     {
         public static void Main(string[] args)
         {
-            var webHostCancellationTokenSource = new CancellationTokenSource();
-            var end = new ManualResetEvent(false);
-
-            AssemblyLoadContext.Default.Unloading += ctx =>
-            {
-                Console.WriteLine("SIGTERM recieved");
-
-                webHostCancellationTokenSource.Cancel();
-
-                end.WaitOne();
-            };
+            Console.WriteLine($"OperationsHistory version {Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion}");
+#if DEBUG
+            Console.WriteLine("Is DEBUG");
+#else
+            Console.WriteLine("Is RELEASE");
+#endif
 
             var host = new WebHostBuilder()
                 .UseKestrel()
@@ -29,9 +24,7 @@ namespace Lykke.Service.OperationsHistory
                 .UseApplicationInsights()
                 .Build();
 
-            host.Run(webHostCancellationTokenSource.Token);
-
-            end.Set();
+            host.Run();
 
             Console.WriteLine("Terminated");
         }
