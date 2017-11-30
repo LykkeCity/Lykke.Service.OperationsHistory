@@ -1,6 +1,6 @@
 ﻿namespace Lykke.Service.OperationsHistory.Core.Settings.Job
 {
-    public class JobSettings
+    public class OperationsHistoryJobSettings
     {
         public DbSettings Db { get; set; }
     }

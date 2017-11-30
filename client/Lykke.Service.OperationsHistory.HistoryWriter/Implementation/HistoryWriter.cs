@@ -29,9 +29,11 @@ namespace Lykke.Service.OperationsHistory.HistoryWriter.Implementation
         /// <summary>
         /// History log repository
         /// </summary>
+        /// TODO: Remove
         protected HistoryLogEntryRepository Repository =>
-            _repo ?? (_repo = new HistoryLogEntryRepository(
-                new AzureTableStorage<HistoryLogEntryEntity>(_connectionString, Constants.OutTableName, _log)));
+            _repo ?? (_repo =
+                new HistoryLogEntryRepository(
+                    AzureTableStorage<HistoryLogEntryEntity>.Create(null, Constants.OutTableName, _log)));
 
         /// <summary>
         /// Initializes a new instance of the HistoryWriter with the given Azure connection 

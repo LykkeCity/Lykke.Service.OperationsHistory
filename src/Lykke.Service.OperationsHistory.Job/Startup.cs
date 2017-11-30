@@ -1,38 +1,44 @@
-﻿using System;
-using Autofac;
+﻿using System.IO;
 using Autofac.Extensions.DependencyInjection;
-using AzureStorage.Tables;
+using Lykke.Service.OperationsHistory.Core.Settings.Job;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Hosting;
 using Common.Log;
-using Lykke.Common.ApiLibrary.Middleware;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 using Lykke.Common.ApiLibrary.Swagger;
-using Lykke.Logs;
-using Lykke.Service.OperationsHistory.Core.Settings.Api;
-using Lykke.Service.OperationsHistory.Modules;
+using Autofac;
 using Lykke.SettingsReader;
 using Lykke.SlackNotification.AzureQueue;
+using Lykke.Logs;
+using AzureStorage.Tables;
+using Lykke.Service.OperationsHistory.Job.Modules;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Lykke.Common.ApiLibrary.Middleware;
+using Lykke.Service.OperationsHistory.Job.Model;
 using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core.Services;
+using Lykke.JobTriggers.Triggers;
 
-namespace Lykke.Service.OperationsHistory
+namespace Lykke.Service.OperationsHistory.Job
 {
     public class Startup
     {
         public IHostingEnvironment Environment { get; }
-        public IContainer ApplicationContainer { get; set; }
+        public IContainer ApplicationContainer { get; private set; }
         public IConfigurationRoot Configuration { get; }
         public ILog Log { get; private set; }
+
+        private TriggerHost _triggerHost;
+        private Task _triggerHostTask;
 
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
+                .SetBasePath(Directory.GetCurrentDirectory())
                 .AddEnvironmentVariables();
-            Configuration = builder.Build();
 
+            Configuration = builder.Build();
             Environment = env;
         }
 
@@ -43,31 +49,34 @@ namespace Lykke.Service.OperationsHistory
                 services.AddMvc()
                     .AddJsonOptions(options =>
                     {
-                        options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
+                        options.SerializerSettings.ContractResolver =
+                            new Newtonsoft.Json.Serialization.DefaultContractResolver();
                     });
 
                 services.AddSwaggerGen(options =>
                 {
-                    options.DefaultLykkeConfiguration("v1", "OperationsHistory API");
+                    options.DefaultLykkeConfiguration("v1", "OperationsHistory Job");
                 });
 
                 var builder = new ContainerBuilder();
-                var appSettings = Configuration.LoadSettings<ApiSettings>();
+                var appSettings = Configuration.LoadSettings<AppSettings>();
+
                 Log = CreateLogWithSlack(services, appSettings);
 
-                builder.RegisterModule(new ServiceModule(appSettings.CurrentValue.OperationsHistoryService,
-                    appSettings.Nested(x => x.OperationsHistoryService.Db), Log));
+                builder.RegisterModule(new JobModule(appSettings.CurrentValue.OperationsHistoryJob,
+                    appSettings.Nested(x => x.OperationsHistoryJob.Db), Log));
 
                 builder.Populate(services);
+
                 ApplicationContainer = builder.Build();
+
+                return new AutofacServiceProvider(ApplicationContainer);
             }
             catch (Exception ex)
             {
                 Log?.WriteFatalErrorAsync(nameof(Startup), nameof(ConfigureServices), "", ex).Wait();
                 throw;
             }
-
-            return new AutofacServiceProvider(ApplicationContainer);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime appLifetime)
@@ -79,7 +88,7 @@ namespace Lykke.Service.OperationsHistory
                     app.UseDeveloperExceptionPage();
                 }
 
-                app.UseLykkeMiddleware("OperationsHistory", ex => new { Message = "Technical problem" });
+                app.UseLykkeMiddleware("OperationsHistory", ex => new ErrorResponse { ErrorMessage = "Technical problem" });
 
                 app.UseMvc();
                 app.UseSwagger();
@@ -105,9 +114,13 @@ namespace Lykke.Service.OperationsHistory
         {
             try
             {
-                // NOTE: Service not yet recieve and process requests here
+                // NOTE: Job not yet recieve and process IsAlive requests here
 
                 await ApplicationContainer.Resolve<IStartupManager>().StartAsync();
+
+                _triggerHost = new TriggerHost(new AutofacServiceProvider(ApplicationContainer));
+
+                _triggerHostTask = _triggerHost.Start();
 
                 await Log.WriteMonitorAsync("", "", "Started");
             }
@@ -122,9 +135,16 @@ namespace Lykke.Service.OperationsHistory
         {
             try
             {
-                // NOTE: Service still can recieve and process requests here, so take care about it if you add logic here.
+                // NOTE: Job still can recieve and process IsAlive requests here, so take care about it if you add logic here.
 
                 await ApplicationContainer.Resolve<IShutdownManager>().StopAsync();
+
+                _triggerHost?.Cancel();
+
+                if (_triggerHostTask != null)
+                {
+                    await _triggerHostTask;
+                }
             }
             catch (Exception ex)
             {
@@ -140,7 +160,7 @@ namespace Lykke.Service.OperationsHistory
         {
             try
             {
-                // NOTE: Service can't recieve and process requests here, so you can destroy all resources
+                // NOTE: Job can't recieve and process IsAlive requests here, so you can destroy all resources
 
                 if (Log != null)
                 {
@@ -160,7 +180,7 @@ namespace Lykke.Service.OperationsHistory
             }
         }
 
-        private static ILog CreateLogWithSlack(IServiceCollection services, IReloadingManager<ApiSettings> settings)
+        private static ILog CreateLogWithSlack(IServiceCollection services, IReloadingManager<AppSettings> settings)
         {
             var consoleLogger = new LogToConsole();
             var aggregateLogger = new AggregateLogger();
@@ -174,7 +194,7 @@ namespace Lykke.Service.OperationsHistory
                 QueueName = settings.CurrentValue.SlackNotifications.AzureQueue.QueueName
             }, aggregateLogger);
 
-            var dbLogConnectionStringManager = settings.ConnectionString(x => x.OperationsHistoryService.Db.LogsConnString);
+            var dbLogConnectionStringManager = settings.Nested(x => x.OperationsHistoryJob.Db.LogsConnString);
             var dbLogConnectionString = dbLogConnectionStringManager.CurrentValue;
 
             // Creating azure storage logger, which logs own messages to concole log
