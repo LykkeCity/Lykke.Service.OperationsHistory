@@ -1,8 +1,4 @@
-
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Lykke.Service.OperationsHistory.AutorestClient.Models;
 using Lykke.Service.OperationsHistory.Client.Models;
 
 namespace Lykke.Service.OperationsHistory.Client

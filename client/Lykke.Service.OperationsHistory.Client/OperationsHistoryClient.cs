@@ -33,14 +33,14 @@ namespace Lykke.Service.OperationsHistory.Client
 
         public async Task<OperationsHistoryResponse> AllAsync(string clientId, int top, int skip)
         {
-            var response = await _apiClient.GetOperationsHistoryAllWithHttpMessagesAsync(clientId, top, skip);
+            var response = await _apiClient.GetOperationsHistoryAllWithHttpMessagesAsync(top, skip, clientId);
 
             return PrepareClientResponse(response);
         }
 
         public async Task<OperationsHistoryResponse> AllAsync(string clientId, int page)
         {
-            var response = await _apiClient.GetOperationsHistoryAllPagedWithHttpMessagesAsync(clientId, page);
+            var response = await _apiClient.GetOperationsHistoryAllPagedWithHttpMessagesAsync(page, clientId);
 
             return PrepareClientResponse(response);
         }
@@ -48,8 +48,7 @@ namespace Lykke.Service.OperationsHistory.Client
         public async Task<OperationsHistoryResponse> ByOperationAsync(string clientId, string operationType, int top, int skip)
         {
             var response =
-                await _apiClient.GetOperationsHistoryAllByOpTypeWithHttpMessagesAsync(clientId, operationType, top,
-                    skip);
+                await _apiClient.GetOperationsHistoryAllByOpTypeWithHttpMessagesAsync(top, skip, clientId, operationType);
 
             return PrepareClientResponse(response);
         }
@@ -57,8 +56,7 @@ namespace Lykke.Service.OperationsHistory.Client
         public async Task<OperationsHistoryResponse> ByOperationAsync(string clientId, string operationType, int page)
         {
             var response =
-                await _apiClient.GetOperationsHistoryAllByOpTypePagedWithHttpMessagesAsync(clientId, operationType,
-                    page);
+                await _apiClient.GetOperationsHistoryAllByOpTypePagedWithHttpMessagesAsync(page, clientId, operationType);
 
             return PrepareClientResponse(response);
         }
@@ -66,8 +64,8 @@ namespace Lykke.Service.OperationsHistory.Client
         public async Task<OperationsHistoryResponse> ByOperationAndAssetAsync(string clientId, string operationType, string assetId, int top, int skip)
         {
             var response =
-                await _apiClient.GetOperationsHistoryAllByOpTypeAndAssetWithHttpMessagesAsync(clientId, operationType,
-                    assetId, top, skip);
+                await _apiClient.GetOperationsHistoryAllByOpTypeAndAssetWithHttpMessagesAsync(top, skip, clientId,
+                    operationType, assetId);
 
             return PrepareClientResponse(response);
         }
@@ -75,15 +73,14 @@ namespace Lykke.Service.OperationsHistory.Client
         public async Task<OperationsHistoryResponse> ByOperationAndAssetAsync(string clientId, string operationType, string assetId, int page)
         {
             var response =
-                await _apiClient.GetOperationsHistoryAllByOpTypeAndAssetPagedWithHttpMessagesAsync(clientId,
-                    operationType, assetId, page);
+                await _apiClient.GetOperationsHistoryAllByOpTypeAndAssetPagedWithHttpMessagesAsync(page, clientId, operationType, assetId);
 
             return PrepareClientResponse(response);
         }
 
         public async Task<OperationsHistoryResponse> ByAssetAsync(string clientId, string assetId, int top, int skip)
         {
-            var response = await _apiClient.GetOperationsHistoryAllByAssetWithHttpMessagesAsync(clientId, assetId, top, skip);
+            var response = await _apiClient.GetOperationsHistoryAllByAssetWithHttpMessagesAsync(top, skip, clientId, assetId);
 
             return PrepareClientResponse(response);
         }
@@ -91,7 +88,7 @@ namespace Lykke.Service.OperationsHistory.Client
         public async Task<OperationsHistoryResponse> ByAssetAsync(string clientId, string assetId, int page)
         {
             var response =
-                await _apiClient.GetOperationsHistoryAllByAssetPagedWithHttpMessagesAsync(clientId, assetId, page);
+                await _apiClient.GetOperationsHistoryAllByAssetPagedWithHttpMessagesAsync(page, clientId, assetId);
 
             return PrepareClientResponse(response);
         }
