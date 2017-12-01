@@ -7,6 +7,7 @@ using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
+using Lykke.Service.OperationsHistory.Mappers;
 using Lykke.Service.OperationsHistory.Models;
 using Lykke.Service.OperationsHistory.Services;
 using Lykke.Service.OperationsHistory.Services.InMemoryCache;
@@ -51,14 +52,11 @@ namespace Lykke.Service.OperationsHistory.Modules
                 .As<IHistoryCache>()
                 .SingleInstance();
 
+            Mapper.Initialize(cfg => cfg.AddProfile(typeof(HistoryLogMapperProfile)));
+
             builder.RegisterInstance(new HistoryLogEntryRepository(AzureTableStorage<HistoryLogEntryEntity>.Create(
                     _dbSettings.ConnectionString(x => x.LogsConnString), "OperationsHistory", _log)))
                 .As<IHistoryLogEntryRepository>();
-
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<IHistoryLogEntryEntity, HistoryEntryResponse>();
-            });
 
             builder.Populate(_services);
         }

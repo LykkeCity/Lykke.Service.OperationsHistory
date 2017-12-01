@@ -16,10 +16,10 @@ namespace Lykke.Service.OperationsHistory.Tests
     [TestClass]
     public class InMemoryCacheTests
     {
-        private OperationsHistorySettings _settings;
+        private static OperationsHistorySettings _settings;
 
-        [TestInitialize]
-        public void Initialize()
+        [ClassInitialize]
+        public static void Initialize(TestContext testContext)
         {
             _settings = new OperationsHistorySettings
             {
@@ -31,10 +31,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                 CacheExpiration = 10
             };
 
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<IHistoryLogEntryEntity, HistoryEntryResponse>();
-            });
+            Mapper.Initialize(cfg => cfg.AddProfile(typeof(TestMappingProfile)));
         }
 
         [TestMethod]
