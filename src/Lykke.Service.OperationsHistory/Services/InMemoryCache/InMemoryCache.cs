@@ -149,7 +149,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 
             if (needUpdateOrCreate)
             {
-                var records = await _repository.GetAllAsync(clientId);
+                var records = await _repository.GetByClientIdAsync(clientId);
                 var updatedObject = new CacheModel
                 {
                     LastUpdated = DateTime.UtcNow,

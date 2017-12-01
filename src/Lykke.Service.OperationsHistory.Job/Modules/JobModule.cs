@@ -1,20 +1,15 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using AzureStorage.Queue;
 using AzureStorage.Tables;
 using Common.Log;
-using Lykke.JobTriggers.Abstractions;
 using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsHistory.Core.Settings.Job;
-using Lykke.Service.OperationsHistory.Job.Handlers;
-using Lykke.Service.OperationsHistory.Job.Notifiers;
 using Lykke.Service.OperationsHistory.Job.Services;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.DependencyInjection;
-using Lykke.JobTriggers.Extenstions;
+using Lykke.Service.OperationsHistory.Job.RabbitSubscribers;
 
 namespace Lykke.Service.OperationsHistory.Job.Modules
 {
@@ -53,24 +48,39 @@ namespace Lykke.Service.OperationsHistory.Job.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
-            builder.RegisterInstance<Func<string, IQueueExt>>(qName =>
-                AzureQueueExt.Create(_dbSettingsManager.ConnectionString(x => x.LogsConnString), qName));
+            RegisterAzureRepositories(builder);
 
-            builder.RegisterInstance(new HistoryLogEntryRepository(
-                    AzureTableStorage<HistoryLogEntryEntity>.Create(
-                        _dbSettingsManager.ConnectionString(x => x.LogsConnString), Constants.OutTableName, _log)))
-                .As<IHistoryLogEntryRepository>();
+            RegisterApplicationServices(builder);
 
-            builder.RegisterType<SlackNotifier>().As<IPoisionQueueNotifier>();
-
-            builder.RegisterType<NewHistoryEntryHandler>();
-
-            builder.AddTriggers(pool =>
-            {
-                pool.AddDefaultConnection(_dbSettingsManager.CurrentValue.LogsConnString);
-            });
+            RegisterRabbitMqSubscribers(builder);
 
             builder.Populate(_services);
+        }
+
+        private void RegisterRabbitMqSubscribers(ContainerBuilder builder)
+        {
+            // TODO: You should register each subscriber in DI container as IStartable singleton and autoactivate it
+
+            builder.RegisterType<OperationsHistorySubscriber>()
+                .As<IStartable>()
+                .AutoActivate()
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.Rabbit));
+        }
+
+        private void RegisterApplicationServices(ContainerBuilder builder)
+        {
+            builder.RegisterType<HistoryWriter>()
+                .As<IHistoryWriter>()
+                .SingleInstance();
+        }
+
+        private void RegisterAzureRepositories(ContainerBuilder builder)
+        {
+            builder.RegisterInstance(new HistoryLogEntryRepository(
+                    AzureTableStorage<HistoryLogEntryEntity>.Create(
+                        _dbSettingsManager.ConnectionString(x => x.DataConnString), "OperationsHistory", _log)))
+                .As<IHistoryLogEntryRepository>();
         }
     }
 }

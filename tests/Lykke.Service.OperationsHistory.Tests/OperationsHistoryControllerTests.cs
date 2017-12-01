@@ -116,24 +116,6 @@ namespace Lykke.Service.OperationsHistory.Tests
             Assert.IsTrue(contains ?? false);
         }
 
-        [TestMethod]
-        public async Task UpdateOperationsHistory_IdIsNullOrEmpty_BadRequest()
-        {
-            var controller = new OperationsHistoryController(_cache, _repo);
-            var response = await controller.UpdateOperationsHistory(new EditHistoryEntryModel
-            {
-                Id = string.Empty,
-                State = 10,
-                BlockChainHash = String.Empty
-            });
-
-            Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
-
-            var messages = GetErrorMessages(response, "Id");
-            var contains = messages?.Contains(OperationsHistoryController.IdRequired);
-            Assert.IsTrue(contains ?? false);
-        }
-
         private static IEnumerable<string> GetErrorMessages(IActionResult response, string key)
         {
             var badRequest = response as BadRequestObjectResult;

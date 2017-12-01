@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -42,7 +41,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         public async Task GetRecordsByClient_CachedFullRepository()
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
-            mockedRepo.Setup(m => m.GetAllAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
+            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
             var cache = new InMemoryCache(mockedRepo.Object, _settings);
 
             var recordsFromCache = await cache.GetRecordsByClient("any");
@@ -58,7 +57,7 @@ namespace Lykke.Service.OperationsHistory.Tests
 
             // getting values from repository into cache
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
-            mockedRepo.Setup(m => m.GetAllAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
+            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
             var cache = new InMemoryCache(mockedRepo.Object, _settings);
             var recordsFromCacheV1 = await cache.GetRecordsByClient("any");
 
@@ -73,7 +72,7 @@ namespace Lykke.Service.OperationsHistory.Tests
             pause.WaitOne(_settings.CacheExpiration / 2 * 1000 + 3000);
 
             // cache expired so the new values must be fetched from the repository
-            mockedRepo.Setup(m => m.GetAllAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
+            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
             var recordsFromCacheV2 = await cache.GetRecordsByClient("any");
             Assert.AreEqual(4, recordsFromCacheV2.Count());
         }
@@ -82,7 +81,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         public async Task GetAllAsync_CheckPagination_SinglePage()
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
-            mockedRepo.Setup(m => m.GetAllAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
+            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
             var cache = new InMemoryCache(mockedRepo.Object, _settings);
 
             var pageOne = await cache.GetAllPagedAsync("any", 1);
@@ -96,7 +95,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         public async Task GetAllAsync_CheckPagination_MultiplePages()
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
-            mockedRepo.Setup(m => m.GetAllAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
+            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
             var cache = new InMemoryCache(mockedRepo.Object, _settings);
 
             var pageOne = await cache.GetAllPagedAsync("any", 1);
@@ -112,7 +111,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         public async Task GetAllAsync_FilterByAssetAndOperation_Success()
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
-            mockedRepo.Setup(m => m.GetAllAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1());
+            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1());
             var cache = new InMemoryCache(mockedRepo.Object, _settings);
 
             var filtered = await cache.GetAllPagedAsync("any", "CHF", "OpType2", 1);
@@ -124,7 +123,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         public async Task GetAllByOpTypeAsync_ValidOpType_Success()
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
-            mockedRepo.Setup(m => m.GetAllAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
+            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
             var cache = new InMemoryCache(mockedRepo.Object, _settings);
 
             var filtered = await cache.GetAllByOpTypePagedAsync("any", "OpType3", 1);
@@ -136,7 +135,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         public async Task GetAllByAssetAsync_ValidAsset_Success()
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
-            mockedRepo.Setup(m => m.GetAllAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
+            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
             var cache = new InMemoryCache(mockedRepo.Object, _settings);
 
             var filtered = await cache.GetAllByAssetPagedAsync("any", "RUB", 1);

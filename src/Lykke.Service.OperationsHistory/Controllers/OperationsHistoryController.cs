@@ -6,8 +6,6 @@ using Lykke.Service.OperationsHistory.Models;
 using Lykke.Service.OperationsHistory.Services;
 using Lykke.Service.OperationsHistory.Validation;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.OperationsHistory.Controllers
@@ -239,40 +237,40 @@ namespace Lykke.Service.OperationsHistory.Controllers
             return Ok(await _cache.GetAllByAssetAsync(clientId, assetId, top, skip));
         }
 
-        /// <summary>
-        /// Updates a record in a history by id provided with edit model provided
-        /// </summary>
-        /// <param name="editModel">
-        /// editModel.Id - Id of the record, 
-        /// editModel.BlockChainHash - new BlockChainHash, 
-        /// editModel.State - new State (valid values: InProcessOnchain(0), SettledOnchain(1), InProcessOffchain(2), SettledOffchain(3), SettledNoChain(4))</param>
-        /// <returns></returns>
-        [HttpPost("update")]
-        [SwaggerOperation("UpdateOperationsHistory")]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateOperationsHistory([FromBody] EditHistoryEntryModel editModel)
-        {
-            if (!ParametersValidator.ValidateId(editModel.Id))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(editModel.Id), IdRequired));
-            }
-            if (!ParametersValidator.ValidateState(editModel.State))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(editModel.State), StateOutOfRange));
-            }
+        ///// <summary>
+        ///// Updates a record in a history by id provided with edit model provided
+        ///// </summary>
+        ///// <param name="editModel">
+        ///// editModel.Id - Id of the record, 
+        ///// editModel.BlockChainHash - new BlockChainHash, 
+        ///// editModel.State - new State (valid values: InProcessOnchain(0), SettledOnchain(1), InProcessOffchain(2), SettledOffchain(3), SettledNoChain(4))</param>
+        ///// <returns></returns>
+        //[HttpPost("update")]
+        //[SwaggerOperation("UpdateOperationsHistory")]
+        //[ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        //[ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
+        //public async Task<IActionResult> UpdateOperationsHistory([FromBody] EditHistoryEntryModel editModel)
+        //{
+        //    if (!ParametersValidator.ValidateId(editModel.Id))
+        //    {
+        //        return BadRequest(ErrorResponse.Create(nameof(editModel.Id), IdRequired));
+        //    }
+        //    if (!ParametersValidator.ValidateState(editModel.State))
+        //    {
+        //        return BadRequest(ErrorResponse.Create(nameof(editModel.State), StateOutOfRange));
+        //    }
 
-            var recordById = await _repository.GetById(editModel.Id);
+        //    var recordById = await _repository.GetById(editModel.Id);
 
-            dynamic parsedData = JObject.Parse(recordById.CustomData);
+        //    dynamic parsedData = JObject.Parse(recordById.CustomData);
 
-            parsedData.State = editModel.State;
-            parsedData.BlockChainHash = editModel.BlockChainHash;
+        //    parsedData.State = editModel.State;
+        //    parsedData.BlockChainHash = editModel.BlockChainHash;
 
-            var updatedJson = parsedData.ToString(Formatting.None);
-            await _repository.UpdateAsync(editModel.Id, updatedJson);
+        //    var updatedJson = parsedData.ToString(Formatting.None);
+        //    await _repository.UpdateAsync(editModel.Id, updatedJson);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
     }
 }
