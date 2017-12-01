@@ -3,7 +3,7 @@
     public class RabbitMqSettings
     {
         public string ConnectionString { get; set; }
-        public string ExchangeOperationsHistory { get; set; }
-        public string QueueOperationsCacheUpdater { get; set; }
+        public string Exchange { get; set; }
+        public string Queue { get; set; }
     }
 }

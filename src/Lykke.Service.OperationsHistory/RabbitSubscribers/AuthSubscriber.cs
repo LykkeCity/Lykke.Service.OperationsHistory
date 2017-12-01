@@ -4,22 +4,21 @@ using Common.Log;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
-using Lykke.Service.OperationsRepository.Contract;
+using Lykke.Service.OperationsHistory.RabbitSubscribers.Contract;
+using Lykke.Service.OperationsHistory.Services;
 using System;
 using System.Threading.Tasks;
-using Lykke.Service.OperationsHistory.Core.Entities;
-using Lykke.Service.OperationsHistory.Services;
 
 namespace Lykke.Service.OperationsHistory.RabbitSubscribers
 {
-    public class OperationsHistorySubscriber : IStartable, IStopable
+    public class AuthSubscriber : IStartable, IStopable
     {
         private readonly ILog _log;
-        private RabbitMqSubscriber<OperationsHistoryMessage> _subscriber;
+        private RabbitMqSubscriber<ClientAuthInfo> _subscriber;
         private readonly RabbitMqSettings _rabbitSettings;
         private readonly IHistoryCache _historyCache;
 
-        public OperationsHistorySubscriber(ILog log, RabbitMqSettings rabbitSettings, IHistoryCache historyCache)
+        public AuthSubscriber(ILog log, RabbitMqSettings rabbitSettings, IHistoryCache historyCache)
         {
             _log = log;
             _rabbitSettings = rabbitSettings;
@@ -38,11 +37,11 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
 
             settings.MakeDurable();
 
-            _subscriber = new RabbitMqSubscriber<OperationsHistoryMessage>(settings,
+            _subscriber = new RabbitMqSubscriber<ClientAuthInfo>(settings,
                     new ResilientErrorHandlingStrategy(_log, settings,
                         retryTimeout: TimeSpan.FromSeconds(10),
                         next: new DeadQueueErrorHandlingStrategy(_log, settings)))
-                .SetMessageDeserializer(new JsonMessageDeserializer<OperationsHistoryMessage>())
+                .SetMessageDeserializer(new JsonMessageDeserializer<ClientAuthInfo>())
                 .SetMessageReadStrategy(new MessageReadQueueStrategy())
                 .Subscribe(ProcessMessageAsync)
                 .CreateDefaultBinding()
@@ -50,22 +49,9 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
                 .Start();
         }
 
-        private async Task ProcessMessageAsync(OperationsHistoryMessage arg)
+        private async Task ProcessMessageAsync(ClientAuthInfo arg)
         {
-            var newCacheEntry = new HistoryLogEntryEntity
-            {
-                Id = arg.Id,
-                ClientId = arg.ClientId,
-                CustomData = arg.Data,
-                DateTime = arg.DateTime,
-                OpType = arg.OpType,
-                Amount = arg.Amount,
-                Currency = arg.Currency
-            };
-
-            _historyCache.AddOrUpdate(newCacheEntry);
-
-            await Task.CompletedTask;
+            await _historyCache.WarmUp(arg.ClientId);
         }
 
         public void Dispose()

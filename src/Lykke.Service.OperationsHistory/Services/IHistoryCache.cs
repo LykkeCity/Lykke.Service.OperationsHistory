@@ -17,5 +17,6 @@ namespace Lykke.Service.OperationsHistory.Services
         Task<IEnumerable<HistoryEntryResponse>> GetAllByAssetAsync(string clientId, string assetId, int top, int skip);
 
         void AddOrUpdate(IHistoryLogEntryEntity item);
+        Task WarmUp(string clientId);
     }
 }

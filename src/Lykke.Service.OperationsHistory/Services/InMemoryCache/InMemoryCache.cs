@@ -151,18 +151,9 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
                 return cachedValue.Records.Values;
             }
 
-            var recordsFromStorage = await _repository.GetByClientIdAsync(clientId);
-            var newCacheObject = new CacheModel
-            {
-                Records = new ConcurrentDictionary<string, IHistoryLogEntryEntity>(
-                    recordsFromStorage
-                        .OrderBy(r => r.DateTime)
-                        .Select(x => new KeyValuePair<string, IHistoryLogEntryEntity>(x.Id, x)))
-            };
+            var newCachedValue = await Load(clientId);
 
-            var newCachedValue = _storage.AddOrUpdate(clientId, newCacheObject, (key, oldValue) => newCacheObject);
-
-            return newCachedValue.Records.Values;
+            return newCachedValue == null ? new List<IHistoryLogEntryEntity>() : newCachedValue.Records.Values;
         }
 
         public void AddOrUpdate(IHistoryLogEntryEntity item)
@@ -176,6 +167,32 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 
             _log?.WriteWarningAsync(nameof(InMemoryCache), nameof(AddOrUpdate), $"clientId = {item.ClientId}",
                 "No cache for clientId, new item will be ignored");
+        }
+
+        public async Task WarmUp(string clientId)
+        {
+            if (!_storage.ContainsKey(clientId))
+            {
+                await Load(clientId);
+            }
+        }
+
+        private async Task<CacheModel> Load(string clientId)
+        {
+            var records = await _repository.GetByClientIdAsync(clientId);
+
+            if (!records.Any())
+                return null;
+
+            var cacheModel = new CacheModel
+            {
+                Records = new ConcurrentDictionary<string, IHistoryLogEntryEntity>(
+                    records
+                        .OrderBy(r => r.DateTime)
+                        .Select(x => new KeyValuePair<string, IHistoryLogEntryEntity>(x.Id, x)))
+            };
+
+            return _storage.AddOrUpdate(clientId, cacheModel, (key, oldValue) => cacheModel);
         }
     }
 }

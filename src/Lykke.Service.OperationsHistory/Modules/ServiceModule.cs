@@ -66,7 +66,13 @@ namespace Lykke.Service.OperationsHistory.Modules
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.Rabbit));
+                .WithParameter(TypedParameter.From(_settings.RabbitOperations));
+
+            builder.RegisterType<AuthSubscriber>()
+                .As<IStartable>()
+                .AutoActivate()
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.RabbitRegistration));
         }
 
         private void RegisterApplicationServices(ContainerBuilder builder)

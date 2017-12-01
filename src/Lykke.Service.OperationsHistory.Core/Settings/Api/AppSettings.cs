@@ -9,7 +9,8 @@
     public class OperationsHistorySettings
     {
         public DbSettings Db { get; set; }
-        public RabbitMqSettings Rabbit { get; set; }
+        public RabbitMqSettings RabbitOperations { get; set; }
+        public RabbitMqSettings RabbitRegistration { get; set; }
 
         /// <summary>
         /// The maximum amout of values returned per 1 page
