@@ -9,10 +9,8 @@
     public class OperationsHistorySettings
     {
         public DbSettings Db { get; set; }
-        /// <summary>
-        /// Cache expiration in seconds
-        /// </summary>
-        public int CacheExpiration { get; set; }
+        public RabbitMqSettings Rabbit { get; set; }
+
         /// <summary>
         /// The maximum amout of values returned per 1 page
         /// </summary>

@@ -3,12 +3,11 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using AzureStorage.Tables;
 using Common.Log;
-using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using Lykke.Service.OperationsHistory.Mappers;
-using Lykke.Service.OperationsHistory.Models;
+using Lykke.Service.OperationsHistory.RabbitSubscribers;
 using Lykke.Service.OperationsHistory.Services;
 using Lykke.Service.OperationsHistory.Services.InMemoryCache;
 using Lykke.SettingsReader;
@@ -48,17 +47,40 @@ namespace Lykke.Service.OperationsHistory.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
-            builder.RegisterType<InMemoryCache>()
-                .As<IHistoryCache>()
-                .SingleInstance();
+            RegisterAzureRepositories(builder);
+
+            RegisterApplicationServices(builder);
+
+            RegisterRabbitMqSubscribers(builder);
 
             Mapper.Initialize(cfg => cfg.AddProfile(typeof(HistoryLogMapperProfile)));
 
+            builder.Populate(_services);
+        }
+
+        private void RegisterRabbitMqSubscribers(ContainerBuilder builder)
+        {
+            // TODO: You should register each subscriber in DI container as IStartable singleton and autoactivate it
+
+            builder.RegisterType<OperationsHistorySubscriber>()
+                .As<IStartable>()
+                .AutoActivate()
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.Rabbit));
+        }
+
+        private void RegisterApplicationServices(ContainerBuilder builder)
+        {
+            builder.RegisterType<InMemoryCache>()
+                .As<IHistoryCache>()
+                .SingleInstance();
+        }
+
+        private void RegisterAzureRepositories(ContainerBuilder builder)
+        {
             builder.RegisterInstance(new HistoryLogEntryRepository(AzureTableStorage<HistoryLogEntryEntity>.Create(
                     _dbSettings.ConnectionString(x => x.LogsConnString), "OperationsHistory", _log)))
                 .As<IHistoryLogEntryRepository>();
-
-            builder.Populate(_services);
         }
     }
 }

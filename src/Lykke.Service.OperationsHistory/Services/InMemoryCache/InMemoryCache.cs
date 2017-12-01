@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using AutoMapper;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using Lykke.Service.OperationsHistory.Models;
+using Common.Log;
 
 namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 {
@@ -13,14 +15,17 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
     {
         private readonly IHistoryLogEntryRepository _repository;
         private readonly OperationsHistorySettings _settings;
-        private readonly IDictionary<string, CacheModel> _storage;
+        private readonly ConcurrentDictionary<string, CacheModel> _storage;
+        private readonly ILog _log;
 
-        public InMemoryCache(IHistoryLogEntryRepository repository, OperationsHistorySettings setting)
+        public InMemoryCache(IHistoryLogEntryRepository repository, OperationsHistorySettings setting, ILog log)
         {
             _repository = repository;
             _settings = setting;
-            _storage = new Dictionary<string, CacheModel>();
+            _storage = new ConcurrentDictionary<string, CacheModel>();
+            _log = log;
         }
+
         public async Task<IEnumerable<HistoryEntryResponse>> GetAllPagedAsync(string clientId, int page)
         {
             return await InternalGetAllAsync(
@@ -141,32 +146,36 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 
         public async Task<IEnumerable<IHistoryLogEntryEntity>> GetRecordsByClient(string clientId)
         {
-            var needUpdateOrCreate = true;
             if (_storage.TryGetValue(clientId, out CacheModel cachedValue))
             {
-                needUpdateOrCreate = DateTime.UtcNow.Subtract(cachedValue.LastUpdated).TotalSeconds >= _settings.CacheExpiration;
+                return cachedValue.Records.Values;
             }
 
-            if (needUpdateOrCreate)
+            var recordsFromStorage = await _repository.GetByClientIdAsync(clientId);
+            var newCacheObject = new CacheModel
             {
-                var records = await _repository.GetByClientIdAsync(clientId);
-                var updatedObject = new CacheModel
-                {
-                    LastUpdated = DateTime.UtcNow,
-                    Records = records.OrderBy(r => r.DateTime).AsQueryable()
-                };
+                Records = new ConcurrentDictionary<string, IHistoryLogEntryEntity>(
+                    recordsFromStorage
+                        .OrderBy(r => r.DateTime)
+                        .Select(x => new KeyValuePair<string, IHistoryLogEntryEntity>(x.Id, x)))
+            };
 
-                if (_storage.Keys.Contains(clientId))
-                {
-                    _storage[clientId] = updatedObject;
-                }
-                else
-                {
-                    _storage.Add(clientId, updatedObject);
-                }
+            var newCachedValue = _storage.AddOrUpdate(clientId, newCacheObject, (key, oldValue) => newCacheObject);
+
+            return newCachedValue.Records.Values;
+        }
+
+        public void AddOrUpdate(IHistoryLogEntryEntity item)
+        {
+            if (_storage.TryGetValue(item.ClientId, out CacheModel cachedCollection))
+            {
+                cachedCollection.Records.AddOrUpdate(item.Id, item, (key, oldValue) => item);
+
+                return;
             }
 
-            return _storage[clientId].Records;
+            _log.WriteWarningAsync(nameof(InMemoryCache), nameof(AddOrUpdate), $"clientId = {item.ClientId}",
+                "No cache for clientId, new item will be ignored");
         }
     }
 }

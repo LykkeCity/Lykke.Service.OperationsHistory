@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Models;
 
 namespace Lykke.Service.OperationsHistory.Services
@@ -16,5 +15,7 @@ namespace Lykke.Service.OperationsHistory.Services
         Task<IEnumerable<HistoryEntryResponse>> GetAllByOpTypeAsync(string clientId, string operationType, int top, int skip);
         Task<IEnumerable<HistoryEntryResponse>> GetAllByAssetPagedAsync(string clientId, string assetId, int page);
         Task<IEnumerable<HistoryEntryResponse>> GetAllByAssetAsync(string clientId, string assetId, int top, int skip);
+
+        void AddOrUpdate(IHistoryLogEntryEntity item);
     }
 }
