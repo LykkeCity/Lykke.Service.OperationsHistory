@@ -174,7 +174,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
                 return;
             }
 
-            _log.WriteWarningAsync(nameof(InMemoryCache), nameof(AddOrUpdate), $"clientId = {item.ClientId}",
+            _log?.WriteWarningAsync(nameof(InMemoryCache), nameof(AddOrUpdate), $"clientId = {item.ClientId}",
                 "No cache for clientId, new item will be ignored");
         }
     }

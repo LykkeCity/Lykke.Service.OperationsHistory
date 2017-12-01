@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
-using Lykke.Service.OperationsHistory.Models;
 using Lykke.Service.OperationsHistory.Services.InMemoryCache;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -27,8 +25,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                 {
                     LogsConnString = string.Empty
                 },
-                ValuesPerPage = 3,
-                CacheExpiration = 10
+                ValuesPerPage = 3
             };
 
             Mapper.Initialize(cfg => cfg.AddProfile(typeof(TestMappingProfile)));
@@ -39,7 +36,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
             mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
-            var cache = new InMemoryCache(mockedRepo.Object, _settings);
+            var cache = new InMemoryCache(mockedRepo.Object, _settings, null);
 
             var recordsFromCache = await cache.GetRecordsByClient("any");
             var recordsFromRepo = await GetFakeRepositoryV1();
@@ -48,38 +45,11 @@ namespace Lykke.Service.OperationsHistory.Tests
         }
 
         [TestMethod]
-        public async Task GetRecordsByClient_CacheExpiration()
-        {
-            var pause = new ManualResetEvent(false);
-
-            // getting values from repository into cache
-            var mockedRepo = new Mock<IHistoryLogEntryRepository>();
-            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
-            var cache = new InMemoryCache(mockedRepo.Object, _settings);
-            var recordsFromCacheV1 = await cache.GetRecordsByClient("any");
-
-            Assert.AreEqual(3, recordsFromCacheV1.Count());
-
-            pause.WaitOne(_settings.CacheExpiration / 2 * 1000);
-
-            // still same values in the cache because cache not expired
-            recordsFromCacheV1 = await cache.GetRecordsByClient("any");
-            Assert.AreEqual(3, recordsFromCacheV1.Count());
-
-            pause.WaitOne(_settings.CacheExpiration / 2 * 1000 + 3000);
-
-            // cache expired so the new values must be fetched from the repository
-            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
-            var recordsFromCacheV2 = await cache.GetRecordsByClient("any");
-            Assert.AreEqual(4, recordsFromCacheV2.Count());
-        }
-
-        [TestMethod]
         public async Task GetAllAsync_CheckPagination_SinglePage()
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
             mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
-            var cache = new InMemoryCache(mockedRepo.Object, _settings);
+            var cache = new InMemoryCache(mockedRepo.Object, _settings, null);
 
             var pageOne = await cache.GetAllPagedAsync("any", 1);
             var pageTwo = await cache.GetAllPagedAsync("any", 2);
@@ -93,7 +63,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
             mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
-            var cache = new InMemoryCache(mockedRepo.Object, _settings);
+            var cache = new InMemoryCache(mockedRepo.Object, _settings, null);
 
             var pageOne = await cache.GetAllPagedAsync("any", 1);
             var pageTwo = await cache.GetAllPagedAsync("any", 2);
@@ -109,7 +79,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
             mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1());
-            var cache = new InMemoryCache(mockedRepo.Object, _settings);
+            var cache = new InMemoryCache(mockedRepo.Object, _settings, null);
 
             var filtered = await cache.GetAllPagedAsync("any", "CHF", "OpType2", 1);
 
@@ -121,7 +91,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
             mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
-            var cache = new InMemoryCache(mockedRepo.Object, _settings);
+            var cache = new InMemoryCache(mockedRepo.Object, _settings, null);
 
             var filtered = await cache.GetAllByOpTypePagedAsync("any", "OpType3", 1);
 
@@ -133,7 +103,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
             mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV2);
-            var cache = new InMemoryCache(mockedRepo.Object, _settings);
+            var cache = new InMemoryCache(mockedRepo.Object, _settings, null);
 
             var filtered = await cache.GetAllByAssetPagedAsync("any", "RUB", 1);
 
@@ -146,6 +116,7 @@ namespace Lykke.Service.OperationsHistory.Tests
             {
                 new HistoryLogEntryEntity
                 {
+                    Id = "216e9bce-34da-438d-ba36-97eafd8e54fe",
                     DateTime = DateTime.Now.AddDays(1),
                     Amount = 1,
                     ClientId = "1",
@@ -155,6 +126,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                 },
                 new HistoryLogEntryEntity
                 {
+                    Id = "f25b11c5-4126-40dc-8ec6-6b63bc9fdbdf",
                     DateTime = DateTime.Now.AddDays(2),
                     Amount = 2,
                     ClientId = "1",
@@ -164,6 +136,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                 },
                 new HistoryLogEntryEntity
                 {
+                    Id = "8d41fdb3-748c-4a9a-9897-5735cc31add8",
                     DateTime = DateTime.Now.AddDays(3),
                     Amount = 3,
                     ClientId = "1",
@@ -182,6 +155,7 @@ namespace Lykke.Service.OperationsHistory.Tests
             {
                 new HistoryLogEntryEntity
                 {
+                    Id = "7e719b22-546d-459d-9290-7bbbd655aaad",
                     DateTime = DateTime.Now.AddDays(1),
                     Amount = 1,
                     ClientId = "1",
@@ -191,6 +165,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                 },
                 new HistoryLogEntryEntity
                 {
+                    Id = "d8a04125-594b-43bb-86df-aeaa0386d794",
                     DateTime = DateTime.Now.AddDays(2),
                     Amount = 2,
                     ClientId = "1",
@@ -200,6 +175,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                 },
                 new HistoryLogEntryEntity
                 {
+                    Id = "fb79ead0-d026-48d8-8ae2-863c08910821",
                     DateTime = DateTime.Now.AddDays(3),
                     Amount = 3,
                     ClientId = "1",
@@ -209,6 +185,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                 },
                 new HistoryLogEntryEntity
                 {
+                    Id = "455b0957-58f6-441c-8791-51829007116c",
                     DateTime = DateTime.Now.AddDays(4),
                     Amount = 4,
                     ClientId = "1",
