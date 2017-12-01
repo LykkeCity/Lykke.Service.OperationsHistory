@@ -33,8 +33,7 @@ namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
             var settings = RabbitMqSubscriptionSettings.CreateForSubscriber(_rabbitSettings.ConnectionString,
                 _rabbitSettings.ExchangeOperationsHistory, _rabbitSettings.QueueOperationsLogUpdater);
 
-            // TODO: Make additional configuration, using fluent API here:
-            // ex: .MakeDurable()
+            settings.MakeDurable();
 
             _subscriber = new RabbitMqSubscriber<OperationsHistoryMessage>(settings,
                     new ResilientErrorHandlingStrategy(_log, settings,
