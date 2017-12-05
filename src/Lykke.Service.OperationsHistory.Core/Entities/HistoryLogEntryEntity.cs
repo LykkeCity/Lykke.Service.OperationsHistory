@@ -86,7 +86,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             public static HistoryLogEntryEntity Create(IHistoryLogEntryEntity src)
             {
                 var entity = CreateNew(src);
-                entity.PartitionKey = GeneratePartitionKey(src.ClientId);
+                entity.PartitionKey = GeneratePartitionKey(src.Currency);
                 entity.RowKey = GenerateRowKey(src.Id);
 
                 return entity;
