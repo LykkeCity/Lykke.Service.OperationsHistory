@@ -94,13 +94,13 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
         }
 
-        private async Task<IEnumerable<HistoryEntryResponse>> InternalGetAllAsync(string clientId, string assetId, string operationType,
+        private async Task<IEnumerable<HistoryEntryResponse>> InternalGetAllAsync(string clientId, string currency, string operationType,
             int top, int skip)
         {
             var clientRecords = await GetRecordsByClient(clientId);
 
             var pagedResult = clientRecords
-                .Where(r => r.AssetId == assetId && r.OpType == operationType)
+                .Where(r => r.Currency == currency && r.OpType == operationType)
                 .Skip(skip)
                 .Take(top)
                 .ToList();
@@ -121,12 +121,12 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
         }
 
-        private async Task<IEnumerable<HistoryEntryResponse>> InternalGetAllByAssetAsync(string clientId, string assetId, int top, int skip)
+        private async Task<IEnumerable<HistoryEntryResponse>> InternalGetAllByAssetAsync(string clientId, string currency, int top, int skip)
         {
             var clientRecords = await GetRecordsByClient(clientId);
 
             var pagedResult = clientRecords
-                .Where(r => r.AssetId == assetId)
+                .Where(r => r.Currency == currency)
                 .Skip(skip)
                 .Take(top)
                 .ToList();

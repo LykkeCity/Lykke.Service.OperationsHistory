@@ -14,7 +14,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             _tableStorage = table;
         }
 
-        public async Task AddAsync(DateTime dateTime, double amount, string assetId, string clientId, string customData, string opType, string id)
+        public async Task AddAsync(DateTime dateTime, double amount, string currency, string clientId, string customData, string opType, string id)
         {
             var newEntry = new HistoryLogEntryEntity
             {
@@ -24,7 +24,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
                 Id = id,
                 Amount = amount,
                 CustomData = customData,
-                AssetId = assetId
+                Currency = currency
             };
 
             await Task.WhenAll(

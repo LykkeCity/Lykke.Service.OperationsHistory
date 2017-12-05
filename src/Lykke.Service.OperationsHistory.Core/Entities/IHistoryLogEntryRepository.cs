@@ -6,7 +6,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
 {
     public interface IHistoryLogEntryRepository
     {
-        Task AddAsync(DateTime dateTime, double amount, string assetId, string clientId,
+        Task AddAsync(DateTime dateTime, double amount, string currency, string clientId,
             string customData, string opType, string id);
 
         Task<HistoryLogEntryEntity> UpdateAsync(string clientId, string id, string customData);

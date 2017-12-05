@@ -96,12 +96,12 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
         public string Id { get; set; }
         public DateTime DateTime { get; set; }
         public double Amount { get; set; }
-        public string AssetId { get; set; }
+        public string Currency { get; set; }
         public string OpType { get; set; }
         public string ClientId { get; set; }
         public string CustomData { get; set; }
 
-        private static HistoryLogEntryEntity CreateNew(DateTime dateTime, double amount, string assetId,
+        private static HistoryLogEntryEntity CreateNew(DateTime dateTime, double amount, string currency,
             string clientId, string customData, string opType, string id)
         {
             return new HistoryLogEntryEntity
@@ -109,7 +109,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
                 Id = id,
                 DateTime = dateTime,
                 Amount = amount,
-                AssetId = assetId,
+                Currency = currency,
                 ClientId = clientId,
                 CustomData = customData,
                 OpType = opType
@@ -118,7 +118,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
 
         private static HistoryLogEntryEntity CreateNew(IHistoryLogEntryEntity src)
         {
-            return CreateNew(src.DateTime, src.Amount, src.AssetId, src.ClientId, src.CustomData, src.OpType, src.Id);
+            return CreateNew(src.DateTime, src.Amount, src.Currency, src.ClientId, src.CustomData, src.OpType, src.Id);
         }
     }
 }
