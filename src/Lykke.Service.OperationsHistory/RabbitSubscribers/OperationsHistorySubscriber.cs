@@ -60,7 +60,7 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
                 DateTime = arg.DateTime,
                 OpType = arg.OpType,
                 Amount = arg.Amount,
-                Currency = arg.Currency
+                AssetId = arg.Currency
             };
 
             _historyCache.AddOrUpdate(newCacheEntry);

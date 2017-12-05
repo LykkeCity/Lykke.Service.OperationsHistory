@@ -120,7 +120,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                     DateTime = DateTime.Now.AddDays(1),
                     Amount = 1,
                     ClientId = "1",
-                    Currency = "USD",
+                    AssetId = "USD",
                     OpType = "OpType1",
                     CustomData = string.Empty
                 },
@@ -130,7 +130,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                     DateTime = DateTime.Now.AddDays(2),
                     Amount = 2,
                     ClientId = "1",
-                    Currency = "CHF",
+                    AssetId = "CHF",
                     OpType = "OpType2",
                     CustomData = string.Empty
                 },
@@ -140,7 +140,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                     DateTime = DateTime.Now.AddDays(3),
                     Amount = 3,
                     ClientId = "1",
-                    Currency = "EUR",
+                    AssetId = "EUR",
                     OpType = "OpType3",
                     CustomData = string.Empty
                 }
@@ -159,7 +159,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                     DateTime = DateTime.Now.AddDays(1),
                     Amount = 1,
                     ClientId = "1",
-                    Currency = "USD",
+                    AssetId = "USD",
                     OpType = "OpType1",
                     CustomData = string.Empty
                 },
@@ -169,7 +169,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                     DateTime = DateTime.Now.AddDays(2),
                     Amount = 2,
                     ClientId = "1",
-                    Currency = "CHF",
+                    AssetId = "CHF",
                     OpType = "OpType2",
                     CustomData = string.Empty
                 },
@@ -179,7 +179,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                     DateTime = DateTime.Now.AddDays(3),
                     Amount = 3,
                     ClientId = "1",
-                    Currency = "EUR",
+                    AssetId = "EUR",
                     OpType = "OpType3",
                     CustomData = string.Empty
                 },
@@ -189,7 +189,7 @@ namespace Lykke.Service.OperationsHistory.Tests
                     DateTime = DateTime.Now.AddDays(4),
                     Amount = 4,
                     ClientId = "1",
-                    Currency = "RUB",
+                    AssetId = "RUB",
                     OpType = "OpType3",
                     CustomData = string.Empty
                 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Threading.Tasks;
 using AzureStorage;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             _tableStorage = table;
         }
 
-        public async Task AddAsync(DateTime dateTime, double amount, string currency, string clientId, string customData, string opType, string id)
+        public async Task AddAsync(DateTime dateTime, double amount, string assetId, string clientId, string customData, string opType, string id)
         {
             var newEntry = new HistoryLogEntryEntity
             {
@@ -25,13 +24,14 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
                 Id = id,
                 Amount = amount,
                 CustomData = customData,
-                Currency = currency
+                AssetId = assetId
             };
 
             await Task.WhenAll(
                 _tableStorage.InsertAsync(HistoryLogEntryEntity.ByClientId.Create(newEntry)),
                 _tableStorage.InsertAsync(HistoryLogEntryEntity.ByDate.Create(newEntry)),
-                _tableStorage.InsertAsync(HistoryLogEntryEntity.ByOperation.Create(newEntry)));
+                _tableStorage.InsertAsync(HistoryLogEntryEntity.ByOperation.Create(newEntry)),
+                _tableStorage.InsertAsync(HistoryLogEntryEntity.ByAssetId.Create(newEntry)));
         }
 
         public async Task<HistoryLogEntryEntity> GetAsync(string clientId, string id)
@@ -66,6 +66,14 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
 
             await _tableStorage.MergeAsync(HistoryLogEntryEntity.ByOperation.GeneratePartitionKey(existingItem.OpType),
                 HistoryLogEntryEntity.ByOperation.GenerateRowKey(existingItem.Id),
+                item =>
+                {
+                    item.CustomData = customData;
+                    return item;
+                });
+
+            await _tableStorage.MergeAsync(HistoryLogEntryEntity.ByAssetId.GeneratePartitionKey(existingItem.OpType),
+                HistoryLogEntryEntity.ByAssetId.GenerateRowKey(existingItem.Id),
                 item =>
                 {
                     item.CustomData = customData;

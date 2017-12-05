@@ -100,7 +100,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             var clientRecords = await GetRecordsByClient(clientId);
 
             var pagedResult = clientRecords
-                .Where(r => r.Currency == assetId && r.OpType == operationType)
+                .Where(r => r.AssetId == assetId && r.OpType == operationType)
                 .Skip(skip)
                 .Take(top)
                 .ToList();
@@ -126,7 +126,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             var clientRecords = await GetRecordsByClient(clientId);
 
             var pagedResult = clientRecords
-                .Where(r => r.Currency == assetId)
+                .Where(r => r.AssetId == assetId)
                 .Skip(skip)
                 .Take(top)
                 .ToList();
