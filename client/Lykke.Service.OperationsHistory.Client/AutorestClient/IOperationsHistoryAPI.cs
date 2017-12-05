@@ -45,35 +45,11 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// </param>
         Task<HttpOperationResponse<IsAliveResponse>> IsAliveWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
-        /// <param name='page'>
-        /// </param>
         /// <param name='clientId'>
         /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> GetOperationsHistoryAllPagedWithHttpMessagesAsync(int page, string clientId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <param name='top'>
+        /// <param name='take'>
         /// </param>
         /// <param name='skip'>
-        /// </param>
-        /// <param name='clientId'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> GetOperationsHistoryAllWithHttpMessagesAsync(int top, int skip, string clientId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <param name='page'>
-        /// </param>
-        /// <param name='clientId'>
         /// </param>
         /// <param name='operationType'>
         /// </param>
@@ -85,85 +61,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetOperationsHistoryAllByOpTypeAndAssetPagedWithHttpMessagesAsync(int page, string clientId = default(string), string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <param name='top'>
-        /// </param>
-        /// <param name='skip'>
-        /// </param>
-        /// <param name='clientId'>
-        /// </param>
-        /// <param name='operationType'>
-        /// </param>
-        /// <param name='assetId'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> GetOperationsHistoryAllByOpTypeAndAssetWithHttpMessagesAsync(int top, int skip, string clientId = default(string), string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <param name='page'>
-        /// </param>
-        /// <param name='clientId'>
-        /// </param>
-        /// <param name='operationType'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> GetOperationsHistoryAllByOpTypePagedWithHttpMessagesAsync(int page, string clientId = default(string), string operationType = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <param name='top'>
-        /// </param>
-        /// <param name='skip'>
-        /// </param>
-        /// <param name='clientId'>
-        /// </param>
-        /// <param name='operationType'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> GetOperationsHistoryAllByOpTypeWithHttpMessagesAsync(int top, int skip, string clientId = default(string), string operationType = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <param name='page'>
-        /// </param>
-        /// <param name='clientId'>
-        /// </param>
-        /// <param name='assetId'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> GetOperationsHistoryAllByAssetPagedWithHttpMessagesAsync(int page, string clientId = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <param name='top'>
-        /// </param>
-        /// <param name='skip'>
-        /// </param>
-        /// <param name='clientId'>
-        /// </param>
-        /// <param name='assetId'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<object>> GetOperationsHistoryAllByAssetWithHttpMessagesAsync(int top, int skip, string clientId = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetWithHttpMessagesAsync(string clientId, int take, int skip, string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }

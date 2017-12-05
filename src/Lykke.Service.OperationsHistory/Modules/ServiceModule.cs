@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using AzureStorage.Tables;
 using Common.Log;
+using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
@@ -17,13 +18,13 @@ namespace Lykke.Service.OperationsHistory.Modules
 {
     public class ServiceModule : Module
     {
-        private readonly OperationsHistorySettings _settings;
+        private readonly ApiSettings _settings;
         private readonly IReloadingManager<DbSettings> _dbSettings;
         private readonly ILog _log;
         // NOTE: you can remove it if you don't need to use IServiceCollection extensions to register service specific dependencies
         private readonly IServiceCollection _services;
 
-        public ServiceModule(OperationsHistorySettings settings, IReloadingManager<DbSettings> dbSettings, ILog log)
+        public ServiceModule(ApiSettings settings, IReloadingManager<DbSettings> dbSettings, ILog log)
         {
             _settings = settings;
             _dbSettings = dbSettings;
@@ -34,9 +35,6 @@ namespace Lykke.Service.OperationsHistory.Modules
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance(_settings)
-                .SingleInstance();
-
             builder.RegisterInstance(_log)
                 .As<ILog>()
                 .SingleInstance();
@@ -53,6 +51,8 @@ namespace Lykke.Service.OperationsHistory.Modules
 
             RegisterRabbitMqSubscribers(builder);
 
+            RegisterServiceClients(builder);
+
             Mapper.Initialize(cfg => cfg.AddProfile(typeof(HistoryLogMapperProfile)));
 
             builder.Populate(_services);
@@ -66,18 +66,19 @@ namespace Lykke.Service.OperationsHistory.Modules
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.RabbitOperations));
+                .WithParameter(TypedParameter.From(_settings.OperationsHistoryService.RabbitOperations));
 
             builder.RegisterType<AuthSubscriber>()
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.RabbitRegistration));
+                .WithParameter(TypedParameter.From(_settings.OperationsHistoryService.RabbitRegistration));
         }
 
         private void RegisterApplicationServices(ContainerBuilder builder)
         {
             builder.RegisterType<InMemoryCache>()
+                .WithParameter(TypedParameter.From(_settings.OperationsHistoryService))
                 .As<IHistoryCache>()
                 .SingleInstance();
         }
@@ -87,6 +88,11 @@ namespace Lykke.Service.OperationsHistory.Modules
             builder.RegisterInstance(new HistoryLogEntryRepository(AzureTableStorage<HistoryLogEntryEntity>.Create(
                     _dbSettings.ConnectionString(x => x.LogsConnString), "OperationsHistory", _log)))
                 .As<IHistoryLogEntryRepository>();
+        }
+
+        private void RegisterServiceClients(ContainerBuilder builder)
+        {
+            builder.RegisterLykkeServiceClient(_settings.ClientAccountServiceClient.ServiceUrl);
         }
     }
 }

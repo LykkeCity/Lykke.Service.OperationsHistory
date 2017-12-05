@@ -1,9 +1,12 @@
-﻿namespace Lykke.Service.OperationsHistory.Core.Settings.Api
+﻿using Lykke.Service.ClientAccount.Client;
+
+namespace Lykke.Service.OperationsHistory.Core.Settings.Api
 {
     public class ApiSettings
     {
         public OperationsHistorySettings OperationsHistoryService { get; set; }
         public SlackNotificationsSettings SlackNotifications { get; set; }
+        public ClientAccountServiceClientSettings ClientAccountServiceClient { get; set; }
     }
 
     public class OperationsHistorySettings

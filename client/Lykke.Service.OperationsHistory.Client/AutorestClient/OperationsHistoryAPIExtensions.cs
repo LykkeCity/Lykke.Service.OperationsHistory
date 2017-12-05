@@ -46,89 +46,29 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='page'>
-            /// </param>
             /// <param name='clientId'>
             /// </param>
-            public static object GetOperationsHistoryAllPaged(this IOperationsHistoryAPI operations, int page, string clientId = default(string))
-            {
-                return operations.GetOperationsHistoryAllPagedAsync(page, clientId).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='page'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetOperationsHistoryAllPagedAsync(this IOperationsHistoryAPI operations, int page, string clientId = default(string), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetOperationsHistoryAllPagedWithHttpMessagesAsync(page, clientId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='top'>
+            /// <param name='take'>
             /// </param>
             /// <param name='skip'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            public static object GetOperationsHistoryAll(this IOperationsHistoryAPI operations, int top, int skip, string clientId = default(string))
-            {
-                return operations.GetOperationsHistoryAllAsync(top, skip, clientId).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='top'>
-            /// </param>
-            /// <param name='skip'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetOperationsHistoryAllAsync(this IOperationsHistoryAPI operations, int top, int skip, string clientId = default(string), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetOperationsHistoryAllWithHttpMessagesAsync(top, skip, clientId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='page'>
-            /// </param>
-            /// <param name='clientId'>
             /// </param>
             /// <param name='operationType'>
             /// </param>
             /// <param name='assetId'>
             /// </param>
-            public static object GetOperationsHistoryAllByOpTypeAndAssetPaged(this IOperationsHistoryAPI operations, int page, string clientId = default(string), string operationType = default(string), string assetId = default(string))
+            public static object Get(this IOperationsHistoryAPI operations, string clientId, int take, int skip, string operationType = default(string), string assetId = default(string))
             {
-                return operations.GetOperationsHistoryAllByOpTypeAndAssetPagedAsync(page, clientId, operationType, assetId).GetAwaiter().GetResult();
+                return operations.GetAsync(clientId, take, skip, operationType, assetId).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='page'>
-            /// </param>
             /// <param name='clientId'>
+            /// </param>
+            /// <param name='take'>
+            /// </param>
+            /// <param name='skip'>
             /// </param>
             /// <param name='operationType'>
             /// </param>
@@ -137,195 +77,9 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetOperationsHistoryAllByOpTypeAndAssetPagedAsync(this IOperationsHistoryAPI operations, int page, string clientId = default(string), string operationType = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetAsync(this IOperationsHistoryAPI operations, string clientId, int take, int skip, string operationType = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetOperationsHistoryAllByOpTypeAndAssetPagedWithHttpMessagesAsync(page, clientId, operationType, assetId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='top'>
-            /// </param>
-            /// <param name='skip'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='operationType'>
-            /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            public static object GetOperationsHistoryAllByOpTypeAndAsset(this IOperationsHistoryAPI operations, int top, int skip, string clientId = default(string), string operationType = default(string), string assetId = default(string))
-            {
-                return operations.GetOperationsHistoryAllByOpTypeAndAssetAsync(top, skip, clientId, operationType, assetId).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='top'>
-            /// </param>
-            /// <param name='skip'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='operationType'>
-            /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetOperationsHistoryAllByOpTypeAndAssetAsync(this IOperationsHistoryAPI operations, int top, int skip, string clientId = default(string), string operationType = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetOperationsHistoryAllByOpTypeAndAssetWithHttpMessagesAsync(top, skip, clientId, operationType, assetId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='page'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='operationType'>
-            /// </param>
-            public static object GetOperationsHistoryAllByOpTypePaged(this IOperationsHistoryAPI operations, int page, string clientId = default(string), string operationType = default(string))
-            {
-                return operations.GetOperationsHistoryAllByOpTypePagedAsync(page, clientId, operationType).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='page'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='operationType'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetOperationsHistoryAllByOpTypePagedAsync(this IOperationsHistoryAPI operations, int page, string clientId = default(string), string operationType = default(string), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetOperationsHistoryAllByOpTypePagedWithHttpMessagesAsync(page, clientId, operationType, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='top'>
-            /// </param>
-            /// <param name='skip'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='operationType'>
-            /// </param>
-            public static object GetOperationsHistoryAllByOpType(this IOperationsHistoryAPI operations, int top, int skip, string clientId = default(string), string operationType = default(string))
-            {
-                return operations.GetOperationsHistoryAllByOpTypeAsync(top, skip, clientId, operationType).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='top'>
-            /// </param>
-            /// <param name='skip'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='operationType'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetOperationsHistoryAllByOpTypeAsync(this IOperationsHistoryAPI operations, int top, int skip, string clientId = default(string), string operationType = default(string), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetOperationsHistoryAllByOpTypeWithHttpMessagesAsync(top, skip, clientId, operationType, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='page'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            public static object GetOperationsHistoryAllByAssetPaged(this IOperationsHistoryAPI operations, int page, string clientId = default(string), string assetId = default(string))
-            {
-                return operations.GetOperationsHistoryAllByAssetPagedAsync(page, clientId, assetId).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='page'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetOperationsHistoryAllByAssetPagedAsync(this IOperationsHistoryAPI operations, int page, string clientId = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetOperationsHistoryAllByAssetPagedWithHttpMessagesAsync(page, clientId, assetId, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='top'>
-            /// </param>
-            /// <param name='skip'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            public static object GetOperationsHistoryAllByAsset(this IOperationsHistoryAPI operations, int top, int skip, string clientId = default(string), string assetId = default(string))
-            {
-                return operations.GetOperationsHistoryAllByAssetAsync(top, skip, clientId, assetId).GetAwaiter().GetResult();
-            }
-
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='top'>
-            /// </param>
-            /// <param name='skip'>
-            /// </param>
-            /// <param name='clientId'>
-            /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<object> GetOperationsHistoryAllByAssetAsync(this IOperationsHistoryAPI operations, int top, int skip, string clientId = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.GetOperationsHistoryAllByAssetWithHttpMessagesAsync(top, skip, clientId, assetId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetWithHttpMessagesAsync(clientId, take, skip, operationType, assetId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

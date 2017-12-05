@@ -55,7 +55,7 @@ namespace Lykke.Service.OperationsHistory
                 var appSettings = Configuration.LoadSettings<ApiSettings>();
                 Log = CreateLogWithSlack(services, appSettings);
 
-                builder.RegisterModule(new ServiceModule(appSettings.CurrentValue.OperationsHistoryService,
+                builder.RegisterModule(new ServiceModule(appSettings.CurrentValue,
                     appSettings.Nested(x => x.OperationsHistoryService.Db), Log));
 
                 builder.Populate(services);
