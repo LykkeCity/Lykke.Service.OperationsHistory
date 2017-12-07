@@ -53,7 +53,7 @@ namespace Lykke.Service.OperationsHistory.Client
                 {
                     Error = new ErrorModel
                     {
-                        Messages = error.ErrorMessages
+                        Message = error.ErrorMessage
                     }
                 };
             }

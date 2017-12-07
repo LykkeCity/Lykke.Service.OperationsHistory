@@ -24,9 +24,10 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
         /// <summary>
         /// Initializes a new instance of the ErrorResponse class.
         /// </summary>
-        public ErrorResponse(IDictionary<string, IList<string>> errorMessages = default(IDictionary<string, IList<string>>))
+        public ErrorResponse(string errorMessage = default(string), IDictionary<string, IList<string>> modelErrors = default(IDictionary<string, IList<string>>))
         {
-            ErrorMessages = errorMessages;
+            ErrorMessage = errorMessage;
+            ModelErrors = modelErrors;
             CustomInit();
         }
 
@@ -37,8 +38,13 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "ErrorMessages")]
-        public IDictionary<string, IList<string>> ErrorMessages { get; private set; }
+        [JsonProperty(PropertyName = "ErrorMessage")]
+        public string ErrorMessage { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "ModelErrors")]
+        public IDictionary<string, IList<string>> ModelErrors { get; private set; }
 
     }
 }

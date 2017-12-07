@@ -51,15 +51,15 @@ namespace Lykke.Service.OperationsHistory.Controllers
         {
             if (!ParametersValidator.ValidateClientId(clientId))
             {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
+                return BadRequest(ErrorResponse.Create(ClientRequiredMsg));
             }
             if (!ParametersValidator.ValidateSkip(skip))
             {
-                return BadRequest(ErrorResponse.Create(nameof(skip), SkipOutOfRange));
+                return BadRequest(ErrorResponse.Create(SkipOutOfRange));
             }
             if (!ParametersValidator.ValidateTake(take))
             {
-                return BadRequest(ErrorResponse.Create(nameof(take), TakeOutOfRange));
+                return BadRequest(ErrorResponse.Create(TakeOutOfRange));
             }
 
             var client = await _clientAccountService.GetClientByIdAsync(clientId);
