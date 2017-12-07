@@ -76,9 +76,9 @@ namespace Lykke.Service.OperationsHistory.Client
             return PrepareClientResponse(response);
         }
 
-        public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime dateTo)
+        public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime dateTo, string operationType = null)
         {
-            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, dateTo);
+            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, dateTo, operationType);
 
             return PrepareClientResponse(response);
         }

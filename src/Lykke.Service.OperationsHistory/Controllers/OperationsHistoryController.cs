@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.ClientAccount.Client;
@@ -76,14 +77,19 @@ namespace Lykke.Service.OperationsHistory.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetByDates(
             [FromQuery] DateTime dateFrom, 
-            [FromQuery] DateTime dateTo)
+            [FromQuery] DateTime dateTo,
+            [FromQuery] string operationType)
         {
             if (dateFrom >= dateTo)
             {
                 return BadRequest(ErrorResponse.Create(DateRangeError));
             }
 
-            return Ok(await _repository.GetByDatesAsync(dateFrom, dateTo));
+            var dateRangeResult = await _repository.GetByDatesAsync(dateFrom, dateTo);
+
+            return Ok(string.IsNullOrWhiteSpace(operationType)
+                ? dateRangeResult
+                : dateRangeResult.Where(x => x.OpType == operationType));
         }
     }
 }

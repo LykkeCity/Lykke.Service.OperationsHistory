@@ -92,9 +92,11 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// </param>
             /// <param name='dateTo'>
             /// </param>
-            public static object GetByDates(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo)
+            /// <param name='operationType'>
+            /// </param>
+            public static object GetByDates(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, string operationType = default(string))
             {
-                return operations.GetByDatesAsync(dateFrom, dateTo).GetAwaiter().GetResult();
+                return operations.GetByDatesAsync(dateFrom, dateTo, operationType).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -104,12 +106,14 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// </param>
             /// <param name='dateTo'>
             /// </param>
+            /// <param name='operationType'>
+            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetByDatesAsync(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetByDatesAsync(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, string operationType = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetByDatesWithHttpMessagesAsync(dateFrom, dateTo, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetByDatesWithHttpMessagesAsync(dateFrom, dateTo, operationType, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

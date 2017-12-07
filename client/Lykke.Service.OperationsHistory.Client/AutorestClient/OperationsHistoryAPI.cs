@@ -441,6 +441,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// </param>
         /// <param name='dateTo'>
         /// </param>
+        /// <param name='operationType'>
+        /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
         /// </param>
@@ -456,7 +458,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetByDatesWithHttpMessagesAsync(System.DateTime dateFrom, System.DateTime dateTo, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetByDatesWithHttpMessagesAsync(System.DateTime dateFrom, System.DateTime dateTo, string operationType = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -467,6 +469,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("dateFrom", dateFrom);
                 tracingParameters.Add("dateTo", dateTo);
+                tracingParameters.Add("operationType", operationType);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "GetByDates", tracingParameters);
             }
@@ -476,6 +479,10 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             List<string> _queryParameters = new List<string>();
             _queryParameters.Add(string.Format("dateFrom={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(dateFrom, SerializationSettings).Trim('"'))));
             _queryParameters.Add(string.Format("dateTo={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(dateTo, SerializationSettings).Trim('"'))));
+            if (operationType != null)
+            {
+                _queryParameters.Add(string.Format("operationType={0}", System.Uri.EscapeDataString(operationType)));
+            }
             if (_queryParameters.Count > 0)
             {
                 _url += "?" + string.Join("&", _queryParameters);
