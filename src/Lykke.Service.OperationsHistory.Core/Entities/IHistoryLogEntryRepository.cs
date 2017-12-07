@@ -14,5 +14,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
         Task<HistoryLogEntryEntity> GetAsync(string clientId, string id);
 
         Task<IList<HistoryLogEntryEntity>> GetByClientIdAsync(string clientId);
+
+        Task<IList<HistoryLogEntryEntity>> GetByDatesAsync(DateTime dateFrom, DateTime dateTo);
     }
 }

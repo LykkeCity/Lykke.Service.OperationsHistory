@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AzureStorage;
 using System.Collections.Generic;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.OperationsHistory.Core.Entities
 {
@@ -89,6 +90,20 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
 
             await _tableStorage.GetDataByChunksAsync(HistoryLogEntryEntity.ByClientId.GeneratePartitionKey(clientId),
                 chunk => data.AddRange(chunk));
+
+            return data;
+        }
+
+        public async Task<IList<HistoryLogEntryEntity>> GetByDatesAsync(DateTime dateFrom, DateTime dateTo)
+        {
+            var rangeQuery = AzureStorageUtils.QueryGenerator<HistoryLogEntryEntity>.PartitionKeyOnly.BetweenQuery(
+                    HistoryLogEntryEntity.ByDate.GeneratePartitionKey(dateFrom), 
+                    HistoryLogEntryEntity.ByDate.GeneratePartitionKey(dateTo.AddDays(-1)),
+                    ToIntervalOption.IncludeTo);
+
+            var data = new List<HistoryLogEntryEntity>();
+
+            await _tableStorage.ExecuteAsync(rangeQuery, chunk => data.AddRange(chunk));
 
             return data;
         }

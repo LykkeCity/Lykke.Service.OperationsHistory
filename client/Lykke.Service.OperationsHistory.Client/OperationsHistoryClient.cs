@@ -42,13 +42,6 @@ namespace Lykke.Service.OperationsHistory.Client
             return mapperConfiguration.CreateMapper();
         }
 
-        public async Task<OperationsHistoryResponse> Get(string clientId, string operationType, string assetId, int take, int skip)
-        {
-            var response = await _apiClient.GetWithHttpMessagesAsync(clientId, take, skip, operationType, assetId);
-
-            return PrepareClientResponse(response);
-        }
-
         private OperationsHistoryResponse PrepareClientResponse(HttpOperationResponse<object> serviceResponse)
         {
             var error = serviceResponse.Body as ErrorResponse;
@@ -74,6 +67,20 @@ namespace Lykke.Service.OperationsHistory.Client
             }
 
             throw new ArgumentException("Unknown response object");
+        }
+
+        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, string operationType, string assetId, int take, int skip)
+        {
+            var response = await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId);
+
+            return PrepareClientResponse(response);
+        }
+
+        public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime dateTo)
+        {
+            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, dateTo);
+
+            return PrepareClientResponse(response);
         }
     }
 }

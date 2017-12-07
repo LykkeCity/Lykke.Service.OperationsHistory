@@ -56,9 +56,9 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// </param>
             /// <param name='assetId'>
             /// </param>
-            public static object Get(this IOperationsHistoryAPI operations, string clientId, int take, int skip, string operationType = default(string), string assetId = default(string))
+            public static object GetByClientId(this IOperationsHistoryAPI operations, string clientId, int take, int skip, string operationType = default(string), string assetId = default(string))
             {
-                return operations.GetAsync(clientId, take, skip, operationType, assetId).GetAwaiter().GetResult();
+                return operations.GetByClientIdAsync(clientId, take, skip, operationType, assetId).GetAwaiter().GetResult();
             }
 
             /// <param name='operations'>
@@ -77,9 +77,39 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetAsync(this IOperationsHistoryAPI operations, string clientId, int take, int skip, string operationType = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetByClientIdAsync(this IOperationsHistoryAPI operations, string clientId, int take, int skip, string operationType = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetWithHttpMessagesAsync(clientId, take, skip, operationType, assetId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='dateFrom'>
+            /// </param>
+            /// <param name='dateTo'>
+            /// </param>
+            public static object GetByDates(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo)
+            {
+                return operations.GetByDatesAsync(dateFrom, dateTo).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='dateFrom'>
+            /// </param>
+            /// <param name='dateTo'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> GetByDatesAsync(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetByDatesWithHttpMessagesAsync(dateFrom, dateTo, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

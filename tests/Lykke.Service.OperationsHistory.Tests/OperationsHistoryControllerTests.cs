@@ -31,7 +31,7 @@ namespace Lykke.Service.OperationsHistory.Tests
         public async Task GetOperationsHistory_ClientIsNullOrEmpty_BadRequest()
         {
             var controller = new OperationsHistoryController(_cache, _repo, _clientAccountService);
-            var response = await controller.Get("", null, null, 1, 1);
+            var response = await controller.GetByClientId("", null, null, 1, 1);
 
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
 

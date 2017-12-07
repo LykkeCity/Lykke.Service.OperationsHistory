@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Lykke.Service.ClientAccount.Client;
@@ -20,13 +21,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         #region error messages
         public static readonly string ClientRequiredMsg = "Client id is required";
         public static readonly string ClientNotExists = "Client doesn't exist";
-        public static readonly string OpTypeRequired = "Operation type parameter is required";
-        public static readonly string AssetRequired = "Asset id parameter is required";
-        public static readonly string IdRequired = "Id parameter is required";
-        public static readonly string PageOutOfRange = "Out of range value";
         public static readonly string TakeOutOfRange = "Top parameter is out of range. Maximum value is 1000.";
-        public static readonly string StateOutOfRange = "State parameter is out of range [0; 4]";
         public static readonly string SkipOutOfRange = "Skip parameter is out of range (should be >= 0).";
+        public static readonly string DateRangeError = "[dateFrom] can't be greater than or equal to [dateTo]";
         #endregion
 
         private readonly IHistoryCache _cache;
@@ -41,11 +38,10 @@ namespace Lykke.Service.OperationsHistory.Controllers
         }
 
         [HttpGet("{clientId}")]
-        [SwaggerOperation("Get")]
+        [SwaggerOperation("GetByClientId")]
         [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.InternalServerError)]
-        public async Task<IActionResult> Get(
+        public async Task<IActionResult> GetByClientId(
             string clientId, 
             [FromQuery] string operationType,
             [FromQuery] string assetId, 
@@ -72,6 +68,22 @@ namespace Lykke.Service.OperationsHistory.Controllers
             }
 
             return Ok(await _cache.GetAsync(clientId, operationType, assetId, take, skip));
+        }
+
+        [HttpGet]
+        [SwaggerOperation("GetByDates")]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetByDates(
+            [FromQuery] DateTime dateFrom, 
+            [FromQuery] DateTime dateTo)
+        {
+            if (dateFrom >= dateTo)
+            {
+                return BadRequest(ErrorResponse.Create(DateRangeError));
+            }
+
+            return Ok(await _repository.GetByDatesAsync(dateFrom, dateTo));
         }
     }
 }

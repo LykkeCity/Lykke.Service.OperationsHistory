@@ -61,7 +61,19 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetWithHttpMessagesAsync(string clientId, int take, int skip, string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int take, int skip, string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='dateFrom'>
+        /// </param>
+        /// <param name='dateTo'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<object>> GetByDatesWithHttpMessagesAsync(System.DateTime dateFrom, System.DateTime dateTo, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }
