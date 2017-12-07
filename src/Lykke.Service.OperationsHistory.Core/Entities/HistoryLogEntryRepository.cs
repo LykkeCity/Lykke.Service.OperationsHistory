@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AzureStorage;
 using System.Collections.Generic;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.OperationsHistory.Core.Entities
 {
@@ -29,10 +28,10 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             };
 
             await Task.WhenAll(
-                _tableStorage.InsertAsync(HistoryLogEntryEntity.ByClientId.Create(newEntry)),
-                _tableStorage.InsertAsync(HistoryLogEntryEntity.ByDate.Create(newEntry)),
-                _tableStorage.InsertAsync(HistoryLogEntryEntity.ByOperation.Create(newEntry)),
-                _tableStorage.InsertAsync(HistoryLogEntryEntity.ByAssetId.Create(newEntry)));
+                _tableStorage.InsertOrMergeAsync(HistoryLogEntryEntity.ByClientId.Create(newEntry)),
+                _tableStorage.InsertOrMergeAsync(HistoryLogEntryEntity.ByDate.Create(newEntry)),
+                _tableStorage.InsertOrMergeAsync(HistoryLogEntryEntity.ByOperation.Create(newEntry)),
+                _tableStorage.InsertOrMergeAsync(HistoryLogEntryEntity.ByAssetId.Create(newEntry)));
         }
 
         public async Task<HistoryLogEntryEntity> GetAsync(string clientId, string id)
