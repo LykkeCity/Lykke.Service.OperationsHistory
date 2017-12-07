@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Lykke.Service.ClientAccount.Client;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Lykke.Service.OperationsHistory.Controllers;
@@ -35,17 +33,18 @@ namespace Lykke.Service.OperationsHistory.Tests
 
             Assert.IsInstanceOfType(response, typeof(BadRequestObjectResult));
 
-            var messages = GetErrorMessages(response, "clientId");
-            var contains = messages?.Contains(OperationsHistoryController.ClientRequiredMsg);
-            Assert.IsTrue(contains ?? false);
+            var message = GetErrorMessage(response, "clientId");
+            var contains = message == OperationsHistoryController.ClientRequiredMsg;
+
+            Assert.IsTrue(contains);
         }
 
-        private static IEnumerable<string> GetErrorMessages(IActionResult response, string key)
+        private static string GetErrorMessage(IActionResult response, string key)
         {
             var badRequest = response as BadRequestObjectResult;
             var errorResponse = badRequest?.Value as ErrorResponse;
 
-            return errorResponse?.ErrorMessages[key];
+            return errorResponse?.ErrorMessage;
         }
     }
 }
