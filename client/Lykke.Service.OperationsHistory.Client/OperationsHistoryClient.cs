@@ -31,71 +31,6 @@ namespace Lykke.Service.OperationsHistory.Client
             _apiClient = null;
         }
 
-        public async Task<OperationsHistoryResponse> AllAsync(string clientId, int top, int skip)
-        {
-            var response = await _apiClient.GetOperationsHistoryAllWithHttpMessagesAsync(clientId, top, skip);
-
-            return PrepareClientResponse(response);
-        }
-
-        public async Task<OperationsHistoryResponse> AllAsync(string clientId, int page)
-        {
-            var response = await _apiClient.GetOperationsHistoryAllPagedWithHttpMessagesAsync(clientId, page);
-
-            return PrepareClientResponse(response);
-        }
-
-        public async Task<OperationsHistoryResponse> ByOperationAsync(string clientId, string operationType, int top, int skip)
-        {
-            var response =
-                await _apiClient.GetOperationsHistoryAllByOpTypeWithHttpMessagesAsync(clientId, operationType, top,
-                    skip);
-
-            return PrepareClientResponse(response);
-        }
-
-        public async Task<OperationsHistoryResponse> ByOperationAsync(string clientId, string operationType, int page)
-        {
-            var response =
-                await _apiClient.GetOperationsHistoryAllByOpTypePagedWithHttpMessagesAsync(clientId, operationType,
-                    page);
-
-            return PrepareClientResponse(response);
-        }
-
-        public async Task<OperationsHistoryResponse> ByOperationAndAssetAsync(string clientId, string operationType, string assetId, int top, int skip)
-        {
-            var response =
-                await _apiClient.GetOperationsHistoryAllByOpTypeAndAssetWithHttpMessagesAsync(clientId, operationType,
-                    assetId, top, skip);
-
-            return PrepareClientResponse(response);
-        }
-
-        public async Task<OperationsHistoryResponse> ByOperationAndAssetAsync(string clientId, string operationType, string assetId, int page)
-        {
-            var response =
-                await _apiClient.GetOperationsHistoryAllByOpTypeAndAssetPagedWithHttpMessagesAsync(clientId,
-                    operationType, assetId, page);
-
-            return PrepareClientResponse(response);
-        }
-
-        public async Task<OperationsHistoryResponse> ByAssetAsync(string clientId, string assetId, int top, int skip)
-        {
-            var response = await _apiClient.GetOperationsHistoryAllByAssetWithHttpMessagesAsync(clientId, assetId, top, skip);
-
-            return PrepareClientResponse(response);
-        }
-
-        public async Task<OperationsHistoryResponse> ByAssetAsync(string clientId, string assetId, int page)
-        {
-            var response =
-                await _apiClient.GetOperationsHistoryAllByAssetPagedWithHttpMessagesAsync(clientId, assetId, page);
-
-            return PrepareClientResponse(response);
-        }
-
         public static IMapper CreateMapper()
         {
             var mapperConfiguration = new MapperConfiguration(cfg =>
@@ -118,7 +53,7 @@ namespace Lykke.Service.OperationsHistory.Client
                 {
                     Error = new ErrorModel
                     {
-                        Messages = error.ErrorMessages
+                        Message = error.ErrorMessage
                     }
                 };
             }
@@ -132,6 +67,25 @@ namespace Lykke.Service.OperationsHistory.Client
             }
 
             throw new ArgumentException("Unknown response object");
+        }
+
+        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, string operationType = null, 
+            string assetId = null, int take = 100, int skip = 0)
+        {
+            var response =
+                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId);
+
+            return PrepareClientResponse(response);
+        }
+
+        public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime? dateTo,
+            string operationType = null)
+        {
+            var actualDateTo = dateTo ?? DateTime.UtcNow;
+
+            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, actualDateTo, operationType);
+
+            return PrepareClientResponse(response);
         }
     }
 }

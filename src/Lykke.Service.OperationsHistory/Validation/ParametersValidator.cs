@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lykke.Service.OperationsHistory.Validation
+﻿namespace Lykke.Service.OperationsHistory.Validation
 {
     public static class ParametersValidator
     {
@@ -26,7 +22,7 @@ namespace Lykke.Service.OperationsHistory.Validation
             return !string.IsNullOrWhiteSpace(assetId);
         }
 
-        public static bool ValidateTop(int top)
+        public static bool ValidateTake(int top)
         {
             return (top <= 1000) && (top >= 1);
         }

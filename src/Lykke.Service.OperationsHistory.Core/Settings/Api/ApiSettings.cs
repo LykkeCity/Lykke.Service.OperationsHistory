@@ -1,18 +1,20 @@
-﻿namespace Lykke.Service.OperationsHistory.Core.Settings.Api
+﻿using Lykke.Service.ClientAccount.Client;
+
+namespace Lykke.Service.OperationsHistory.Core.Settings.Api
 {
     public class ApiSettings
     {
         public OperationsHistorySettings OperationsHistoryService { get; set; }
         public SlackNotificationsSettings SlackNotifications { get; set; }
+        public ClientAccountServiceClientSettings ClientAccountServiceClient { get; set; }
     }
 
     public class OperationsHistorySettings
     {
         public DbSettings Db { get; set; }
-        /// <summary>
-        /// Cache expiration in seconds
-        /// </summary>
-        public int CacheExpiration { get; set; }
+        public RabbitMqSettings RabbitOperations { get; set; }
+        public RabbitMqSettings RabbitRegistration { get; set; }
+
         /// <summary>
         /// The maximum amout of values returned per 1 page
         /// </summary>

@@ -1,7 +1,7 @@
 ﻿using System;
 using Lykke.Service.OperationsHistory.Models;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.SwaggerGen.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.OperationsHistory.Controllers
 {
