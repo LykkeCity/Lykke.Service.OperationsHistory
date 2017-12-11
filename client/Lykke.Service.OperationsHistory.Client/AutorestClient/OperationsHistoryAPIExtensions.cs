@@ -119,5 +119,47 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 }
             }
 
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='walletId'>
+            /// </param>
+            /// <param name='take'>
+            /// </param>
+            /// <param name='skip'>
+            /// </param>
+            /// <param name='operationType'>
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            public static object GetByWalletId(this IOperationsHistoryAPI operations, string walletId, int take, int skip, string operationType = default(string), string assetId = default(string))
+            {
+                return operations.GetByWalletIdAsync(walletId, take, skip, operationType, assetId).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='walletId'>
+            /// </param>
+            /// <param name='take'>
+            /// </param>
+            /// <param name='skip'>
+            /// </param>
+            /// <param name='operationType'>
+            /// </param>
+            /// <param name='assetId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<object> GetByWalletIdAsync(this IOperationsHistoryAPI operations, string walletId, int take, int skip, string operationType = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
     }
 }

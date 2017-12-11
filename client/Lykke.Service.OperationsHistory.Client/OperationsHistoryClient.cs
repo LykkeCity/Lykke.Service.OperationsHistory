@@ -35,17 +35,18 @@ namespace Lykke.Service.OperationsHistory.Client
         {
             var mapperConfiguration = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<HistoryEntryResponse, HistoryRecordModel>()
-                    .ForMember(dest => dest.ClientId, opt => opt.Ignore());
+                cfg.CreateMap<HistoryEntryWalletResponse, HistoryRecordModel>()
+                    .ForMember(dest => dest.WalletId, opt => opt.Ignore());
+                cfg.CreateMap<HistoryEntryClientResponse, HistoryRecordModel>();
             });
 
             return mapperConfiguration.CreateMapper();
         }
 
-        private OperationsHistoryResponse PrepareClientResponse(HttpOperationResponse<object> serviceResponse)
+        private OperationsHistoryResponse PrepareResponse<T>(HttpOperationResponse<object> serviceResponse)
         {
             var error = serviceResponse.Body as ErrorResponse;
-            var result = serviceResponse.Body as IList<HistoryEntryResponse>;
+            var result = serviceResponse.Body as IList<T>;
 
             if (error != null)
             {
@@ -75,7 +76,7 @@ namespace Lykke.Service.OperationsHistory.Client
             var response =
                 await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId);
 
-            return PrepareClientResponse(response);
+            return PrepareResponse<HistoryEntryClientResponse>(response);
         }
 
         public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime? dateTo,
@@ -85,7 +86,15 @@ namespace Lykke.Service.OperationsHistory.Client
 
             var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, actualDateTo, operationType);
 
-            return PrepareClientResponse(response);
+            return PrepareResponse<HistoryEntryWalletResponse>(response);
+        }
+
+        public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, string operationType = null, string assetId = null, int take = 100, int skip = 0)
+        {
+            var response =
+                await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId);
+
+            return PrepareResponse<HistoryEntryWalletResponse>(response);
         }
     }
 }
