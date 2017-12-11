@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Runtime.Loader;
-using System.Threading;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Lykke.Service.OperationsHistory

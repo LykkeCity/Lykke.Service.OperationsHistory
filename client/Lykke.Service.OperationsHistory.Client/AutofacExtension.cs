@@ -16,5 +16,11 @@ namespace Lykke.Service.OperationsHistory.Client
 
             builder.RegisterInstance(new OperationsHistoryClient(serviceUrl, log)).As<IOperationsHistoryClient>().SingleInstance();
         }
+
+        public static void RegisterOperationsHistoryClient(this ContainerBuilder builder,
+            OperationsHistoryServiceClientSettings settings, ILog log)
+        {
+            builder.RegisterOperationsHistoryClient(settings.ServiceUrl, log);
+        }
     }
 }

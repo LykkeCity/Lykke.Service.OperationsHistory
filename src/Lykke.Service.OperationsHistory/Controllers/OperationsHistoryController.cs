@@ -1,14 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Models;
 using Lykke.Service.OperationsHistory.Services;
 using Lykke.Service.OperationsHistory.Validation;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Swashbuckle.SwaggerGen.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Lykke.Service.OperationsHistory.Controllers
 {
@@ -20,259 +21,75 @@ namespace Lykke.Service.OperationsHistory.Controllers
     {
         #region error messages
         public static readonly string ClientRequiredMsg = "Client id is required";
-        public static readonly string OpTypeRequired = "Operation type parameter is required";
-        public static readonly string AssetRequired = "Asset id parameter is required";
-        public static readonly string IdRequired = "Id parameter is required";
-        public static readonly string PageOutOfRange = "Out of range value";
-        public static readonly string TopOutOfRange = "Top parameter is out of range. Maximum value is 1000.";
-        public static readonly string StateOutOfRange = "State parameter is out of range [0; 4]";
+        public static readonly string ClientNotExists = "Client doesn't exist";
+        public static readonly string TakeOutOfRange = "Top parameter is out of range. Maximum value is 1000.";
         public static readonly string SkipOutOfRange = "Skip parameter is out of range (should be >= 0).";
+        public static readonly string DateRangeError = "[dateFrom] can't be greater than or equal to [dateTo]";
         #endregion
 
         private readonly IHistoryCache _cache;
         private readonly IHistoryLogEntryRepository _repository;
+        private readonly IClientAccountClient _clientAccountService;
 
-        public OperationsHistoryController(IHistoryCache cache, IHistoryLogEntryRepository repository)
+        public OperationsHistoryController(IHistoryCache cache, IHistoryLogEntryRepository repository, IClientAccountClient clientAccountService)
         {
             _cache = cache;
             _repository = repository;
+            _clientAccountService = clientAccountService;
         }
 
-        [HttpGet("allPaged")]
-        [SwaggerOperation("GetOperationsHistoryAllPaged")]
-        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetOperationsHistory([FromQuery]string clientId, [FromQuery]int page = 1)
-        {
-            if (!ParametersValidator.ValidateClientId(clientId))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
-            }
-            if (!ParametersValidator.ValidatePageIndex(page))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
-            }
-
-            return Ok(await _cache.GetAllPagedAsync(clientId, page));
-        }
-
-        [HttpGet("all")]
-        [SwaggerOperation("GetOperationsHistoryAll")]
-        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetOperationsHistory([FromQuery] string clientId, [FromQuery] int top,
+        [HttpGet("{clientId}")]
+        [SwaggerOperation("GetByClientId")]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetByClientId(
+            string clientId, 
+            [FromQuery] string operationType,
+            [FromQuery] string assetId, 
+            [FromQuery] int take, 
             [FromQuery] int skip)
         {
             if (!ParametersValidator.ValidateClientId(clientId))
             {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
-            }
-            if (!ParametersValidator.ValidateTop(top))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(top), TopOutOfRange));
+                return BadRequest(ErrorResponse.Create(ClientRequiredMsg));
             }
             if (!ParametersValidator.ValidateSkip(skip))
             {
-                return BadRequest(ErrorResponse.Create(nameof(skip), SkipOutOfRange));
+                return BadRequest(ErrorResponse.Create(SkipOutOfRange));
+            }
+            if (!ParametersValidator.ValidateTake(take))
+            {
+                return BadRequest(ErrorResponse.Create(TakeOutOfRange));
             }
 
-            return Ok(await _cache.GetAllAsync(clientId, top, skip));
+            var client = await _clientAccountService.GetClientByIdAsync(clientId);
+            if (client == null)
+            {
+                return BadRequest(ErrorResponse.Create(ClientNotExists));
+            }
+
+            return Ok(await _cache.GetAsync(clientId, operationType, assetId, take, skip));
         }
 
-        [HttpGet("allByOpTypeAndAssetPaged")]
-        [SwaggerOperation("GetOperationsHistoryAllByOpTypeAndAssetPaged")]
+        [HttpGet]
+        [SwaggerOperation("GetByDates")]
         [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetOperationsHistory([FromQuery] string clientId,
-            [FromQuery] string operationType, [FromQuery] string assetId,
-            [FromQuery] int page = 1)
+        public async Task<IActionResult> GetByDates(
+            [FromQuery] DateTime dateFrom, 
+            [FromQuery] DateTime dateTo,
+            [FromQuery] string operationType)
         {
-            if (!ParametersValidator.ValidateClientId(clientId))
+            if (dateFrom >= dateTo)
             {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
-            }
-            if (!ParametersValidator.ValidateOperationType(operationType))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(operationType), OpTypeRequired));
-            }
-            if (!ParametersValidator.ValidateAssetId(assetId))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(assetId), AssetRequired));
-            }
-            if (!ParametersValidator.ValidatePageIndex(page))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
+                return BadRequest(ErrorResponse.Create(DateRangeError));
             }
 
-            return Ok(await _cache.GetAllPagedAsync(clientId, assetId, operationType, page));
-        }
+            var dateRangeResult = (await _repository.GetByDatesAsync(dateFrom, dateTo)).OrderByDescending(r => r.DateTime);
 
-        [HttpGet("allByOpTypeAndAsset")]
-        [SwaggerOperation("GetOperationsHistoryAllByOpTypeAndAsset")]
-        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetOperationsHistory([FromQuery] string clientId,
-            [FromQuery] string operationType, [FromQuery] string assetId,
-            [FromQuery] int top, [FromQuery] int skip)
-        {
-            if (!ParametersValidator.ValidateClientId(clientId))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
-            }
-            if (!ParametersValidator.ValidateOperationType(operationType))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(operationType), OpTypeRequired));
-            }
-            if (!ParametersValidator.ValidateAssetId(assetId))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(assetId), AssetRequired));
-            }
-            if (!ParametersValidator.ValidateSkip(skip))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(skip), SkipOutOfRange));
-            }
-            if (!ParametersValidator.ValidateTop(top))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(top), TopOutOfRange));
-            }
-
-            return Ok(await _cache.GetAllAsync(clientId, assetId, operationType, top, skip));
-        }
-
-        [HttpGet("allByOpTypePaged")]
-        [SwaggerOperation("GetOperationsHistoryAllByOpTypePaged")]
-        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetOperationsHistoryByOpType([FromQuery] string clientId, 
-            [FromQuery] string operationType, [FromQuery] int page = 1)
-        {
-            if (!ParametersValidator.ValidateClientId(clientId))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
-            }
-            if (!ParametersValidator.ValidateOperationType(operationType))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(operationType), OpTypeRequired));
-            }
-            if (!ParametersValidator.ValidatePageIndex(page))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
-            }
-
-            return Ok(await _cache.GetAllByOpTypePagedAsync(clientId, operationType, page));
-        }
-
-        [HttpGet("allByOpType")]
-        [SwaggerOperation("GetOperationsHistoryAllByOpType")]
-        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetOperationsHistoryByOpType([FromQuery] string clientId,
-            [FromQuery] string operationType, [FromQuery] int top, [FromQuery] int skip)
-        {
-            if (!ParametersValidator.ValidateClientId(clientId))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
-            }
-            if (!ParametersValidator.ValidateOperationType(operationType))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(operationType), OpTypeRequired));
-            }
-            if (!ParametersValidator.ValidateSkip(skip))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(skip), SkipOutOfRange));
-            }
-            if (!ParametersValidator.ValidateTop(top))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(top), TopOutOfRange));
-            }
-
-            return Ok(await _cache.GetAllByOpTypeAsync(clientId, operationType, top, skip));
-        }
-
-        [HttpGet("allByAssetPaged")]
-        [SwaggerOperation("GetOperationsHistoryAllByAssetPaged")]
-        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetOperationsHistoryByAsset([FromQuery] string clientId,
-            [FromQuery] string assetId, [FromQuery] int page = 1)
-        {
-            if (!ParametersValidator.ValidateClientId(clientId))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
-            }
-            if (!ParametersValidator.ValidateAssetId(assetId))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(assetId), AssetRequired));
-            }
-            if (!ParametersValidator.ValidatePageIndex(page))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(page), PageOutOfRange));
-            }
-
-            return Ok(await _cache.GetAllByAssetPagedAsync(clientId, assetId, page));
-        }
-
-        [HttpGet("allByAsset")]
-        [SwaggerOperation("GetOperationsHistoryAllByAsset")]
-        [ProducesResponseType(typeof(IEnumerable<HistoryEntryResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetOperationsHistoryByAsset([FromQuery] string clientId,
-            [FromQuery] string assetId, [FromQuery] int top, [FromQuery] int skip)
-        {
-            if (!ParametersValidator.ValidateClientId(clientId))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(clientId), ClientRequiredMsg));
-            }
-            if (!ParametersValidator.ValidateAssetId(assetId))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(assetId), AssetRequired));
-            }
-            if (!ParametersValidator.ValidateSkip(skip))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(skip), SkipOutOfRange));
-            }
-            if (!ParametersValidator.ValidateTop(top))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(top), TopOutOfRange));
-            }
-
-            return Ok(await _cache.GetAllByAssetAsync(clientId, assetId, top, skip));
-        }
-
-        /// <summary>
-        /// Updates a record in a history by id provided with edit model provided
-        /// </summary>
-        /// <param name="editModel">
-        /// editModel.Id - Id of the record, 
-        /// editModel.BlockChainHash - new BlockChainHash, 
-        /// editModel.State - new State (valid values: InProcessOnchain(0), SettledOnchain(1), InProcessOffchain(2), SettledOffchain(3), SettledNoChain(4))</param>
-        /// <returns></returns>
-        [HttpPost("update")]
-        [SwaggerOperation("UpdateOperationsHistory")]
-        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateOperationsHistory([FromBody] EditHistoryEntryModel editModel)
-        {
-            if (!ParametersValidator.ValidateId(editModel.Id))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(editModel.Id), IdRequired));
-            }
-            if (!ParametersValidator.ValidateState(editModel.State))
-            {
-                return BadRequest(ErrorResponse.Create(nameof(editModel.State), StateOutOfRange));
-            }
-
-            var recordById = await _repository.GetById(editModel.Id);
-
-            dynamic parsedData = JObject.Parse(recordById.CustomData);
-
-            parsedData.State = editModel.State;
-            parsedData.BlockChainHash = editModel.BlockChainHash;
-
-            var updatedJson = parsedData.ToString(Formatting.None);
-            await _repository.UpdateAsync(editModel.Id, updatedJson);
-
-            return Ok();
+            return Ok(string.IsNullOrWhiteSpace(operationType)
+                ? dateRangeResult
+                : dateRangeResult.Where(x => x.OpType == operationType));
         }
     }
 }

@@ -1,172 +1,93 @@
-﻿using System;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.OperationsHistory.Core.Entities;
-using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using Lykke.Service.OperationsHistory.Models;
+using Common.Log;
 
 namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 {
     public class InMemoryCache: IHistoryCache
     {
         private readonly IHistoryLogEntryRepository _repository;
-        private readonly OperationsHistorySettings _settings;
-        private readonly IDictionary<string, CacheModel> _storage;
+        private readonly ConcurrentDictionary<string, CacheModel> _storage;
+        private readonly ILog _log;
 
-        public InMemoryCache(IHistoryLogEntryRepository repository, OperationsHistorySettings setting)
+        public InMemoryCache(IHistoryLogEntryRepository repository, ILog log)
         {
             _repository = repository;
-            _settings = setting;
-            _storage = new Dictionary<string, CacheModel>();
-        }
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllPagedAsync(string clientId, int page)
-        {
-            return await InternalGetAllAsync(
-                clientId, 
-                GetTopValueForPagedApi(),
-                GetSkipValueForPagedApi(page));
-        }
-
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllAsync(string clientId, int top, int skip)
-        {
-            return await InternalGetAllAsync(clientId, top, skip);
-        }
-
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllPagedAsync(string clientId, string assetId, string operationType, int page)
-        {
-            return await InternalGetAllAsync(
-                clientId, 
-                assetId, 
-                operationType, 
-                GetTopValueForPagedApi(), 
-                GetSkipValueForPagedApi(page));
-        }
-
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllAsync(string clientId, string assetId, string operationType, int top, int skip)
-        {
-            return await InternalGetAllAsync(clientId, assetId, operationType, top, skip);
-        }
-
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllByOpTypePagedAsync(string clientId, string operationType, int page)
-        {
-            return await InternalGetAllByOpTypeAsync(
-                clientId, 
-                operationType, 
-                GetTopValueForPagedApi(),
-                GetSkipValueForPagedApi(page));
-        }
-
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllByOpTypeAsync(string clientId, string operationType, int top, int skip)
-        {
-            return await InternalGetAllByOpTypeAsync(clientId, operationType, top, skip);
-        }
-
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllByAssetPagedAsync(string clientId, string assetId, int page)
-        {
-            return await InternalGetAllByAssetAsync(
-                clientId, 
-                assetId, 
-                GetTopValueForPagedApi(),
-                GetSkipValueForPagedApi(page));
-        }
-
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAllByAssetAsync(string clientId, string assetId, int top, int skip)
-        {
-            return await InternalGetAllByAssetAsync(clientId, assetId, top, skip);
-        }
-
-        private async Task<IEnumerable<HistoryEntryResponse>> InternalGetAllAsync(string clientId, int top, int skip)
-        {
-            var clientRecords = await GetRecordsByClient(clientId);
-
-            var pagedResult = clientRecords
-                .Skip(skip)
-                .Take(top)
-                .ToList();
-
-            return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
-        }
-
-        private async Task<IEnumerable<HistoryEntryResponse>> InternalGetAllAsync(string clientId, string assetId, string operationType,
-            int top, int skip)
-        {
-            var clientRecords = await GetRecordsByClient(clientId);
-
-            var pagedResult = clientRecords
-                .Where(r => r.Currency == assetId && r.OpType == operationType)
-                .Skip(skip)
-                .Take(top)
-                .ToList();
-
-            return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
-        }
-
-        private async Task<IEnumerable<HistoryEntryResponse>> InternalGetAllByOpTypeAsync(string clientId, string operationType, int top, int skip)
-        {
-            var clientRecords = await GetRecordsByClient(clientId);
-
-            var pagedResult = clientRecords
-                .Where(r => r.OpType == operationType)
-                .Skip(skip)
-                .Take(top)
-                .ToList();
-
-            return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
-        }
-
-        private async Task<IEnumerable<HistoryEntryResponse>> InternalGetAllByAssetAsync(string clientId, string assetId, int top, int skip)
-        {
-            var clientRecords = await GetRecordsByClient(clientId);
-
-            var pagedResult = clientRecords
-                .Where(r => r.Currency == assetId)
-                .Skip(skip)
-                .Take(top)
-                .ToList();
-
-            return Mapper.Map<IEnumerable<HistoryEntryResponse>>(pagedResult);
-        }
-
-        private int GetSkipValueForPagedApi(int page)
-        {
-            return (page - 1) * _settings.ValuesPerPage;
-        }
-
-        private int GetTopValueForPagedApi()
-        {
-            return _settings.ValuesPerPage;
+            _storage = new ConcurrentDictionary<string, CacheModel>();
+            _log = log;
         }
 
         public async Task<IEnumerable<IHistoryLogEntryEntity>> GetRecordsByClient(string clientId)
         {
-            var needUpdateOrCreate = true;
             if (_storage.TryGetValue(clientId, out CacheModel cachedValue))
             {
-                needUpdateOrCreate = DateTime.UtcNow.Subtract(cachedValue.LastUpdated).TotalSeconds >= _settings.CacheExpiration;
+                return cachedValue.Records.Values;
             }
 
-            if (needUpdateOrCreate)
+            var newCachedValue = await Load(clientId);
+
+            return newCachedValue == null ? new List<IHistoryLogEntryEntity>() : newCachedValue.Records.Values;
+        }
+
+        public void AddOrUpdate(IHistoryLogEntryEntity item)
+        {
+            if (_storage.TryGetValue(item.ClientId, out CacheModel cachedCollection))
             {
-                var records = await _repository.GetAllAsync(clientId);
-                var updatedObject = new CacheModel
-                {
-                    LastUpdated = DateTime.UtcNow,
-                    Records = records.OrderBy(r => r.DateTime).AsQueryable()
-                };
+                cachedCollection.Records.AddOrUpdate(item.Id, item, (key, oldValue) => item);
 
-                if (_storage.Keys.Contains(clientId))
-                {
-                    _storage[clientId] = updatedObject;
-                }
-                else
-                {
-                    _storage.Add(clientId, updatedObject);
-                }
+                return;
             }
 
-            return _storage[clientId].Records;
+            _log?.WriteWarningAsync(nameof(InMemoryCache), nameof(AddOrUpdate), $"clientId = {item.ClientId}",
+                "No cache for clientId, new item will be ignored");
+        }
+
+        public async Task WarmUp(string clientId)
+        {
+            if (!_storage.ContainsKey(clientId))
+            {
+                await Load(clientId);
+            }
+        }
+
+        private async Task<CacheModel> Load(string clientId)
+        {
+            var records = await _repository.GetByClientIdAsync(clientId);
+
+            if (!records.Any())
+                return null;
+
+            var cacheModel = new CacheModel
+            {
+                Records = new ConcurrentDictionary<string, IHistoryLogEntryEntity>(
+                    records
+                        .OrderByDescending(r => r.DateTime)
+                        .Select(x => new KeyValuePair<string, IHistoryLogEntryEntity>(x.Id, x)))
+            };
+
+            return _storage.AddOrUpdate(clientId, cacheModel, (key, oldValue) => cacheModel);
+        }
+
+        public async Task<IEnumerable<HistoryEntryResponse>> GetAsync(string clientId, string operationType, string assetId, int take, int skip)
+        {
+            var clientRecords = await GetRecordsByClient(clientId);
+
+            var operationIsEmpty = string.IsNullOrWhiteSpace(operationType);
+            var assetIsEmpty = string.IsNullOrWhiteSpace(assetId);
+
+            var result = clientRecords
+                .Where(r => operationIsEmpty || r.OpType == operationType)
+                .Where(r => assetIsEmpty || r.Currency == assetId)
+                .OrderByDescending(r => r.DateTime)
+                .Skip(skip)
+                .Take(take);
+
+            return Mapper.Map<IEnumerable<HistoryEntryResponse>>(result);
         }
     }
 }
