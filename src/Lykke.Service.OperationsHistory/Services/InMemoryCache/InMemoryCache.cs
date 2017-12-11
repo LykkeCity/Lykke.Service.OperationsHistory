@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Lykke.Service.OperationsHistory.Core.Entities;
-using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using Lykke.Service.OperationsHistory.Models;
 using Common.Log;
 
@@ -13,14 +12,12 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
     public class InMemoryCache: IHistoryCache
     {
         private readonly IHistoryLogEntryRepository _repository;
-        private readonly OperationsHistorySettings _settings;
         private readonly ConcurrentDictionary<string, CacheModel> _storage;
         private readonly ILog _log;
 
-        public InMemoryCache(IHistoryLogEntryRepository repository, OperationsHistorySettings setting, ILog log)
+        public InMemoryCache(IHistoryLogEntryRepository repository, ILog log)
         {
             _repository = repository;
-            _settings = setting;
             _storage = new ConcurrentDictionary<string, CacheModel>();
             _log = log;
         }
@@ -80,9 +77,12 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
         {
             var clientRecords = await GetRecordsByClient(clientId);
 
+            var operationIsEmpty = string.IsNullOrWhiteSpace(operationType);
+            var assetIsEmpty = string.IsNullOrWhiteSpace(assetId);
+
             var result = clientRecords
-                .Where(r => string.IsNullOrWhiteSpace(operationType) || r.OpType == operationType)
-                .Where(r => string.IsNullOrWhiteSpace(assetId) || r.Currency == assetId)
+                .Where(r => operationIsEmpty || r.OpType == operationType)
+                .Where(r => assetIsEmpty || r.Currency == assetId)
                 .OrderByDescending(r => r.DateTime)
                 .Skip(skip)
                 .Take(take);

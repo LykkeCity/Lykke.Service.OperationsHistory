@@ -69,16 +69,21 @@ namespace Lykke.Service.OperationsHistory.Client
             throw new ArgumentException("Unknown response object");
         }
 
-        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, string operationType, string assetId, int take, int skip)
+        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, string operationType = null, 
+            string assetId = null, int take = 100, int skip = 0)
         {
-            var response = await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId);
+            var response =
+                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId);
 
             return PrepareClientResponse(response);
         }
 
-        public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime dateTo, string operationType = null)
+        public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime? dateTo,
+            string operationType = null)
         {
-            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, dateTo, operationType);
+            var actualDateTo = dateTo ?? DateTime.UtcNow;
+
+            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, actualDateTo, operationType);
 
             return PrepareClientResponse(response);
         }

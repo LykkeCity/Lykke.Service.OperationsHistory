@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lykke.Service.OperationsHistory.Validation
+﻿namespace Lykke.Service.OperationsHistory.Validation
 {
     public static class ParametersValidator
     {
