@@ -69,7 +69,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             {
                 Records = new ConcurrentDictionary<string, IHistoryLogEntryEntity>(
                     records
-                        .OrderBy(r => r.DateTime)
+                        .OrderByDescending(r => r.DateTime)
                         .Select(x => new KeyValuePair<string, IHistoryLogEntryEntity>(x.Id, x)))
             };
 
@@ -83,6 +83,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             var result = clientRecords
                 .Where(r => string.IsNullOrWhiteSpace(operationType) || r.OpType == operationType)
                 .Where(r => string.IsNullOrWhiteSpace(assetId) || r.Currency == assetId)
+                .OrderByDescending(r => r.DateTime)
                 .Skip(skip)
                 .Take(take);
 

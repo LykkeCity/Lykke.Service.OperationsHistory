@@ -85,7 +85,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(DateRangeError));
             }
 
-            var dateRangeResult = await _repository.GetByDatesAsync(dateFrom, dateTo);
+            var dateRangeResult = (await _repository.GetByDatesAsync(dateFrom, dateTo)).OrderByDescending(r => r.DateTime);
 
             return Ok(string.IsNullOrWhiteSpace(operationType)
                 ? dateRangeResult
