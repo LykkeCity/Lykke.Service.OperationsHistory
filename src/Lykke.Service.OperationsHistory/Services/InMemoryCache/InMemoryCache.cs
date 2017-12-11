@@ -6,6 +6,7 @@ using AutoMapper;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Models;
 using Common.Log;
+using Lykke.Service.OperationsHistory.Core.Domain;
 
 namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 {
@@ -22,14 +23,14 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             _log = log;
         }
 
-        public async Task<IEnumerable<IHistoryLogEntryEntity>> GetRecordsByClient(string clientId)
+        public async Task<IEnumerable<IHistoryLogEntryEntity>> GetRecordsByWalletId(string walletId)
         {
-            if (_storage.TryGetValue(clientId, out CacheModel cachedValue))
+            if (_storage.TryGetValue(walletId, out CacheModel cachedValue))
             {
                 return cachedValue.Records.Values;
             }
 
-            var newCachedValue = await Load(clientId);
+            var newCachedValue = await Load(walletId);
 
             return newCachedValue == null ? new List<IHistoryLogEntryEntity>() : newCachedValue.Records.Values;
         }
@@ -43,21 +44,21 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
                 return;
             }
 
-            _log?.WriteWarningAsync(nameof(InMemoryCache), nameof(AddOrUpdate), $"clientId = {item.ClientId}",
-                "No cache for clientId, new item will be ignored");
+            _log?.WriteWarningAsync(nameof(InMemoryCache), nameof(AddOrUpdate), $"walletId = {item.ClientId}",
+                "No cache for walletId, new item will be ignored");
         }
 
-        public async Task WarmUp(string clientId)
+        public async Task WarmUp(string walletId)
         {
-            if (!_storage.ContainsKey(clientId))
+            if (!_storage.ContainsKey(walletId))
             {
-                await Load(clientId);
+                await Load(walletId);
             }
         }
 
-        private async Task<CacheModel> Load(string clientId)
+        private async Task<CacheModel> Load(string walletId)
         {
-            var records = await _repository.GetByClientIdAsync(clientId);
+            var records = await _repository.GetByWalletIdAsync(walletId);
 
             if (!records.Any())
                 return null;
@@ -70,24 +71,28 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
                         .Select(x => new KeyValuePair<string, IHistoryLogEntryEntity>(x.Id, x)))
             };
 
-            return _storage.AddOrUpdate(clientId, cacheModel, (key, oldValue) => cacheModel);
+            return _storage.AddOrUpdate(walletId, cacheModel, (key, oldValue) => cacheModel);
         }
 
-        public async Task<IEnumerable<HistoryEntryResponse>> GetAsync(string clientId, string operationType, string assetId, int take, int skip)
+        public async Task<IEnumerable<IHistoryLogEntryEntity>> GetAsync(string walletId, string operationType, string assetId, PaginationInfo paging = null)
         {
-            var clientRecords = await GetRecordsByClient(clientId);
+            var walletRecords = await GetRecordsByWalletId(walletId);
 
             var operationIsEmpty = string.IsNullOrWhiteSpace(operationType);
             var assetIsEmpty = string.IsNullOrWhiteSpace(assetId);
 
-            var result = clientRecords
+            var result = walletRecords
                 .Where(r => operationIsEmpty || r.OpType == operationType)
-                .Where(r => assetIsEmpty || r.Currency == assetId)
-                .OrderByDescending(r => r.DateTime)
-                .Skip(skip)
-                .Take(take);
+                .Where(r => assetIsEmpty || r.Currency == assetId);
 
-            return Mapper.Map<IEnumerable<HistoryEntryResponse>>(result);
+            if (paging != null)
+            {
+                result = result
+                    .Skip(paging.Skip)
+                    .Take(paging.Take);
+            }
+
+            return result.OrderByDescending(x => x.DateTime);
         }
     }
 }

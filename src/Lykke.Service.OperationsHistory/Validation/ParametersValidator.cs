@@ -7,11 +7,6 @@
             return pageIndex > 0;
         }
 
-        public static bool ValidateClientId(string clientId)
-        {
-            return !string.IsNullOrWhiteSpace(clientId);
-        }
-
         public static bool ValidateOperationType(string operationType)
         {
             return !string.IsNullOrWhiteSpace(operationType);

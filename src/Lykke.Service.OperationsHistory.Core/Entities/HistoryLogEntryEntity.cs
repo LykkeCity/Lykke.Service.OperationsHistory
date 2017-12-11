@@ -27,11 +27,11 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             }
         }
 
-        public static class ByClientId
+        public static class ByWalletId
         {
-            public static string GeneratePartitionKey(string clientId)
+            public static string GeneratePartitionKey(string walletId)
             {
-                return clientId;
+                return walletId;
             }
 
             public static string GenerateRowKey(string id)
@@ -102,7 +102,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
         public string CustomData { get; set; }
 
         private static HistoryLogEntryEntity CreateNew(DateTime dateTime, double amount, string currency,
-            string clientId, string customData, string opType, string id)
+            string walletId, string customData, string opType, string id)
         {
             return new HistoryLogEntryEntity
             {
@@ -110,7 +110,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
                 DateTime = dateTime,
                 Amount = amount,
                 Currency = currency,
-                ClientId = clientId,
+                ClientId = walletId,
                 CustomData = customData,
                 OpType = opType
             };

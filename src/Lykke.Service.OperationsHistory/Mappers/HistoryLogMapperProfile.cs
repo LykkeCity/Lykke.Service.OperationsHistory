@@ -8,7 +8,9 @@ namespace Lykke.Service.OperationsHistory.Mappers
     {
         public HistoryLogMapperProfile()
         {
-            CreateMap<IHistoryLogEntryEntity, HistoryEntryResponse>();
+            CreateMap<IHistoryLogEntryEntity, HistoryEntryWalletResponse>();
+            CreateMap<IHistoryLogEntryEntity, HistoryEntryClientResponse>()
+                .ForMember(x => x.WalletId, o => o.MapFrom(x => x.ClientId));
         }
     }
 }
