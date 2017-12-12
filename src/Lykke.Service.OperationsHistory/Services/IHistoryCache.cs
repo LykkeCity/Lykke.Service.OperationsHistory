@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using Lykke.Service.OperationsHistory.Core.Domain;
 using Lykke.Service.OperationsHistory.Core.Entities;
-using Lykke.Service.OperationsHistory.Models;
 
 namespace Lykke.Service.OperationsHistory.Services
 {

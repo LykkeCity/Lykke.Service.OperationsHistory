@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Lykke.Service.OperationsHistory.Core.Entities;
-using Lykke.Service.OperationsHistory.Models;
 using Common.Log;
 using Lykke.Service.OperationsHistory.Core.Domain;
 
@@ -43,9 +41,6 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 
                 return;
             }
-
-            _log?.WriteWarningAsync(nameof(InMemoryCache), nameof(AddOrUpdate), $"walletId = {item.ClientId}",
-                "No cache for walletId, new item will be ignored");
         }
 
         public async Task WarmUp(string walletId)
