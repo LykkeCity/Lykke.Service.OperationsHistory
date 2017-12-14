@@ -63,9 +63,7 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
                 Currency = arg.Currency
             };
 
-            _historyCache.AddOrUpdate(newCacheEntry);
-
-            await Task.CompletedTask;
+            await _historyCache.AddOrUpdate(newCacheEntry);
         }
 
         public void Dispose()
