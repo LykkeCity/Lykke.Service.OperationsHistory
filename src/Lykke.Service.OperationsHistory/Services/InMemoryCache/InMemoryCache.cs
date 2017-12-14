@@ -11,19 +11,19 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
     public class InMemoryCache: IHistoryCache
     {
         private readonly IHistoryLogEntryRepository _repository;
-        private readonly ConcurrentDictionary<string, CacheModel> _storage;
+        private readonly ConcurrentDictionary<string, CacheModel> _cache;
         private readonly ILog _log;
 
         public InMemoryCache(IHistoryLogEntryRepository repository, ILog log)
         {
             _repository = repository;
-            _storage = new ConcurrentDictionary<string, CacheModel>();
+            _cache = new ConcurrentDictionary<string, CacheModel>();
             _log = log;
         }
 
         public async Task<IEnumerable<IHistoryLogEntryEntity>> GetRecordsByWalletId(string walletId)
         {
-            if (_storage.TryGetValue(walletId, out CacheModel cachedValue))
+            if (_cache.TryGetValue(walletId, out CacheModel cachedValue))
             {
                 return cachedValue.Records.Values;
             }
@@ -33,40 +33,22 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             return newCachedValue == null ? new List<IHistoryLogEntryEntity>() : newCachedValue.Records.Values;
         }
 
-        public void AddOrUpdate(IHistoryLogEntryEntity item)
+        public async Task AddOrUpdate(IHistoryLogEntryEntity item)
         {
-            if (_storage.TryGetValue(item.ClientId, out CacheModel cachedCollection))
+            if (!_cache.TryGetValue(item.ClientId, out CacheModel cachedCollection))
             {
-                cachedCollection.Records.AddOrUpdate(item.Id, item, (key, oldValue) => item);
-
-                return;
+                cachedCollection = await Load(item.ClientId);
             }
+            // make sure new item added to cache even if it was loaded from repository
+            cachedCollection?.Records.AddOrUpdate(item.Id, item, (key, oldValue) => item);
         }
 
         public async Task WarmUp(string walletId)
         {
-            if (!_storage.ContainsKey(walletId))
+            if (!_cache.ContainsKey(walletId))
             {
                 await Load(walletId);
             }
-        }
-
-        private async Task<CacheModel> Load(string walletId)
-        {
-            var records = await _repository.GetByWalletIdAsync(walletId);
-
-            if (!records.Any())
-                return null;
-
-            var cacheModel = new CacheModel
-            {
-                Records = new ConcurrentDictionary<string, IHistoryLogEntryEntity>(
-                    records
-                        .OrderByDescending(r => r.DateTime)
-                        .Select(x => new KeyValuePair<string, IHistoryLogEntryEntity>(x.Id, x)))
-            };
-
-            return _storage.AddOrUpdate(walletId, cacheModel, (key, oldValue) => cacheModel);
         }
 
         public async Task<IEnumerable<IHistoryLogEntryEntity>> GetAsync(string walletId, string operationType, string assetId, PaginationInfo paging = null)
@@ -88,6 +70,24 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             }
 
             return result.OrderByDescending(x => x.DateTime);
+        }
+
+        private async Task<CacheModel> Load(string walletId)
+        {
+            var records = await _repository.GetByWalletIdAsync(walletId);
+
+            if (!records.Any())
+                return null;
+
+            var cacheModel = new CacheModel
+            {
+                Records = new ConcurrentDictionary<string, IHistoryLogEntryEntity>(
+                    records
+                        .OrderByDescending(r => r.DateTime)
+                        .Select(x => new KeyValuePair<string, IHistoryLogEntryEntity>(x.Id, x)))
+            };
+
+            return _cache.AddOrUpdate(walletId, cacheModel, (key, oldValue) => cacheModel);
         }
     }
 }

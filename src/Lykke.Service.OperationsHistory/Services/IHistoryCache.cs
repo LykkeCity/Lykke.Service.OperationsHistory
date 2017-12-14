@@ -9,7 +9,7 @@ namespace Lykke.Service.OperationsHistory.Services
     {
         Task<IEnumerable<IHistoryLogEntryEntity>> GetAsync(string walletId, string operationType, string assetId, PaginationInfo paging = null);
 
-        void AddOrUpdate(IHistoryLogEntryEntity item);
+        Task AddOrUpdate(IHistoryLogEntryEntity item);
 
         Task WarmUp(string clientId);
     }
