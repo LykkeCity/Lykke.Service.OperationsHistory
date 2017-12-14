@@ -3,12 +3,15 @@ using System.Threading.Tasks;
 using AzureStorage;
 using System.Collections.Generic;
 using System.Linq;
+using Common;
 
 namespace Lykke.Service.OperationsHistory.Core.Entities
 {
     public class HistoryLogEntryRepository : IHistoryLogEntryRepository
     {
         private readonly INoSQLTableStorage<HistoryLogEntryEntity> _tableStorage;
+
+        private const int _batchPieceSize = 15;
 
         public HistoryLogEntryRepository(INoSQLTableStorage<HistoryLogEntryEntity> table)
         {
@@ -114,8 +117,10 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             var result = new List<HistoryLogEntryEntity>();
 
             await Task.WhenAll(
-                walletIds.Select(x => _tableStorage.GetDataByChunksAsync(
-                    HistoryLogEntryEntity.ByWalletId.GeneratePartitionKey(x), items =>
+                walletIds.ToPieces(_batchPieceSize).Select(piece => _tableStorage.GetDataByChunksAsync(
+                    AzureStorageUtils.QueryGenerator<HistoryLogEntryEntity>.MultiplePartitionKeys(piece
+                        .Select(walletId => HistoryLogEntryEntity.ByWalletId.GeneratePartitionKey(walletId)).ToArray()),
+                    items =>
                     {
                         lock (result)
                         {

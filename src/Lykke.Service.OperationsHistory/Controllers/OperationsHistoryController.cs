@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Common;
 using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.ClientAccount.Client.AutorestClient.Models;
 using Lykke.Service.OperationsHistory.Core.Domain;
@@ -25,11 +26,15 @@ namespace Lykke.Service.OperationsHistory.Controllers
     {
         #region error messages
         public static readonly string ClientRequiredMsg = "Client id is required";
-        public static readonly string ClientNotExists = "Client doesn't exist";
         public static readonly string TakeOutOfRange = "Top parameter is out of range. Maximum value is 1000.";
         public static readonly string SkipOutOfRange = "Skip parameter is out of range (should be >= 0).";
         public static readonly string DateRangeError = "[dateFrom] can't be greater than or equal to [dateTo]";
-        public static readonly string WalletNotExists = "Wallet doesn't exist";
+        #endregion
+
+        #region consts
+
+        private const int _cacheBatchPieceSize = 15;
+
         #endregion
 
         private readonly IHistoryCache _cache;
@@ -43,10 +48,20 @@ namespace Lykke.Service.OperationsHistory.Controllers
             _clientAccountService = clientAccountService;
         }
 
+        /// <summary>
+        /// Getting history by clientId
+        /// </summary>
+        /// <param name="clientId">Client identifier</param>
+        /// <param name="operationType">The type of the operation, possible values: CashInOut, CashOutAttempt, ClientTrade, TransferEvent, LimitTradeEvent</param>
+        /// <param name="assetId">Asset identifier</param>
+        /// <param name="take">How many maximum items have to be returned</param>
+        /// <param name="skip">How many items skip before returning</param>
+        /// <returns></returns>
         [HttpGet("client/{clientId}")]
         [SwaggerOperation("GetByClientId")]
         [ProducesResponseType(typeof(IEnumerable<HistoryEntryClientResponse>), (int) HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByClientId(
             string clientId, 
             [FromQuery] string operationType,
@@ -66,7 +81,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
             var client = await _clientAccountService.GetClientByIdAsync(clientId);
             if (client == null)
             {
-                return BadRequest(ErrorResponse.Create(ClientNotExists));
+                return NotFound();
             }
 
             var wallets = await _clientAccountService.GetWalletsByClientIdAsync(clientId);
@@ -75,9 +90,10 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             var result = new List<IHistoryLogEntryEntity>();
 
-            await Task.WhenAll(
-                walletIds
-                    .Select(x => _cache.GetAsync(x, operationType, assetId)
+            foreach (var piece in walletIds.ToPieces(_cacheBatchPieceSize))
+            {
+                await Task.WhenAll(
+                    piece.Select(x => _cache.GetAsync(x, operationType, assetId)
                         .ContinueWith(t =>
                         {
                             lock (result)
@@ -85,6 +101,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                                 result.AddRange(t.Result);
                             }
                         })));
+            }
 
             var pagedResult = result
                 .OrderByDescending(x => x.DateTime)
@@ -94,6 +111,13 @@ namespace Lykke.Service.OperationsHistory.Controllers
             return Ok(Mapper.Map<IEnumerable<HistoryEntryClientResponse>>(pagedResult));
         }
 
+        /// <summary>
+        /// Getting history by date range, note: internal cache is not used here
+        /// </summary>
+        /// <param name="dateFrom">The date of the operation will be equal or greater than</param>
+        /// <param name="dateTo">The date of the operation will be less than</param>
+        /// <param name="operationType">The type of the operation, possible values: CashInOut, CashOutAttempt, ClientTrade, TransferEvent, LimitTradeEvent</param>
+        /// <returns></returns>
         [HttpGet]
         [SwaggerOperation("GetByDates")]
         [ProducesResponseType(typeof(IEnumerable<HistoryEntryWalletResponse>), (int)HttpStatusCode.OK)]
@@ -115,10 +139,20 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 : dateRangeResult.Where(x => x.OpType == operationType));
         }
 
+        /// <summary>
+        /// Getting history by wallet identifier
+        /// </summary>
+        /// <param name="walletId">Wallet identifier</param>
+        /// <param name="operationType">The type of the operation, possible values: CashInOut, CashOutAttempt, ClientTrade, TransferEvent, LimitTradeEvent</param>
+        /// <param name="assetId">Asset identifier</param>
+        /// <param name="take">How many maximum items have to be returned</param>
+        /// <param name="skip">How many items skip before returning</param>
+        /// <returns></returns>
         [HttpGet("wallet/{walletId}")]
         [SwaggerOperation("GetByWalletId")]
-        [ProducesResponseType(typeof(IEnumerable<HistoryEntryWalletResponse>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(IEnumerable<HistoryEntryWalletResponse>), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(void), (int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByWalletId(string walletId,
             [FromQuery] string operationType,
             [FromQuery] string assetId,
@@ -137,12 +171,13 @@ namespace Lykke.Service.OperationsHistory.Controllers
             var wallet = await _clientAccountService.GetWalletAsync(walletId);
             if (wallet == null)
             {
-                return BadRequest(ErrorResponse.Create(WalletNotExists));
+                return NotFound();
             }
 
             var id = wallet.Type == nameof(WalletType.Trading) ? wallet.ClientId : wallet.Id;
 
-            var result = await _cache.GetAsync(id, operationType, assetId, new PaginationInfo {Take = take, Skip = skip});
+            var result =
+                await _cache.GetAsync(id, operationType, assetId, new PaginationInfo {Take = take, Skip = skip});
 
             return Ok(Mapper.Map<IEnumerable<HistoryEntryWalletResponse>>(result));
         }
