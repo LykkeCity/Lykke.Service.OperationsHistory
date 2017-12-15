@@ -43,36 +43,54 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Getting history by clientId
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='clientId'>
+            /// Client identifier
             /// </param>
             /// <param name='take'>
+            /// How many maximum items have to be returned
             /// </param>
             /// <param name='skip'>
+            /// How many items skip before returning
             /// </param>
             /// <param name='operationType'>
+            /// The type of the operation, possible values: CashInOut, CashOutAttempt,
+            /// ClientTrade, TransferEvent, LimitTradeEvent
             /// </param>
             /// <param name='assetId'>
+            /// Asset identifier
             /// </param>
             public static object GetByClientId(this IOperationsHistoryAPI operations, string clientId, int take, int skip, string operationType = default(string), string assetId = default(string))
             {
                 return operations.GetByClientIdAsync(clientId, take, skip, operationType, assetId).GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Getting history by clientId
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='clientId'>
+            /// Client identifier
             /// </param>
             /// <param name='take'>
+            /// How many maximum items have to be returned
             /// </param>
             /// <param name='skip'>
+            /// How many items skip before returning
             /// </param>
             /// <param name='operationType'>
+            /// The type of the operation, possible values: CashInOut, CashOutAttempt,
+            /// ClientTrade, TransferEvent, LimitTradeEvent
             /// </param>
             /// <param name='assetId'>
+            /// Asset identifier
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
@@ -85,28 +103,42 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Getting history by date range, note: internal cache is not used here
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='dateFrom'>
+            /// The date of the operation will be equal or greater than
             /// </param>
             /// <param name='dateTo'>
+            /// The date of the operation will be less than
             /// </param>
             /// <param name='operationType'>
+            /// The type of the operation, possible values: CashInOut, CashOutAttempt,
+            /// ClientTrade, TransferEvent, LimitTradeEvent
             /// </param>
             public static object GetByDates(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, string operationType = default(string))
             {
                 return operations.GetByDatesAsync(dateFrom, dateTo, operationType).GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Getting history by date range, note: internal cache is not used here
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='dateFrom'>
+            /// The date of the operation will be equal or greater than
             /// </param>
             /// <param name='dateTo'>
+            /// The date of the operation will be less than
             /// </param>
             /// <param name='operationType'>
+            /// The type of the operation, possible values: CashInOut, CashOutAttempt,
+            /// ClientTrade, TransferEvent, LimitTradeEvent
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
@@ -119,36 +151,54 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 }
             }
 
+            /// <summary>
+            /// Getting history by wallet identifier
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='walletId'>
+            /// Wallet identifier
             /// </param>
             /// <param name='take'>
+            /// How many maximum items have to be returned
             /// </param>
             /// <param name='skip'>
+            /// How many items skip before returning
             /// </param>
             /// <param name='operationType'>
+            /// The type of the operation, possible values: CashInOut, CashOutAttempt,
+            /// ClientTrade, TransferEvent, LimitTradeEvent
             /// </param>
             /// <param name='assetId'>
+            /// Asset identifier
             /// </param>
             public static object GetByWalletId(this IOperationsHistoryAPI operations, string walletId, int take, int skip, string operationType = default(string), string assetId = default(string))
             {
                 return operations.GetByWalletIdAsync(walletId, take, skip, operationType, assetId).GetAwaiter().GetResult();
             }
 
+            /// <summary>
+            /// Getting history by wallet identifier
+            /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='walletId'>
+            /// Wallet identifier
             /// </param>
             /// <param name='take'>
+            /// How many maximum items have to be returned
             /// </param>
             /// <param name='skip'>
+            /// How many items skip before returning
             /// </param>
             /// <param name='operationType'>
+            /// The type of the operation, possible values: CashInOut, CashOutAttempt,
+            /// ClientTrade, TransferEvent, LimitTradeEvent
             /// </param>
             /// <param name='assetId'>
+            /// Asset identifier
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
@@ -156,6 +206,46 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             public static async Task<object> GetByWalletIdAsync(this IOperationsHistoryAPI operations, string walletId, int take, int skip, string operationType = default(string), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
+            /// Getring history record by operation id
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='walletId'>
+            /// Wallet identifie
+            /// </param>
+            /// <param name='operationId'>
+            /// Operation identifier
+            /// </param>
+            public static HistoryEntryWalletResponse GetByOperationId(this IOperationsHistoryAPI operations, string walletId, string operationId)
+            {
+                return operations.GetByOperationIdAsync(walletId, operationId).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Getring history record by operation id
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='walletId'>
+            /// Wallet identifie
+            /// </param>
+            /// <param name='operationId'>
+            /// Operation identifier
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<HistoryEntryWalletResponse> GetByOperationIdAsync(this IOperationsHistoryAPI operations, string walletId, string operationId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.GetByOperationIdWithHttpMessagesAsync(walletId, operationId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

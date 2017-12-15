@@ -36,5 +36,13 @@ namespace Lykke.Service.OperationsHistory.Client
         /// <param name="skip">How many items skip before returning</param>
         /// <returns></returns>
         Task<OperationsHistoryResponse> GetByWalletId(string walletId, string operationType, string assetId, int take, int skip);
+
+        /// <summary>
+        /// Getting history record by operation identifier
+        /// </summary>
+        /// <param name="walletId">Wallet identifier</param>
+        /// <param name="operationId">operation identifier</param>
+        /// <returns></returns>
+        Task<HistoryRecordModel> GetByOperationId(string walletId, string operationId);
     }
 }

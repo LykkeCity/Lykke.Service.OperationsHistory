@@ -7,7 +7,7 @@ namespace Lykke.Service.OperationsHistory.Services
 {
     public interface IHistoryCache
     {
-        Task<IEnumerable<IHistoryLogEntryEntity>> GetAsync(string walletId, string operationType, string assetId, PaginationInfo paging = null);
+        Task<IEnumerable<IHistoryLogEntryEntity>> GetAsync(string walletId, string operationType = null, string assetId = null, PaginationInfo paging = null);
 
         Task AddOrUpdate(IHistoryLogEntryEntity item);
 

@@ -51,7 +51,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             }
         }
 
-        public async Task<IEnumerable<IHistoryLogEntryEntity>> GetAsync(string walletId, string operationType, string assetId, PaginationInfo paging = null)
+        public async Task<IEnumerable<IHistoryLogEntryEntity>> GetAsync(string walletId, string operationType = null, string assetId = null, PaginationInfo paging = null)
         {
             var walletRecords = await GetRecordsByWalletId(walletId);
 
