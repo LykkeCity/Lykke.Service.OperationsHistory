@@ -8,7 +8,9 @@ namespace Lykke.Service.OperationsHistory.Tests
     {
         public TestMappingProfile()
         {
-            CreateMap<IHistoryLogEntryEntity, HistoryEntryResponse>();
+            CreateMap<IHistoryLogEntryEntity, HistoryEntryClientResponse>()
+                .ForMember(dest => dest.WalletId, opt => opt.MapFrom(x => x.ClientId));
+            CreateMap<IHistoryLogEntryEntity, HistoryEntryWalletResponse>();
         }
     }
 }

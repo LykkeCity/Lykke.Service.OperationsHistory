@@ -9,21 +9,22 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class HistoryEntryResponse
+    public partial class HistoryEntryClientResponse
     {
         /// <summary>
-        /// Initializes a new instance of the HistoryEntryResponse class.
+        /// Initializes a new instance of the HistoryEntryClientResponse class.
         /// </summary>
-        public HistoryEntryResponse()
+        public HistoryEntryClientResponse()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the HistoryEntryResponse class.
+        /// Initializes a new instance of the HistoryEntryClientResponse class.
         /// </summary>
-        public HistoryEntryResponse(System.DateTime dateTime, double amount, string currency = default(string), string opType = default(string), string customData = default(string))
+        public HistoryEntryClientResponse(System.DateTime dateTime, double amount, string walletId = default(string), string currency = default(string), string opType = default(string), string customData = default(string))
         {
+            WalletId = walletId;
             DateTime = dateTime;
             Amount = amount;
             Currency = currency;
@@ -36,6 +37,11 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
         /// An initialization method that performs custom operations like setting defaults
         /// </summary>
         partial void CustomInit();
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "WalletId")]
+        public string WalletId { get; set; }
 
         /// <summary>
         /// </summary>

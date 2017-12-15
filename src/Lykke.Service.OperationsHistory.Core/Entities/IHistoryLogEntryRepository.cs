@@ -6,14 +6,16 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
 {
     public interface IHistoryLogEntryRepository
     {
-        Task AddAsync(DateTime dateTime, double amount, string currency, string clientId,
+        Task AddAsync(DateTime dateTime, double amount, string currency, string walletId,
             string customData, string opType, string id);
 
-        Task<HistoryLogEntryEntity> UpdateAsync(string clientId, string id, string customData);
+        Task<HistoryLogEntryEntity> UpdateAsync(string walletId, string id, string customData);
 
-        Task<HistoryLogEntryEntity> GetAsync(string clientId, string id);
+        Task<HistoryLogEntryEntity> GetAsync(string walletId, string id);
 
-        Task<IList<HistoryLogEntryEntity>> GetByClientIdAsync(string clientId);
+        Task<IList<HistoryLogEntryEntity>> GetByWalletIdAsync(string walletId);
+
+        Task<IList<HistoryLogEntryEntity>> GetByWalletsAsync(IEnumerable<string> walletIds);
 
         Task<IList<HistoryLogEntryEntity>> GetByDatesAsync(DateTime dateFrom, DateTime dateTo);
     }

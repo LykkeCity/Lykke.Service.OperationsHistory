@@ -2,7 +2,7 @@
 
 namespace Lykke.Service.OperationsHistory.Models
 {
-    public class HistoryEntryResponse
+    public class HistoryEntryWalletResponse
     {
         public DateTime DateTime { get; set; }
         public double Amount { get; set; }

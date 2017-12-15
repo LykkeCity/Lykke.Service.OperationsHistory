@@ -23,10 +23,10 @@ namespace Lykke.Service.OperationsHistory.Tests
         public async Task GetRecordsByClient_CachedFullRepository()
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
-            mockedRepo.Setup(m => m.GetByClientIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
+            mockedRepo.Setup(m => m.GetByWalletIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
             var cache = new InMemoryCache(mockedRepo.Object, null);
 
-            var recordsFromCache = await cache.GetRecordsByClient("any");
+            var recordsFromCache = await cache.GetRecordsByWalletId("any");
             var recordsFromRepo = await GetFakeRepositoryV1();
 
             Assert.AreEqual(recordsFromRepo.Count(), recordsFromCache.Count());
