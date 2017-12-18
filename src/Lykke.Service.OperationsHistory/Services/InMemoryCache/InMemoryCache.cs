@@ -60,16 +60,17 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 
             var result = walletRecords
                 .Where(r => operationIsEmpty || r.OpType == operationType)
-                .Where(r => assetIsEmpty || r.Currency == assetId);
+                .Where(r => assetIsEmpty || r.Currency == assetId)
+                .OrderByDescending(x => x.DateTime);
 
             if (paging != null)
             {
-                result = result
+                return result
                     .Skip(paging.Skip)
                     .Take(paging.Take);
             }
 
-            return result.OrderByDescending(x => x.DateTime);
+            return result;
         }
 
         private async Task<CacheModel> Load(string walletId)
