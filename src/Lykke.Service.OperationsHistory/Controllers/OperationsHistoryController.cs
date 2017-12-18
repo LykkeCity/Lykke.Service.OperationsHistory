@@ -181,5 +181,37 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             return Ok(Mapper.Map<IEnumerable<HistoryEntryWalletResponse>>(result));
         }
+
+        /// <summary>
+        /// Getring history record by operation id
+        /// </summary>
+        /// <param name="walletId">Wallet identifie</param>
+        /// <param name="operationId">Operation identifier</param>
+        /// <returns></returns>
+        [HttpGet("wallet/{walletId}/operation/{operationId}")]
+        [SwaggerOperation("GetByOperationId")]
+        [ProducesResponseType(typeof(HistoryEntryWalletResponse), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(void), (int) HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetByOperationId(string walletId, string operationId)
+        {
+            var wallet = await _clientAccountService.GetWalletAsync(walletId);
+            if (wallet == null)
+            {
+                return NotFound();
+            }
+
+            var id = wallet.Type == nameof(WalletType.Trading) ? wallet.ClientId : wallet.Id;
+
+            var walletOperations = await _cache.GetAsync(id);
+
+            var operation = walletOperations.Where(x => x.Id.Equals(operationId)).FirstOrDefault();
+
+            if (operation == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(Mapper.Map<HistoryEntryWalletResponse>(operation));
+        }
     }
 }

@@ -45,15 +45,24 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// </param>
         Task<HttpOperationResponse<IsAliveResponse>> IsAliveWithHttpMessagesAsync(Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <summary>
+        /// Getting history by clientId
+        /// </summary>
         /// <param name='clientId'>
+        /// Client identifier
         /// </param>
         /// <param name='take'>
+        /// How many maximum items have to be returned
         /// </param>
         /// <param name='skip'>
+        /// How many items skip before returning
         /// </param>
         /// <param name='operationType'>
+        /// The type of the operation, possible values: CashInOut,
+        /// CashOutAttempt, ClientTrade, TransferEvent, LimitTradeEvent
         /// </param>
         /// <param name='assetId'>
+        /// Asset identifier
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -63,11 +72,19 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// </param>
         Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int take, int skip, string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <summary>
+        /// Getting history by date range, note: internal cache is not used
+        /// here
+        /// </summary>
         /// <param name='dateFrom'>
+        /// The date of the operation will be equal or greater than
         /// </param>
         /// <param name='dateTo'>
+        /// The date of the operation will be less than
         /// </param>
         /// <param name='operationType'>
+        /// The type of the operation, possible values: CashInOut,
+        /// CashOutAttempt, ClientTrade, TransferEvent, LimitTradeEvent
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -77,15 +94,24 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// </param>
         Task<HttpOperationResponse<object>> GetByDatesWithHttpMessagesAsync(System.DateTime dateFrom, System.DateTime dateTo, string operationType = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
+        /// <summary>
+        /// Getting history by wallet identifier
+        /// </summary>
         /// <param name='walletId'>
+        /// Wallet identifier
         /// </param>
         /// <param name='take'>
+        /// How many maximum items have to be returned
         /// </param>
         /// <param name='skip'>
+        /// How many items skip before returning
         /// </param>
         /// <param name='operationType'>
+        /// The type of the operation, possible values: CashInOut,
+        /// CashOutAttempt, ClientTrade, TransferEvent, LimitTradeEvent
         /// </param>
         /// <param name='assetId'>
+        /// Asset identifier
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -94,6 +120,23 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// The cancellation token.
         /// </param>
         Task<HttpOperationResponse<object>> GetByWalletIdWithHttpMessagesAsync(string walletId, int take, int skip, string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Getring history record by operation id
+        /// </summary>
+        /// <param name='walletId'>
+        /// Wallet identifie
+        /// </param>
+        /// <param name='operationId'>
+        /// Operation identifier
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<HistoryEntryWalletResponse>> GetByOperationIdWithHttpMessagesAsync(string walletId, string operationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }
