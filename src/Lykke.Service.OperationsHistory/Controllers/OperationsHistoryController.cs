@@ -26,8 +26,8 @@ namespace Lykke.Service.OperationsHistory.Controllers
     {
         #region error messages
         public static readonly string ClientRequiredMsg = "Client id is required";
-        public static readonly string TakeOutOfRange = "Top parameter is out of range. Maximum value is 1000.";
-        public static readonly string SkipOutOfRange = "Skip parameter is out of range (should be >= 0).";
+        public static readonly string TakeOutOfRange = "Top parameter is out of range, should be [1..1000].";
+        public static readonly string SkipOutOfRange = "Skip parameter is out of range, should be >= 0.";
         public static readonly string DateRangeError = "[dateFrom] can't be greater than or equal to [dateTo]";
         #endregion
 
