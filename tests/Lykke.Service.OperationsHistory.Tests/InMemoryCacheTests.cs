@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Services.InMemoryCache;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,18 +12,12 @@ namespace Lykke.Service.OperationsHistory.Tests
     [TestClass]
     public class InMemoryCacheTests
     {
-        [ClassInitialize]
-        public static void Initialize(TestContext testContext)
-        {
-            Mapper.Initialize(cfg => cfg.AddProfile(typeof(TestMappingProfile)));
-        }
-
         [TestMethod]
         public async Task GetRecordsByClient_CachedFullRepository()
         {
             var mockedRepo = new Mock<IHistoryLogEntryRepository>();
             mockedRepo.Setup(m => m.GetByWalletIdAsync(It.IsAny<string>())).Returns(GetFakeRepositoryV1);
-            var cache = new InMemoryCache(mockedRepo.Object, null);
+            var cache = new InMemoryCache(mockedRepo.Object, null, null);
 
             var recordsFromCache = await cache.GetRecordsByWalletId("any");
             var recordsFromRepo = await GetFakeRepositoryV1();

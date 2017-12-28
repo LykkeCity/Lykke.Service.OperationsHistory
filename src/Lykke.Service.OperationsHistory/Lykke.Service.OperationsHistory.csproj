@@ -31,11 +31,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="6.2.1" />
     <PackageReference Include="Lykke.Common" Version="3.0.2" />
     <PackageReference Include="Lykke.Common.ApiLibrary" Version="1.0.18" />
     <PackageReference Include="Lykke.Logs" Version="3.2.3" />
     <PackageReference Include="Lykke.RabbitMqBroker" Version="4.2.0" />
+    <PackageReference Include="Lykke.Service.Assets.Client" Version="2.1.0.120" />
     <PackageReference Include="Lykke.Service.ClientAccount.Client" Version="1.1.4" />
     <PackageReference Include="Lykke.Service.Session" Version="1.0.33" />
     <PackageReference Include="Lykke.SettingsReader" Version="1.0.43" />
@@ -46,6 +46,7 @@
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
   
   <ItemGroup>

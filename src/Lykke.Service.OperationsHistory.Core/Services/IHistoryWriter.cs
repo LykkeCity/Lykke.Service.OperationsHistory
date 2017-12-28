@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Lykke.Service.OperationsRepository.Contract;
+using Lykke.Service.OperationsRepository.Contract.History;
 
 namespace Lykke.Service.OperationsHistory.Core.Services
 {
