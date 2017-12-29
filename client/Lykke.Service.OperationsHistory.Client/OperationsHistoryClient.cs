@@ -28,10 +28,10 @@ namespace Lykke.Service.OperationsHistory.Client
             _apiClient = null;
         }
 
-        private OperationsHistoryResponse PrepareResponseMultiple<T>(HttpOperationResponse<object> serviceResponse)
+        private OperationsHistoryResponse PrepareResponseMultiple(HttpOperationResponse<object> serviceResponse)
         {
             var error = serviceResponse.Body as ErrorResponse;
-            var result = serviceResponse.Body as IList<T>;
+            var result = serviceResponse.Body as IList<HistoryOperation>;
 
             if (error != null)
             {
@@ -48,9 +48,7 @@ namespace Lykke.Service.OperationsHistory.Client
             {
                 return new OperationsHistoryResponse
                 {
-                    //todo
-                    Records = null
-                    //Records = _mapper.Map<IList<HistoryRecordModel>>(result)
+                    Records = result
                 };
             }
 
@@ -63,17 +61,17 @@ namespace Lykke.Service.OperationsHistory.Client
             var response =
                 await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId);
 
-            return PrepareResponseMultiple<HistoryEntryClientResponse>(response);
+            return PrepareResponseMultiple(response);
         }
 
         public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime? dateTo,
-            string operationType = null)
+            string operationType = null, string assetId = null)
         {
             var actualDateTo = dateTo ?? DateTime.UtcNow;
 
-            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, actualDateTo, operationType);
+            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, actualDateTo, operationType, assetId);
 
-            return PrepareResponseMultiple<HistoryEntryWalletResponse>(response);
+            return PrepareResponseMultiple(response);
         }
 
         public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, string operationType = null, string assetId = null, int take = 100, int skip = 0)
@@ -81,24 +79,14 @@ namespace Lykke.Service.OperationsHistory.Client
             var response =
                 await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId);
 
-            return PrepareResponseMultiple<HistoryEntryWalletResponse>(response);
+            return PrepareResponseMultiple(response);
         }
 
-        public async Task<HistoryRecordModel> GetByOperationId(string walletId, string operationId)
+        public async Task<HistoryOperation> GetByOperationId(string walletId, string operationId)
         {
             var response = await _apiClient.GetByOperationIdWithHttpMessagesAsync(walletId, operationId);
 
-            var result = response.Body as HistoryEntryWalletResponse;
-
-            if (result == null)
-            {
-                return null;
-            }
-
-            //todo
-            return null;
-            //return _mapper.Map<HistoryRecordModel>(result);
-
+            return response.Body as HistoryOperation;
         }
     }
 }

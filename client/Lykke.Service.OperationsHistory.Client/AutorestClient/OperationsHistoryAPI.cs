@@ -274,8 +274,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// How many items skip before returning
         /// </param>
         /// <param name='operationType'>
-        /// The type of the operation, possible values: CashInOut, CashOutAttempt,
-        /// ClientTrade, TransferEvent, LimitTradeEvent
+        /// The type of the operation, possible values: CashIn, CashOut, Trade
         /// </param>
         /// <param name='assetId'>
         /// Asset identifier
@@ -409,7 +408,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<IList<HistoryEntryClientResponse>>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<IList<HistoryOperation>>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -456,8 +455,9 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// The date of the operation will be less than
         /// </param>
         /// <param name='operationType'>
-        /// The type of the operation, possible values: CashInOut, CashOutAttempt,
-        /// ClientTrade, TransferEvent, LimitTradeEvent
+        /// The type of the operation, possible values: CashIn, CashOut, Trade
+        /// </param>
+        /// <param name='assetId'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -474,7 +474,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetByDatesWithHttpMessagesAsync(System.DateTime dateFrom, System.DateTime dateTo, string operationType = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetByDatesWithHttpMessagesAsync(System.DateTime dateFrom, System.DateTime dateTo, string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -486,6 +486,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 tracingParameters.Add("dateFrom", dateFrom);
                 tracingParameters.Add("dateTo", dateTo);
                 tracingParameters.Add("operationType", operationType);
+                tracingParameters.Add("assetId", assetId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "GetByDates", tracingParameters);
             }
@@ -498,6 +499,10 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             if (operationType != null)
             {
                 _queryParameters.Add(string.Format("operationType={0}", System.Uri.EscapeDataString(operationType)));
+            }
+            if (assetId != null)
+            {
+                _queryParameters.Add(string.Format("assetId={0}", System.Uri.EscapeDataString(assetId)));
             }
             if (_queryParameters.Count > 0)
             {
@@ -571,7 +576,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<IList<HistoryEntryWalletResponse>>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<IList<HistoryOperation>>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -621,8 +626,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// How many items skip before returning
         /// </param>
         /// <param name='operationType'>
-        /// The type of the operation, possible values: CashInOut, CashOutAttempt,
-        /// ClientTrade, TransferEvent, LimitTradeEvent
+        /// The type of the operation, possible values: CashIn, CashOut, Trade
         /// </param>
         /// <param name='assetId'>
         /// Asset identifier
@@ -756,7 +760,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<IList<HistoryEntryWalletResponse>>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<IList<HistoryOperation>>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {
@@ -823,7 +827,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<HistoryEntryWalletResponse>> GetByOperationIdWithHttpMessagesAsync(string walletId, string operationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<HistoryOperation>> GetByOperationIdWithHttpMessagesAsync(string walletId, string operationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (walletId == null)
             {
@@ -909,7 +913,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 throw ex;
             }
             // Create Result
-            var _result = new HttpOperationResponse<HistoryEntryWalletResponse>();
+            var _result = new HttpOperationResponse<HistoryOperation>();
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
@@ -918,7 +922,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
                 {
-                    _result.Body = SafeJsonConvert.DeserializeObject<HistoryEntryWalletResponse>(_responseContent, DeserializationSettings);
+                    _result.Body = SafeJsonConvert.DeserializeObject<HistoryOperation>(_responseContent, DeserializationSettings);
                 }
                 catch (JsonException ex)
                 {

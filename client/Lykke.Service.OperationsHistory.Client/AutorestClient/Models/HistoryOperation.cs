@@ -9,27 +9,26 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class HistoryEntryClientResponse
+    public partial class HistoryOperation
     {
         /// <summary>
-        /// Initializes a new instance of the HistoryEntryClientResponse class.
+        /// Initializes a new instance of the HistoryOperation class.
         /// </summary>
-        public HistoryEntryClientResponse()
+        public HistoryOperation()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the HistoryEntryClientResponse class.
+        /// Initializes a new instance of the HistoryOperation class.
         /// </summary>
-        public HistoryEntryClientResponse(System.DateTime dateTime, double amount, string walletId = default(string), string currency = default(string), string opType = default(string), string customData = default(string))
+        public HistoryOperation(System.DateTime dateTime, string id = default(string), CashInHistoryOperation cashIn = default(CashInHistoryOperation), CashOutHistoryOperation cashOut = default(CashOutHistoryOperation), TradeHistoryOperation trade = default(TradeHistoryOperation))
         {
-            WalletId = walletId;
+            Id = id;
             DateTime = dateTime;
-            Amount = amount;
-            Currency = currency;
-            OpType = opType;
-            CustomData = customData;
+            CashIn = cashIn;
+            CashOut = cashOut;
+            Trade = trade;
             CustomInit();
         }
 
@@ -40,8 +39,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "WalletId")]
-        public string WalletId { get; set; }
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
 
         /// <summary>
         /// </summary>
@@ -50,23 +49,18 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "Amount")]
-        public double Amount { get; set; }
+        [JsonProperty(PropertyName = "CashIn")]
+        public CashInHistoryOperation CashIn { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "Currency")]
-        public string Currency { get; set; }
+        [JsonProperty(PropertyName = "CashOut")]
+        public CashOutHistoryOperation CashOut { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "OpType")]
-        public string OpType { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "CustomData")]
-        public string CustomData { get; set; }
+        [JsonProperty(PropertyName = "Trade")]
+        public TradeHistoryOperation Trade { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -76,7 +70,18 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
         /// </exception>
         public virtual void Validate()
         {
-            //Nothing to validate
+            if (CashIn != null)
+            {
+                CashIn.Validate();
+            }
+            if (CashOut != null)
+            {
+                CashOut.Validate();
+            }
+            if (Trade != null)
+            {
+                Trade.Validate();
+            }
         }
     }
 }

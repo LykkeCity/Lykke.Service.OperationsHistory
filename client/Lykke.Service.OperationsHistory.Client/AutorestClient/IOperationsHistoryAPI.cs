@@ -58,8 +58,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// How many items skip before returning
         /// </param>
         /// <param name='operationType'>
-        /// The type of the operation, possible values: CashInOut,
-        /// CashOutAttempt, ClientTrade, TransferEvent, LimitTradeEvent
+        /// The type of the operation, possible values: CashIn, CashOut, Trade
         /// </param>
         /// <param name='assetId'>
         /// Asset identifier
@@ -83,8 +82,9 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// The date of the operation will be less than
         /// </param>
         /// <param name='operationType'>
-        /// The type of the operation, possible values: CashInOut,
-        /// CashOutAttempt, ClientTrade, TransferEvent, LimitTradeEvent
+        /// The type of the operation, possible values: CashIn, CashOut, Trade
+        /// </param>
+        /// <param name='assetId'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -92,7 +92,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetByDatesWithHttpMessagesAsync(System.DateTime dateFrom, System.DateTime dateTo, string operationType = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetByDatesWithHttpMessagesAsync(System.DateTime dateFrom, System.DateTime dateTo, string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Getting history by wallet identifier
@@ -107,8 +107,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// How many items skip before returning
         /// </param>
         /// <param name='operationType'>
-        /// The type of the operation, possible values: CashInOut,
-        /// CashOutAttempt, ClientTrade, TransferEvent, LimitTradeEvent
+        /// The type of the operation, possible values: CashIn, CashOut, Trade
         /// </param>
         /// <param name='assetId'>
         /// Asset identifier
@@ -136,7 +135,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<HistoryEntryWalletResponse>> GetByOperationIdWithHttpMessagesAsync(string walletId, string operationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<HistoryOperation>> GetByOperationIdWithHttpMessagesAsync(string walletId, string operationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }
