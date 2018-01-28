@@ -38,58 +38,35 @@ namespace Lykke.Service.OperationsHistory.Services
             CashInHistoryOperation cashIn = null;
             CashOutHistoryOperation cashOut = null;
             TradeHistoryOperation trade = null;
-
+            
             switch (legacyOperationType)
             {
                 case OperationType.CashInOut:
                     var cashInOut = JsonConvert.DeserializeObject<CashOperationDto>(historyEntity.CustomData);
-                    cashIn = cashInOut?.ConvertToCashIn(asset);
-                    cashOut = cashInOut?.ConvertToCashOut(asset);
-                    break;
+                    return cashInOut?.ConvertToHistoryOperation(asset);
                 case OperationType.CashOutAttempt:
                     var cashOutRequest = JsonConvert.DeserializeObject<CashOutRequestDto>(historyEntity.CustomData);
-                    cashOut = cashOutRequest?.ConvertToCashOut(asset);
-                    break;
+                    return cashOutRequest?.ConvertToHistoryOperation(asset);
                 case OperationType.ClientTrade:
                     var clientTrade = JsonConvert.DeserializeObject<ClientTradeDto>(historyEntity.CustomData);
-                    trade = clientTrade?.ConvertToTrade(asset);
-                    break;
+                    return clientTrade?.ConvertToHistoryOperation(asset);
                 case OperationType.LimitTradeEvent:
                     var limitTrade = JsonConvert.DeserializeObject<LimitTradeEventDto>(historyEntity.CustomData);
                     var limitAssetPair = await GetAssetPairByIdAsync(limitTrade?.AssetPair);
                     var limitAsset = await GetAssetByIdAsync(limitAssetPair?.QuotingAssetId);
-                    trade = limitTrade?.ConvertToTrade(limitAsset);
-                    break;
+                    return limitTrade?.ConvertToHistoryOperation(limitAsset);
                 case OperationType.TransferEvent:
                     var transfer = JsonConvert.DeserializeObject<TransferEventDto>(historyEntity.CustomData);
-                    if (historyEntity.ClientId == transfer.ClientId)
-                    {
-                        cashIn = transfer.ConvertToCashIn(asset);
-                    }
-                    if (historyEntity.ClientId == transfer.FromId)
-                    {
-                        cashOut = transfer.ConvertToCashOut(asset);
-                    }
-                    break;
+                    return transfer?.ConvertToHistoryOperation(asset, historyEntity.ClientId == transfer.ClientId);
                 default:
                     throw new Exception($"Unknown operation type: {legacyOperationType.ToString()}");
             }
-
-            var operationId = cashIn?.Id ?? cashOut?.Id ?? trade?.Id;
-
-            return HistoryOperation.Create(
-                id: operationId,
-                dateTime: historyEntity.DateTime,
-                cashIn: cashIn,
-                cashout: cashOut,
-                trade: trade
-            );
         }
 
         private async Task<Asset> GetAssetByIdAsync(string assetId)
         {
             if (string.IsNullOrEmpty(assetId)) return null;
-
+            
             var cachedValues = await _assetsCache.Values();
 
             return cachedValues.FirstOrDefault(x => x.Id == assetId);

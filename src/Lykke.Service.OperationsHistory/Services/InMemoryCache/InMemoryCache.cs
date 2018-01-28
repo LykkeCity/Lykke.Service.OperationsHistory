@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -63,7 +64,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             }
         }
 
-        public async Task<IEnumerable<HistoryOperation>> GetAsync(string walletId, string operationType = null, string assetId = null, PaginationInfo paging = null)
+        public async Task<IEnumerable<HistoryOperation>> GetAsync(string walletId, HistoryOperationType? operationType = null, string assetId = null, PaginationInfo paging = null)
         {
             var walletRecords = await GetRecordsByWalletId(walletId);
 

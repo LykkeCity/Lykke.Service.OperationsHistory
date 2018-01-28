@@ -70,7 +70,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByClientId(
             string clientId, 
-            [FromQuery] string operationType,
+            [FromQuery] HistoryOperationType? operationType,
             [FromQuery] string assetId, 
             [FromQuery] int take, 
             [FromQuery] int skip)
@@ -131,7 +131,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         public async Task<IActionResult> GetByDates(
             [FromQuery] DateTime dateFrom, 
             [FromQuery] DateTime dateTo,
-            [FromQuery] string operationType,
+            [FromQuery] HistoryOperationType? operationType,
             [FromQuery] string assetId)
         {
             if (dateFrom >= dateTo)
@@ -163,7 +163,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(void), (int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByWalletId(string walletId,
-            [FromQuery] string operationType,
+            [FromQuery] HistoryOperationType? operationType,
             [FromQuery] string assetId,
             [FromQuery] int take,
             [FromQuery] int skip)

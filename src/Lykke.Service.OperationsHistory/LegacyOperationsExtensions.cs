@@ -172,5 +172,107 @@ namespace Lykke.Service.OperationsHistory
                 ContextOperationType = nameof(HistoryOperationType.Trade)
             };
         }
+        
+        private static HistoryOperationState GetState(TransactionStates state)
+        {
+            if (state == TransactionStates.InProcessOffchain ||
+                state == TransactionStates.InProcessOffchain)
+                return HistoryOperationState.InProgress;
+
+            return HistoryOperationState.Finished;
+        }
+        
+        private static HistoryOperationState GetState(OrderStatus state)
+        {
+            if (state == OrderStatus.Cancelled)
+                return HistoryOperationState.Canceled;
+            if (state == OrderStatus.Matched)
+                return HistoryOperationState.Finished;
+            if (state == OrderStatus.Processing ||
+                state == OrderStatus.InOrderBook)
+                return HistoryOperationState.InProgress;
+            return HistoryOperationState.Failed;
+        }
+        
+        public static HistoryOperation ConvertToHistoryOperation(this ICashInOutOperation operation, Asset asset)
+        {
+            var amount = operation.Amount.Normalize(asset);
+
+            var type = amount > 0 ? HistoryOperationType.CashIn : HistoryOperationType.CashOut;
+            
+            return HistoryOperation.Create(
+                operation.Id,
+                operation.DateTime,
+                type,
+                type == HistoryOperationType.CashIn ? HistoryOperationState.Finished : GetState(operation.State),
+                Math.Abs((decimal)amount),
+                operation.AssetId,
+                null,
+                null);
+        }
+        
+        public static HistoryOperation ConvertToHistoryOperation(this ICashOutRequest operation, Asset asset)
+        {
+            var amount = operation.Amount.Normalize(asset);
+
+            return HistoryOperation.Create(
+                operation.Id,
+                operation.DateTime,
+                HistoryOperationType.CashOut,
+                GetState(operation.State),
+                Math.Abs((decimal)amount),
+                operation.AssetId,
+                null,
+                null);
+        }
+        
+        public static HistoryOperation ConvertToHistoryOperation(this IClientTrade operation, Asset asset)
+        {
+            var volume = operation.Amount.Normalize(asset);
+
+            return HistoryOperation.Create(
+                operation.Id,
+                operation.DateTime,
+                HistoryOperationType.Trade,
+                GetState(operation.State),
+                (decimal)volume,
+                operation.AssetId,
+                null,
+                null);
+        }
+        
+        public static HistoryOperation ConvertToHistoryOperation(this ILimitTradeEvent operation, Asset asset)
+        {
+            var isBuy = operation.OrderType == OrderType.Buy;
+
+            var volume = operation.Volume.Normalize(asset, isBuy);
+
+            return HistoryOperation.Create(
+                operation.Id,
+                operation.CreatedDt,
+                HistoryOperationType.LimitTrade,
+                GetState(operation.Status),
+                (decimal)volume,
+                operation.AssetId,
+                operation.AssetPair,
+                (decimal)operation.Price);
+        }
+        
+        public static HistoryOperation ConvertToHistoryOperation(this ITransferEvent operation, Asset asset, bool isCashIn)
+        {
+            var amount = operation.Amount.Normalize(asset);
+
+            var type = isCashIn ? HistoryOperationType.CashIn : HistoryOperationType.CashOut;
+            
+            return HistoryOperation.Create(
+                operation.Id,
+                operation.DateTime,
+                type,
+                type == HistoryOperationType.CashIn ? HistoryOperationState.Finished : GetState(operation.State),
+                Math.Abs((decimal)amount),
+                operation.AssetId,
+                null,
+                null);
+        }
     }
 }

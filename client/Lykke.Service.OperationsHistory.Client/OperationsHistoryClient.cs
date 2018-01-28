@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common.Log;
@@ -55,7 +55,7 @@ namespace Lykke.Service.OperationsHistory.Client
             throw new ArgumentException("Unknown response object");
         }
 
-        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, string operationType = null, 
+        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType? operationType = null, 
             string assetId = null, int take = 100, int skip = 0)
         {
             var response =
@@ -65,7 +65,7 @@ namespace Lykke.Service.OperationsHistory.Client
         }
 
         public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime? dateTo,
-            string operationType = null, string assetId = null)
+            HistoryOperationType? operationType = null, string assetId = null)
         {
             var actualDateTo = dateTo ?? DateTime.UtcNow;
 
@@ -74,7 +74,7 @@ namespace Lykke.Service.OperationsHistory.Client
             return PrepareResponseMultiple(response);
         }
 
-        public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, string operationType = null, string assetId = null, int take = 100, int skip = 0)
+        public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, HistoryOperationType? operationType = null, string assetId = null, int take = 100, int skip = 0)
         {
             var response =
                 await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId);

@@ -15,10 +15,18 @@ namespace Lykke.Service.OperationsHistory.Core
 
     public enum HistoryOperationType
     {
-        None = 0,
         CashIn,
         CashOut,
-        Trade
+        Trade,
+        LimitTrade
+    }
+
+    public enum HistoryOperationState
+    {
+        InProgress,
+        Finished,
+        Canceled,
+        Failed
     }
 
     /// <summary>
@@ -28,24 +36,37 @@ namespace Lykke.Service.OperationsHistory.Core
     {
         public string Id { get; set; }
         public DateTime DateTime { get; set; }
-        public CashInHistoryOperation CashIn { get; set; }
-        public CashOutHistoryOperation CashOut { get; set; }
-        public TradeHistoryOperation Trade { get; set; }
+        
+        [JsonConverter(typeof(StringEnumConverter))]
+        public HistoryOperationType Type { get; set; }
+        
+        [JsonConverter(typeof(StringEnumConverter))]
+        public HistoryOperationState State { get; set; }
+        public decimal Amount { get; set; }
+        public string Asset { get; set; }
+        public string AssetPair { get; set; }
+        public decimal? Price { get; set; }
 
         public static HistoryOperation Create(
             string id,
             DateTime dateTime,
-            TradeHistoryOperation trade = null,
-            CashInHistoryOperation cashIn = null,
-            CashOutHistoryOperation cashout = null)
+            HistoryOperationType type,
+            HistoryOperationState state,
+            decimal amount,
+            string asset,
+            string assetPair,
+            decimal? price = default(decimal?))
         {
             return new HistoryOperation
             {
                 DateTime = dateTime,
                 Id = id,
-                CashIn = cashIn,
-                CashOut = cashout,
-                Trade = trade
+                Type = type,
+                State = state,
+                Amount = amount,
+                Asset = asset,
+                AssetPair = assetPair,
+                Price = price
             };
         }
     }

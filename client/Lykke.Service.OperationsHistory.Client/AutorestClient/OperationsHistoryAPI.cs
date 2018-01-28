@@ -274,7 +274,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// How many items skip before returning
         /// </param>
         /// <param name='operationType'>
-        /// The type of the operation, possible values: CashIn, CashOut, Trade
+        /// The type of the operation, possible values: CashIn, CashOut, Trade.
+        /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade'
         /// </param>
         /// <param name='assetId'>
         /// Asset identifier
@@ -300,7 +301,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int take, int skip, string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (clientId == null)
             {
@@ -328,7 +329,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             List<string> _queryParameters = new List<string>();
             if (operationType != null)
             {
-                _queryParameters.Add(string.Format("operationType={0}", System.Uri.EscapeDataString(operationType)));
+                _queryParameters.Add(string.Format("operationType={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(operationType, SerializationSettings).Trim('"'))));
             }
             if (assetId != null)
             {
@@ -455,7 +456,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// The date of the operation will be less than
         /// </param>
         /// <param name='operationType'>
-        /// The type of the operation, possible values: CashIn, CashOut, Trade
+        /// The type of the operation, possible values: CashIn, CashOut, Trade.
+        /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade'
         /// </param>
         /// <param name='assetId'>
         /// </param>
@@ -474,7 +476,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetByDatesWithHttpMessagesAsync(System.DateTime dateFrom, System.DateTime dateTo, string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetByDatesWithHttpMessagesAsync(System.DateTime dateFrom, System.DateTime dateTo, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -498,7 +500,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             _queryParameters.Add(string.Format("dateTo={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(dateTo, SerializationSettings).Trim('"'))));
             if (operationType != null)
             {
-                _queryParameters.Add(string.Format("operationType={0}", System.Uri.EscapeDataString(operationType)));
+                _queryParameters.Add(string.Format("operationType={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(operationType, SerializationSettings).Trim('"'))));
             }
             if (assetId != null)
             {
@@ -626,7 +628,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// How many items skip before returning
         /// </param>
         /// <param name='operationType'>
-        /// The type of the operation, possible values: CashIn, CashOut, Trade
+        /// The type of the operation, possible values: CashIn, CashOut, Trade.
+        /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade'
         /// </param>
         /// <param name='assetId'>
         /// Asset identifier
@@ -652,7 +655,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetByWalletIdWithHttpMessagesAsync(string walletId, int take, int skip, string operationType = default(string), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetByWalletIdWithHttpMessagesAsync(string walletId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (walletId == null)
             {
@@ -680,7 +683,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             List<string> _queryParameters = new List<string>();
             if (operationType != null)
             {
-                _queryParameters.Add(string.Format("operationType={0}", System.Uri.EscapeDataString(operationType)));
+                _queryParameters.Add(string.Format("operationType={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(operationType, SerializationSettings).Trim('"'))));
             }
             if (assetId != null)
             {
