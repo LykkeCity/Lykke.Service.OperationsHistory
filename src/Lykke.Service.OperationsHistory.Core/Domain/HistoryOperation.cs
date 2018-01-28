@@ -42,20 +42,20 @@ namespace Lykke.Service.OperationsHistory.Core
         
         [JsonConverter(typeof(StringEnumConverter))]
         public HistoryOperationState State { get; set; }
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
         public string Asset { get; set; }
         public string AssetPair { get; set; }
-        public decimal? Price { get; set; }
+        public double? Price { get; set; }
 
         public static HistoryOperation Create(
             string id,
             DateTime dateTime,
             HistoryOperationType type,
             HistoryOperationState state,
-            decimal amount,
+            double amount,
             string asset,
             string assetPair,
-            decimal? price = default(decimal?))
+            double? price = default(double?))
         {
             return new HistoryOperation
             {

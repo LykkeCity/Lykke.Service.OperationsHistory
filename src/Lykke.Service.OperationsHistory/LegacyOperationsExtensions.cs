@@ -205,7 +205,7 @@ namespace Lykke.Service.OperationsHistory
                 operation.DateTime,
                 type,
                 type == HistoryOperationType.CashIn ? HistoryOperationState.Finished : GetState(operation.State),
-                Math.Abs((decimal)amount),
+                Math.Abs(amount),
                 operation.AssetId,
                 null,
                 null);
@@ -220,7 +220,7 @@ namespace Lykke.Service.OperationsHistory
                 operation.DateTime,
                 HistoryOperationType.CashOut,
                 GetState(operation.State),
-                Math.Abs((decimal)amount),
+                Math.Abs(amount),
                 operation.AssetId,
                 null,
                 null);
@@ -235,7 +235,7 @@ namespace Lykke.Service.OperationsHistory
                 operation.DateTime,
                 HistoryOperationType.Trade,
                 GetState(operation.State),
-                (decimal)volume,
+                volume,
                 operation.AssetId,
                 null,
                 null);
@@ -252,10 +252,10 @@ namespace Lykke.Service.OperationsHistory
                 operation.CreatedDt,
                 HistoryOperationType.LimitTrade,
                 GetState(operation.Status),
-                (decimal)volume,
+                volume,
                 operation.AssetId,
                 operation.AssetPair,
-                (decimal)operation.Price);
+                operation.Price);
         }
         
         public static HistoryOperation ConvertToHistoryOperation(this ITransferEvent operation, Asset asset, bool isCashIn)
@@ -269,7 +269,7 @@ namespace Lykke.Service.OperationsHistory
                 operation.DateTime,
                 type,
                 type == HistoryOperationType.CashIn ? HistoryOperationState.Finished : GetState(operation.State),
-                Math.Abs((decimal)amount),
+                Math.Abs(amount),
                 operation.AssetId,
                 null,
                 null);
