@@ -237,7 +237,7 @@ namespace Lykke.Service.OperationsHistory
                 GetState(operation.State),
                 volume,
                 operation.AssetId,
-                null,
+                operation.AssetPairId,
                 null);
         }
         
