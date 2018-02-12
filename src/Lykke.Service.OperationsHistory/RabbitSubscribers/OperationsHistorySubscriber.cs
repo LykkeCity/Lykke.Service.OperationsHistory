@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsRepository.Contract.History;
 using Lykke.Service.OperationsHistory.Core.Services;
+using Lykke.Service.OperationsRepository.Contract;
 
 namespace Lykke.Service.OperationsHistory.RabbitSubscribers
 {
@@ -58,6 +59,9 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
 
         private async Task ProcessMessageAsync(OperationsHistoryMessage arg)
         {
+            if ((OperationType) Enum.Parse(typeof(OperationType), arg.OpType) == OperationType.LimitTradeEvent)
+                return;
+            
             var operation = await _adapter.Execute(arg);
 
             await _historyCache.AddOrUpdate(arg.ClientId, operation);

@@ -8,6 +8,7 @@ using Common.Log;
 using Lykke.Service.OperationsHistory.Core.Domain;
 using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Services;
+using Lykke.Service.OperationsRepository.Contract;
 
 namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 {
@@ -67,7 +68,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
         public async Task<IEnumerable<HistoryOperation>> GetAsync(string walletId, HistoryOperationType? operationType = null, string assetId = null, PaginationInfo paging = null)
         {
             var walletRecords = await GetRecordsByWalletId(walletId);
-
+            
             var result = walletRecords
                 .Where(HistoryOperationFilterPredicates.IfTypeEquals(operationType))
                 .Where(HistoryOperationFilterPredicates.IfAssetEquals(assetId))
@@ -85,11 +86,14 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 
         private async Task<CacheModel> Load(string walletId)
         {
-            var records = await _repository.GetByWalletIdAsync(walletId);
+            var allRecords = await _repository.GetByWalletIdAsync(walletId);
 
+            var records = allRecords.Where(x =>
+                (OperationType) Enum.Parse(typeof(OperationType), x.OpType) != OperationType.LimitTradeEvent);
+            
             if (!records.Any())
                 return null;
-
+            
             var adaptedOperations = await Task.WhenAll(records.Select(x => _adapter.Execute(x)));
 
             var cacheModel = new CacheModel

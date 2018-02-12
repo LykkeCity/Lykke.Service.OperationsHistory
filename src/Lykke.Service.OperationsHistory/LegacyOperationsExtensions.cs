@@ -225,7 +225,7 @@ namespace Lykke.Service.OperationsHistory
                 null,
                 null);
         }
-        
+
         public static HistoryOperation ConvertToHistoryOperation(this IClientTrade operation, Asset asset)
         {
             var volume = operation.Amount.Normalize(asset);
@@ -233,36 +233,19 @@ namespace Lykke.Service.OperationsHistory
             return HistoryOperation.Create(
                 operation.Id,
                 operation.DateTime,
-                HistoryOperationType.Trade,
+                operation.IsLimitOrderResult ? HistoryOperationType.LimitTrade : HistoryOperationType.Trade,
                 GetState(operation.State),
                 volume,
                 operation.AssetId,
                 operation.AssetPairId,
-                null);
-        }
-        
-        public static HistoryOperation ConvertToHistoryOperation(this ILimitTradeEvent operation, Asset asset)
-        {
-            var isBuy = operation.OrderType == OrderType.Buy;
-
-            var volume = operation.Volume.Normalize(asset, isBuy);
-
-            return HistoryOperation.Create(
-                operation.Id,
-                operation.CreatedDt,
-                HistoryOperationType.LimitTrade,
-                GetState(operation.Status),
-                volume,
-                operation.AssetId,
-                operation.AssetPair,
                 operation.Price);
         }
         
-        public static HistoryOperation ConvertToHistoryOperation(this ITransferEvent operation, Asset asset, bool isCashIn)
+        public static HistoryOperation ConvertToHistoryOperation(this ITransferEvent operation, Asset asset)
         {
             var amount = operation.Amount.Normalize(asset);
 
-            var type = isCashIn ? HistoryOperationType.CashIn : HistoryOperationType.CashOut;
+            var type = amount > 0 ? HistoryOperationType.CashIn : HistoryOperationType.CashOut;
             
             return HistoryOperation.Create(
                 operation.Id,
