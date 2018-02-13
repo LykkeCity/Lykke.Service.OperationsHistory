@@ -59,8 +59,8 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
 
         private async Task ProcessMessageAsync(OperationsHistoryMessage arg)
         {
-            if ((OperationType) Enum.Parse(typeof(OperationType), arg.OpType) == OperationType.LimitTradeEvent)
-                return;
+            //if ((OperationType) Enum.Parse(typeof(OperationType), arg.OpType) == OperationType.LimitTradeEvent)
+                //return;
             
             var operation = await _adapter.Execute(arg);
 

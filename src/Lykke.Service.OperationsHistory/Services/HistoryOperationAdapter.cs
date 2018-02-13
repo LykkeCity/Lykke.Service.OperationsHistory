@@ -50,6 +50,11 @@ namespace Lykke.Service.OperationsHistory.Services
                 case OperationType.ClientTrade:
                     var clientTrade = JsonConvert.DeserializeObject<ClientTradeDto>(historyEntity.CustomData);
                     return clientTrade?.ConvertToHistoryOperation(asset);
+                case OperationType.LimitTradeEvent:
+                    var limitTrade = JsonConvert.DeserializeObject<LimitTradeEventDto>(historyEntity.CustomData);
+                    var limitAssetPair = await GetAssetPairByIdAsync(limitTrade?.AssetPair);
+                    var limitAsset = await GetAssetByIdAsync(limitAssetPair?.QuotingAssetId);
+                    return limitTrade?.ConvertToHistoryOperation(limitAsset);
                 case OperationType.TransferEvent:
                     var transfer = JsonConvert.DeserializeObject<TransferEventDto>(historyEntity.CustomData);
                     return transfer?.ConvertToHistoryOperation(asset);

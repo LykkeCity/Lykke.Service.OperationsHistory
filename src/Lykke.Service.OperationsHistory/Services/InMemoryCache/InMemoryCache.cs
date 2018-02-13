@@ -86,10 +86,10 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 
         private async Task<CacheModel> Load(string walletId)
         {
-            var allRecords = await _repository.GetByWalletIdAsync(walletId);
+            var records = await _repository.GetByWalletIdAsync(walletId);
 
-            var records = allRecords.Where(x =>
-                (OperationType) Enum.Parse(typeof(OperationType), x.OpType) != OperationType.LimitTradeEvent);
+            //var records = allRecords.Where(x =>
+                //(OperationType) Enum.Parse(typeof(OperationType), x.OpType) != OperationType.LimitTradeEvent);
             
             if (!records.Any())
                 return null;

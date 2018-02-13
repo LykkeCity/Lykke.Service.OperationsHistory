@@ -240,6 +240,23 @@ namespace Lykke.Service.OperationsHistory
                 operation.AssetPairId,
                 operation.Price);
         }
+
+        public static HistoryOperation ConvertToHistoryOperation(this ILimitTradeEvent operation, Asset asset)
+        {
+            var isBuy = operation.OrderType == OrderType.Buy;
+
+            var volume = operation.Volume.Normalize(asset, isBuy);
+            Console.WriteLine(operation.Status.ToString());
+            return HistoryOperation.Create(
+                operation.Id,
+                operation.CreatedDt,
+                HistoryOperationType.LimitTrade,
+                GetState(operation.Status),
+                volume,
+                operation.AssetId,
+                operation.AssetPair,
+                operation.Price);
+        }
         
         public static HistoryOperation ConvertToHistoryOperation(this ITransferEvent operation, Asset asset)
         {
