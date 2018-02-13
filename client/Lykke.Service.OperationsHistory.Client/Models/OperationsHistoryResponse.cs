@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Lykke.Service.OperationsHistory.AutorestClient.Models;
 
 namespace Lykke.Service.OperationsHistory.Client.Models

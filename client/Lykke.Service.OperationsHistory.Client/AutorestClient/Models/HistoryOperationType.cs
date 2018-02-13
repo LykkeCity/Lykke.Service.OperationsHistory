@@ -24,7 +24,9 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
         [EnumMember(Value = "Trade")]
         Trade,
         [EnumMember(Value = "LimitTrade")]
-        LimitTrade
+        LimitTrade,
+        [EnumMember(Value = "LimitOrderEvent")]
+        LimitOrderEvent
     }
     internal static class HistoryOperationTypeEnumExtension
     {
@@ -45,6 +47,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
                     return "Trade";
                 case HistoryOperationType.LimitTrade:
                     return "LimitTrade";
+                case HistoryOperationType.LimitOrderEvent:
+                    return "LimitOrderEvent";
             }
             return null;
         }
@@ -61,6 +65,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
                     return HistoryOperationType.Trade;
                 case "LimitTrade":
                     return HistoryOperationType.LimitTrade;
+                case "LimitOrderEvent":
+                    return HistoryOperationType.LimitOrderEvent;
             }
             return null;
         }

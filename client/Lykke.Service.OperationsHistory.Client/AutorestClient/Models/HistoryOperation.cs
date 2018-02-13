@@ -23,7 +23,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
         /// Initializes a new instance of the HistoryOperation class.
         /// </summary>
         /// <param name="type">Possible values include: 'CashIn', 'CashOut',
-        /// 'Trade', 'LimitTrade'</param>
+        /// 'Trade', 'LimitTrade', 'LimitOrderEvent'</param>
         /// <param name="state">Possible values include: 'InProgress',
         /// 'Finished', 'Canceled', 'Failed'</param>
         public HistoryOperation(System.DateTime dateTime, HistoryOperationType type, HistoryOperationState state, double amount, string id = default(string), string asset = default(string), string assetPair = default(string), double? price = default(double?))
@@ -56,7 +56,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
 
         /// <summary>
         /// Gets or sets possible values include: 'CashIn', 'CashOut', 'Trade',
-        /// 'LimitTrade'
+        /// 'LimitTrade', 'LimitOrderEvent'
         /// </summary>
         [JsonProperty(PropertyName = "Type")]
         public HistoryOperationType Type { get; set; }

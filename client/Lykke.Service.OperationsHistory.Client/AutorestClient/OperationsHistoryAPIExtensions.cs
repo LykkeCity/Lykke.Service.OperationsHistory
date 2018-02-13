@@ -60,7 +60,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// </param>
             /// <param name='operationType'>
             /// The type of the operation, possible values: CashIn, CashOut, Trade.
-            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade'
+            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
+            /// 'LimitOrderEvent'
             /// </param>
             /// <param name='assetId'>
             /// Asset identifier
@@ -87,7 +88,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// </param>
             /// <param name='operationType'>
             /// The type of the operation, possible values: CashIn, CashOut, Trade.
-            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade'
+            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
+            /// 'LimitOrderEvent'
             /// </param>
             /// <param name='assetId'>
             /// Asset identifier
@@ -117,7 +119,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// </param>
             /// <param name='operationType'>
             /// The type of the operation, possible values: CashIn, CashOut, Trade.
-            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade'
+            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
+            /// 'LimitOrderEvent'
             /// </param>
             /// <param name='assetId'>
             /// </param>
@@ -140,7 +143,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// </param>
             /// <param name='operationType'>
             /// The type of the operation, possible values: CashIn, CashOut, Trade.
-            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade'
+            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
+            /// 'LimitOrderEvent'
             /// </param>
             /// <param name='assetId'>
             /// </param>
@@ -172,7 +176,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// </param>
             /// <param name='operationType'>
             /// The type of the operation, possible values: CashIn, CashOut, Trade.
-            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade'
+            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
+            /// 'LimitOrderEvent'
             /// </param>
             /// <param name='assetId'>
             /// Asset identifier
@@ -199,7 +204,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// </param>
             /// <param name='operationType'>
             /// The type of the operation, possible values: CashIn, CashOut, Trade.
-            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade'
+            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
+            /// 'LimitOrderEvent'
             /// </param>
             /// <param name='assetId'>
             /// Asset identifier
