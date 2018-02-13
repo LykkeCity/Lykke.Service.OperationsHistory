@@ -18,7 +18,8 @@ namespace Lykke.Service.OperationsHistory.Core
         CashIn,
         CashOut,
         Trade,
-        LimitTrade
+        LimitTrade,
+        LimitOrderEvent
     }
 
     public enum HistoryOperationState

@@ -250,7 +250,7 @@ namespace Lykke.Service.OperationsHistory
             return HistoryOperation.Create(
                 operation.Id,
                 operation.CreatedDt,
-                HistoryOperationType.LimitTrade,
+                HistoryOperationType.LimitOrderEvent,
                 GetState(operation.Status),
                 volume,
                 operation.AssetId,
