@@ -1,18 +1,22 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using AutoMapper;
 using AzureStorage.Tables;
+using Common;
 using Common.Log;
+using Lykke.Service.Assets.Client;
+using Lykke.Service.Assets.Client.Models;
 using Lykke.Service.ClientAccount.Client;
+using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
-using Lykke.Service.OperationsHistory.Mappers;
 using Lykke.Service.OperationsHistory.RabbitSubscribers;
 using Lykke.Service.OperationsHistory.Services;
 using Lykke.Service.OperationsHistory.Services.InMemoryCache;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Linq;
 
 namespace Lykke.Service.OperationsHistory.Modules
 {
@@ -52,8 +56,10 @@ namespace Lykke.Service.OperationsHistory.Modules
             RegisterRabbitMqSubscribers(builder);
 
             RegisterServiceClients(builder);
+            
+            _services.RegisterAssetsClient(AssetServiceSettings.Create(new Uri(_settings.AssetsServiceClient.ServiceUrl), TimeSpan.FromMinutes(3)));
 
-            Mapper.Initialize(cfg => cfg.AddProfile(typeof(HistoryLogMapperProfile)));
+            RegisterDictionaryEntities(builder);
 
             builder.Populate(_services);
         }
@@ -79,7 +85,15 @@ namespace Lykke.Service.OperationsHistory.Modules
         {
             builder.RegisterType<InMemoryCache>()
                 .WithParameter(TypedParameter.From(_settings.OperationsHistoryService))
-                .As<IHistoryCache>()
+                .As<IHistoryOperationsCache>()
+                .SingleInstance();
+
+            builder.RegisterType<HistoryOperationAdapter>()
+                .As<IHistoryOperationAdapter>()
+                .SingleInstance();
+
+            builder.RegisterType<HistoryMessageAdapter>()
+                .As<IHistoryMessageAdapter>()
                 .SingleInstance();
         }
 
@@ -93,6 +107,26 @@ namespace Lykke.Service.OperationsHistory.Modules
         private void RegisterServiceClients(ContainerBuilder builder)
         {
             builder.RegisterLykkeServiceClient(_settings.ClientAccountServiceClient.ServiceUrl);
+        }
+
+        private void RegisterDictionaryEntities(ContainerBuilder builder)
+        {
+            builder.Register(c =>
+            {
+                var ctx = c.Resolve<IComponentContext>();
+                return new CachedDataDictionary<string, Asset>(
+                    async () =>
+                        (await ctx.Resolve<IAssetsService>().AssetGetAllAsync()).ToDictionary(itm => itm.Id));
+            }).SingleInstance();
+
+            builder.Register(c =>
+            {
+                var ctx = c.Resolve<IComponentContext>();
+                return new CachedDataDictionary<string, AssetPair>(
+                    async () =>
+                        (await ctx.Resolve<IAssetsService>().AssetPairGetAllAsync())
+                        .ToDictionary(itm => itm.Id));
+            }).SingleInstance();
         }
     }
 }

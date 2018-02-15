@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Common.Log;
 using Lykke.Service.OperationsHistory.AutorestClient;
 using Lykke.Service.OperationsHistory.AutorestClient.Models;
@@ -14,12 +13,10 @@ namespace Lykke.Service.OperationsHistory.Client
     {
         private readonly ILog _log;
         private OperationsHistoryAPI _apiClient;
-        private readonly IMapper _mapper;
 
         public OperationsHistoryClient(string serviceUrl, ILog log)
         {
             _log = log;
-            _mapper = CreateMapper();
             _apiClient = new OperationsHistoryAPI(new Uri(serviceUrl));
         }
 
@@ -31,22 +28,10 @@ namespace Lykke.Service.OperationsHistory.Client
             _apiClient = null;
         }
 
-        public static IMapper CreateMapper()
-        {
-            var mapperConfiguration = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<HistoryEntryWalletResponse, HistoryRecordModel>()
-                    .ForMember(dest => dest.WalletId, opt => opt.Ignore());
-                cfg.CreateMap<HistoryEntryClientResponse, HistoryRecordModel>();
-            });
-
-            return mapperConfiguration.CreateMapper();
-        }
-
-        private OperationsHistoryResponse PrepareResponseMultiple<T>(HttpOperationResponse<object> serviceResponse)
+        private OperationsHistoryResponse PrepareResponseMultiple(HttpOperationResponse<object> serviceResponse)
         {
             var error = serviceResponse.Body as ErrorResponse;
-            var result = serviceResponse.Body as IList<T>;
+            var result = serviceResponse.Body as IList<HistoryOperation>;
 
             if (error != null)
             {
@@ -63,52 +48,45 @@ namespace Lykke.Service.OperationsHistory.Client
             {
                 return new OperationsHistoryResponse
                 {
-                    Records = _mapper.Map<IList<HistoryRecordModel>>(result)
+                    Records = result
                 };
             }
 
             throw new ArgumentException("Unknown response object");
         }
 
-        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, string operationType = null, 
+        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType? operationType = null, 
             string assetId = null, int take = 100, int skip = 0)
         {
             var response =
                 await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId);
 
-            return PrepareResponseMultiple<HistoryEntryClientResponse>(response);
+            return PrepareResponseMultiple(response);
         }
 
         public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime? dateTo,
-            string operationType = null)
+            HistoryOperationType? operationType = null, string assetId = null)
         {
             var actualDateTo = dateTo ?? DateTime.UtcNow;
 
-            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, actualDateTo, operationType);
+            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, actualDateTo, operationType, assetId);
 
-            return PrepareResponseMultiple<HistoryEntryWalletResponse>(response);
+            return PrepareResponseMultiple(response);
         }
 
-        public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, string operationType = null, string assetId = null, int take = 100, int skip = 0)
+        public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, HistoryOperationType? operationType = null, string assetId = null, int take = 100, int skip = 0)
         {
             var response =
                 await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId);
 
-            return PrepareResponseMultiple<HistoryEntryWalletResponse>(response);
+            return PrepareResponseMultiple(response);
         }
 
-        public async Task<HistoryRecordModel> GetByOperationId(string walletId, string operationId)
+        public async Task<HistoryOperation> GetByOperationId(string walletId, string operationId)
         {
             var response = await _apiClient.GetByOperationIdWithHttpMessagesAsync(walletId, operationId);
 
-            var result = response.Body as HistoryEntryWalletResponse;
-
-            if (result == null)
-            {
-                return null;
-            }
-
-            return _mapper.Map<HistoryRecordModel>(result);
+            return response.Body as HistoryOperation;
         }
     }
 }

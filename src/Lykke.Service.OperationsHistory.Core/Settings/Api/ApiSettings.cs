@@ -1,4 +1,5 @@
 ﻿using Lykke.Service.ClientAccount.Client;
+using Lykke.SettingsReader.Attributes;
 
 namespace Lykke.Service.OperationsHistory.Core.Settings.Api
 {
@@ -7,6 +8,7 @@ namespace Lykke.Service.OperationsHistory.Core.Settings.Api
         public OperationsHistorySettings OperationsHistoryService { get; set; }
         public SlackNotificationsSettings SlackNotifications { get; set; }
         public ClientAccountServiceClientSettings ClientAccountServiceClient { get; set; }
+        public AssetsServiceClientSettings AssetsServiceClient { get; set; }
     }
 
     public class OperationsHistorySettings
@@ -38,5 +40,11 @@ namespace Lykke.Service.OperationsHistory.Core.Settings.Api
         public string ConnectionString { get; set; }
 
         public string QueueName { get; set; }
+    }
+
+    public class AssetsServiceClientSettings
+    {
+        [HttpCheck("/api/isalive")]
+        public string ServiceUrl { get; set; }
     }
 }

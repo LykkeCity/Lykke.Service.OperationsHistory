@@ -3,9 +3,9 @@ using Common;
 using Common.Log;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
+using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using Lykke.Service.OperationsHistory.RabbitSubscribers.Contract;
-using Lykke.Service.OperationsHistory.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -16,9 +16,12 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
         private readonly ILog _log;
         private RabbitMqSubscriber<ClientAuthInfo> _subscriber;
         private readonly RabbitMqSettings _rabbitSettings;
-        private readonly IHistoryCache _historyCache;
+        private readonly IHistoryOperationsCache _historyCache;
 
-        public AuthSubscriber(ILog log, RabbitMqSettings rabbitSettings, IHistoryCache historyCache)
+        public AuthSubscriber(
+            RabbitMqSettings rabbitSettings, 
+            IHistoryOperationsCache historyCache,
+            ILog log)
         {
             _log = log;
             _rabbitSettings = rabbitSettings;

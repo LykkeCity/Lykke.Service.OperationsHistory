@@ -1,0 +1,23 @@
+﻿using System;
+using Lykke.Service.OperationsHistory.Core;
+
+namespace Lykke.Service.OperationsHistory.Services
+{
+    public static class HistoryOperationFilterPredicates
+    {
+        public static Func<HistoryOperation, bool> IfTypeEquals(HistoryOperationType? operationType)
+        {
+            return operation => operationType == null || operation.Type == operationType;
+        }
+
+        public static Func<HistoryOperation, bool> IfAssetEquals(string assetId)
+        {
+            return operation =>
+            {
+                if (string.IsNullOrWhiteSpace(assetId)) return true;
+                
+                return operation.Asset == assetId;
+            };
+        }
+    }
+}

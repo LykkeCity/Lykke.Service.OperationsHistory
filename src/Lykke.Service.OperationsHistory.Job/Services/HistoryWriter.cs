@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core.Services;
-using Lykke.Service.OperationsRepository.Contract;
 using Lykke.Service.OperationsHistory.Core.Entities;
+using Lykke.Service.OperationsRepository.Contract.History;
 
 namespace Lykke.Service.OperationsHistory.Job.Services
 {
