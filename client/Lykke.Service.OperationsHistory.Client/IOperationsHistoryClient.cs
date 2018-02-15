@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Lykke.Service.OperationsHistory.AutorestClient.Models;
 using Lykke.Service.OperationsHistory.Client.Models;
 
 namespace Lykke.Service.OperationsHistory.Client
@@ -15,7 +16,7 @@ namespace Lykke.Service.OperationsHistory.Client
         /// <param name="take">How many maximum items have to be returned</param>
         /// <param name="skip">How many items skip before returning</param>
         /// <returns></returns>
-        Task<OperationsHistoryResponse> GetByClientId(string clientId, string operationType, string assetId, int take, int skip);
+        Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType? operationType, string assetId, int take, int skip);
 
         /// <summary>
         /// Getting history by date range, note: internal cache is not used in this case
@@ -23,8 +24,9 @@ namespace Lykke.Service.OperationsHistory.Client
         /// <param name="dateFrom">The date of the operation will be equal or greater than</param>
         /// <param name="dateTo">The date of the operation will be less than</param>
         /// <param name="operationType">The type of the operation</param>
+        /// <param name="assetId">Asset identifier</param>
         /// <returns></returns>
-        Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime? dateTo, string operationType);
+        Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime? dateTo, HistoryOperationType? operationType, string assetId);
 
         /// <summary>
         /// Getting history by wallet identifier
@@ -35,7 +37,7 @@ namespace Lykke.Service.OperationsHistory.Client
         /// <param name="take">How many maximum items have to be returned</param>
         /// <param name="skip">How many items skip before returning</param>
         /// <returns></returns>
-        Task<OperationsHistoryResponse> GetByWalletId(string walletId, string operationType, string assetId, int take, int skip);
+        Task<OperationsHistoryResponse> GetByWalletId(string walletId, HistoryOperationType? operationType, string assetId, int take, int skip);
 
         /// <summary>
         /// Getting history record by operation identifier
@@ -43,6 +45,6 @@ namespace Lykke.Service.OperationsHistory.Client
         /// <param name="walletId">Wallet identifier</param>
         /// <param name="operationId">operation identifier</param>
         /// <returns></returns>
-        Task<HistoryRecordModel> GetByOperationId(string walletId, string operationId);
+        Task<HistoryOperation> GetByOperationId(string walletId, string operationId);
     }
 }

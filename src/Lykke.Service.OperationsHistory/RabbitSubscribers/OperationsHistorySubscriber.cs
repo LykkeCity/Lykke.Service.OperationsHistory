@@ -4,11 +4,12 @@ using Common.Log;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
-using Lykke.Service.OperationsRepository.Contract;
 using System;
 using System.Threading.Tasks;
-using Lykke.Service.OperationsHistory.Core.Entities;
-using Lykke.Service.OperationsHistory.Services;
+using Lykke.Service.OperationsHistory.Core;
+using Lykke.Service.OperationsRepository.Contract.History;
+using Lykke.Service.OperationsHistory.Core.Services;
+using Lykke.Service.OperationsRepository.Contract;
 
 namespace Lykke.Service.OperationsHistory.RabbitSubscribers
 {
@@ -17,13 +18,19 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
         private readonly ILog _log;
         private RabbitMqSubscriber<OperationsHistoryMessage> _subscriber;
         private readonly RabbitMqSettings _rabbitSettings;
-        private readonly IHistoryCache _historyCache;
+        private readonly IHistoryOperationsCache _historyCache;
+        private readonly IHistoryMessageAdapter _adapter;
 
-        public OperationsHistorySubscriber(ILog log, RabbitMqSettings rabbitSettings, IHistoryCache historyCache)
+        public OperationsHistorySubscriber(
+            RabbitMqSettings rabbitSettings, 
+            IHistoryOperationsCache historyCache,
+            IHistoryMessageAdapter adapter,
+            ILog log)
         {
             _log = log;
             _rabbitSettings = rabbitSettings;
             _historyCache = historyCache;
+            _adapter = adapter;
         }
 
         public void Start()
@@ -52,18 +59,9 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
 
         private async Task ProcessMessageAsync(OperationsHistoryMessage arg)
         {
-            var newCacheEntry = new HistoryLogEntryEntity
-            {
-                Id = arg.Id,
-                ClientId = arg.ClientId,
-                CustomData = arg.Data,
-                DateTime = arg.DateTime,
-                OpType = arg.OpType,
-                Amount = arg.Amount,
-                Currency = arg.Currency
-            };
+            var operation = await _adapter.Execute(arg);
 
-            await _historyCache.AddOrUpdate(newCacheEntry);
+            await _historyCache.AddOrUpdate(arg.ClientId, operation);
         }
 
         public void Dispose()

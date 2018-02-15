@@ -1,4 +1,4 @@
-﻿namespace Lykke.Service.OperationsHistory.Client.Models
+namespace Lykke.Service.OperationsHistory.Client.Models
 {
     public class ErrorModel
     {

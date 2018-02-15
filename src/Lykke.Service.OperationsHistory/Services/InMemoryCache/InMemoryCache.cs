@@ -1,27 +1,41 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Common.Log;
 using Lykke.Service.OperationsHistory.Core.Domain;
+using Lykke.Service.OperationsHistory.Core;
+using Lykke.Service.OperationsHistory.Core.Services;
+using Lykke.Service.OperationsRepository.Contract;
 
 namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 {
-    public class InMemoryCache: IHistoryCache
+    public class InMemoryCache: IHistoryOperationsCache
     {
+        private class CacheModel
+        {
+            public ConcurrentDictionary<string, HistoryOperation> Records;
+        }
+
         private readonly IHistoryLogEntryRepository _repository;
         private readonly ConcurrentDictionary<string, CacheModel> _cache;
+        private readonly IHistoryOperationAdapter _adapter;
         private readonly ILog _log;
 
-        public InMemoryCache(IHistoryLogEntryRepository repository, ILog log)
+        public InMemoryCache(
+            IHistoryLogEntryRepository repository, 
+            IHistoryOperationAdapter adapter, 
+            ILog log)
         {
             _repository = repository;
             _cache = new ConcurrentDictionary<string, CacheModel>();
+            _adapter = adapter;
             _log = log;
         }
 
-        public async Task<IEnumerable<IHistoryLogEntryEntity>> GetRecordsByWalletId(string walletId)
+        public async Task<IEnumerable<HistoryOperation>> GetRecordsByWalletId(string walletId)
         {
             if (_cache.TryGetValue(walletId, out CacheModel cachedValue))
             {
@@ -30,14 +44,14 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
 
             var newCachedValue = await Load(walletId);
 
-            return newCachedValue == null ? new List<IHistoryLogEntryEntity>() : newCachedValue.Records.Values;
+            return newCachedValue?.Records.Values ?? Enumerable.Empty<HistoryOperation>();
         }
 
-        public async Task AddOrUpdate(IHistoryLogEntryEntity item)
+        public async Task AddOrUpdate(string walletId, HistoryOperation item)
         {
-            if (!_cache.TryGetValue(item.ClientId, out CacheModel cachedCollection))
+            if (!_cache.TryGetValue(walletId, out CacheModel cachedCollection))
             {
-                cachedCollection = await Load(item.ClientId);
+                cachedCollection = await Load(walletId);
             }
             // make sure new item added to cache even if it was loaded from repository
             cachedCollection?.Records.AddOrUpdate(item.Id, item, (key, oldValue) => item);
@@ -51,16 +65,13 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             }
         }
 
-        public async Task<IEnumerable<IHistoryLogEntryEntity>> GetAsync(string walletId, string operationType = null, string assetId = null, PaginationInfo paging = null)
+        public async Task<IEnumerable<HistoryOperation>> GetAsync(string walletId, HistoryOperationType? operationType = null, string assetId = null, PaginationInfo paging = null)
         {
             var walletRecords = await GetRecordsByWalletId(walletId);
-
-            var operationIsEmpty = string.IsNullOrWhiteSpace(operationType);
-            var assetIsEmpty = string.IsNullOrWhiteSpace(assetId);
-
+            
             var result = walletRecords
-                .Where(r => operationIsEmpty || r.OpType == operationType)
-                .Where(r => assetIsEmpty || r.Currency == assetId)
+                .Where(HistoryOperationFilterPredicates.IfTypeEquals(operationType))
+                .Where(HistoryOperationFilterPredicates.IfAssetEquals(assetId))
                 .OrderByDescending(x => x.DateTime);
 
             if (paging != null)
@@ -76,16 +87,18 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
         private async Task<CacheModel> Load(string walletId)
         {
             var records = await _repository.GetByWalletIdAsync(walletId);
-
+            
             if (!records.Any())
                 return null;
+            
+            var adaptedOperations = await Task.WhenAll(records.Select(x => _adapter.Execute(x)));
 
             var cacheModel = new CacheModel
             {
-                Records = new ConcurrentDictionary<string, IHistoryLogEntryEntity>(
-                    records
+                Records = new ConcurrentDictionary<string, HistoryOperation>(
+                    adaptedOperations
                         .OrderByDescending(r => r.DateTime)
-                        .Select(x => new KeyValuePair<string, IHistoryLogEntryEntity>(x.Id, x)))
+                        .Select(x => new KeyValuePair<string, HistoryOperation>(x.Id, x)))
             };
 
             return _cache.AddOrUpdate(walletId, cacheModel, (key, oldValue) => cacheModel);

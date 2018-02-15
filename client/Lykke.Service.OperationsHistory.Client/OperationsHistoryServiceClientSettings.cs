@@ -1,4 +1,4 @@
-﻿namespace Lykke.Service.OperationsHistory.Client
+namespace Lykke.Service.OperationsHistory.Client
 {
     public class OperationsHistoryServiceClientSettings
     {

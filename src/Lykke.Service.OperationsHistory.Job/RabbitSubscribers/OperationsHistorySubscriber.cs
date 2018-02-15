@@ -4,10 +4,10 @@ using Common.Log;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.Service.OperationsHistory.Core.Settings.Job;
-using Lykke.Service.OperationsRepository.Contract;
 using System;
 using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core.Services;
+using Lykke.Service.OperationsRepository.Contract.History;
 
 namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
 {
