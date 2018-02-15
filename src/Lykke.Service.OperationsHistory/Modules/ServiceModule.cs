@@ -56,6 +56,8 @@ namespace Lykke.Service.OperationsHistory.Modules
             RegisterRabbitMqSubscribers(builder);
 
             RegisterServiceClients(builder);
+            
+            _services.RegisterAssetsClient(AssetServiceSettings.Create(new Uri(_settings.AssetsServiceClient.ServiceUrl), TimeSpan.FromMinutes(3)));
 
             RegisterDictionaryEntities(builder);
 
@@ -105,8 +107,6 @@ namespace Lykke.Service.OperationsHistory.Modules
         private void RegisterServiceClients(ContainerBuilder builder)
         {
             builder.RegisterLykkeServiceClient(_settings.ClientAccountServiceClient.ServiceUrl);
-            builder.RegisterInstance<IAssetsService>(
-                new AssetsService(new Uri(_settings.AssetsServiceClient.ServiceUrl)));
         }
 
         private void RegisterDictionaryEntities(ContainerBuilder builder)

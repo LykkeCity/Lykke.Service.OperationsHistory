@@ -6,7 +6,7 @@ namespace Lykke.Service.OperationsHistory.Core.Services
 {
     public interface IOperationAdapter<TSource, TDest>
     {
-        Task<TDest> Execute(TSource src);
+        Task<TDest> ExecuteAsync(TSource src);
     }
 
     public interface IHistoryOperationAdapter : IOperationAdapter<HistoryLogEntryEntity, HistoryOperation>

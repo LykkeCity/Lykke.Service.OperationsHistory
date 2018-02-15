@@ -1,4 +1,5 @@
 ﻿using Lykke.Service.ClientAccount.Client;
+using Lykke.SettingsReader.Attributes;
 
 namespace Lykke.Service.OperationsHistory.Core.Settings.Api
 {
@@ -43,6 +44,7 @@ namespace Lykke.Service.OperationsHistory.Core.Settings.Api
 
     public class AssetsServiceClientSettings
     {
+        [HttpCheck("/api/isalive")]
         public string ServiceUrl { get; set; }
     }
 }

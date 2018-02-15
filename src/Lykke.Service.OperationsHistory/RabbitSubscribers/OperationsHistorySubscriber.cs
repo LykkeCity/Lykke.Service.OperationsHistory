@@ -59,7 +59,7 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
 
         private async Task ProcessMessageAsync(OperationsHistoryMessage arg)
         {
-            var operation = await _adapter.Execute(arg);
+            var operation = await _adapter.ExecuteAsync(arg);
 
             await _historyCache.AddOrUpdate(arg.ClientId, operation);
         }

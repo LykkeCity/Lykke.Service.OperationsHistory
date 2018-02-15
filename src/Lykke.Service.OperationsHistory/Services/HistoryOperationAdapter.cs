@@ -29,7 +29,7 @@ namespace Lykke.Service.OperationsHistory.Services
             _log = log ?? throw new ArgumentNullException(nameof(log));
         }
 
-        public async Task<HistoryOperation> Execute(HistoryLogEntryEntity historyEntity)
+        public async Task<HistoryOperation> ExecuteAsync(HistoryLogEntryEntity historyEntity)
         {
             var asset = await GetAssetByIdAsync(historyEntity.Currency);
 

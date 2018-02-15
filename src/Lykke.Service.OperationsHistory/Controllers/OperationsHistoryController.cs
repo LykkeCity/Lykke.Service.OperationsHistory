@@ -141,7 +141,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             var dateRangeResult = (await _repository.GetByDatesAsync(dateFrom, dateTo)).OrderByDescending(r => r.DateTime);
 
-            var adaptedOperations = await Task.WhenAll(dateRangeResult.Select(x => _adapter.Execute(x)));
+            var adaptedOperations = await Task.WhenAll(dateRangeResult.Select(x => _adapter.ExecuteAsync(x)));
 
             return Ok(adaptedOperations
                 .Where(HistoryOperationFilterPredicates.IfTypeEquals(operationType))

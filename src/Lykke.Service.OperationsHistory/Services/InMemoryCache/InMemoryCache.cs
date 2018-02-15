@@ -91,7 +91,7 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             if (!records.Any())
                 return null;
             
-            var adaptedOperations = await Task.WhenAll(records.Select(x => _adapter.Execute(x)));
+            var adaptedOperations = await Task.WhenAll(records.Select(x => _adapter.ExecuteAsync(x)));
 
             var cacheModel = new CacheModel
             {

@@ -20,7 +20,7 @@ namespace Lykke.Service.OperationsHistory
         private static HistoryOperationState GetState(TransactionStates state)
         {
             if (state == TransactionStates.InProcessOffchain ||
-                state == TransactionStates.InProcessOffchain)
+                state == TransactionStates.InProcessOnchain)
                 return HistoryOperationState.InProgress;
 
             return HistoryOperationState.Finished;
@@ -90,7 +90,7 @@ namespace Lykke.Service.OperationsHistory
             var isBuy = operation.OrderType == OrderType.Buy;
 
             var volume = operation.Volume.Normalize(asset, isBuy);
-            Console.WriteLine(operation.Status.ToString());
+            
             return HistoryOperation.Create(
                 operation.Id,
                 operation.CreatedDt,

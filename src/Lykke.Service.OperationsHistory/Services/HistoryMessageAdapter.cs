@@ -15,7 +15,7 @@ namespace Lykke.Service.OperationsHistory.Services
             _operationAdapter = operationAdapter;
         }
 
-        public async Task<HistoryOperation> Execute(OperationsHistoryMessage src)
+        public Task<HistoryOperation> ExecuteAsync(OperationsHistoryMessage src)
         {
             var historyLogEntry = new HistoryLogEntryEntity
             {
@@ -28,7 +28,7 @@ namespace Lykke.Service.OperationsHistory.Services
                 Currency = src.Currency
             };
 
-            return await _operationAdapter.Execute(historyLogEntry);
+            return _operationAdapter.ExecuteAsync(historyLogEntry);
         }
     }
 }
