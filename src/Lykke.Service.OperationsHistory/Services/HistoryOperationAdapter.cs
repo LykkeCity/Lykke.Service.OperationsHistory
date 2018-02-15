@@ -34,10 +34,6 @@ namespace Lykke.Service.OperationsHistory.Services
             var asset = await GetAssetByIdAsync(historyEntity.Currency);
 
             var legacyOperationType = (OperationType) Enum.Parse(typeof(OperationType), historyEntity.OpType);
-
-            CashInHistoryOperation cashIn = null;
-            CashOutHistoryOperation cashOut = null;
-            TradeHistoryOperation trade = null;
             
             switch (legacyOperationType)
             {
