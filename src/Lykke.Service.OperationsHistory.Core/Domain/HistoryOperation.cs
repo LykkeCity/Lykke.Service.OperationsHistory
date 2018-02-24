@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
+using Lykke.Service.OperationsRepository.Contract.Abstractions;
 
 namespace Lykke.Service.OperationsHistory.Core
 {
@@ -39,6 +40,8 @@ namespace Lykke.Service.OperationsHistory.Core
         public string Asset { get; set; }
         public string AssetPair { get; set; }
         public double? Price { get; set; }
+        public double FeeSize { get; set; }
+        public FeeType FeeType { get; set; }
 
         public static HistoryOperation Create(
             string id,
@@ -48,7 +51,9 @@ namespace Lykke.Service.OperationsHistory.Core
             double amount,
             string asset,
             string assetPair,
-            double? price = default(double?))
+            double? price = default(double?),
+            double feeSize = 0,
+            FeeType feeType = FeeType.Unknown)
         {
             return new HistoryOperation
             {
@@ -59,7 +64,9 @@ namespace Lykke.Service.OperationsHistory.Core
                 Amount = amount,
                 Asset = asset,
                 AssetPair = assetPair,
-                Price = price
+                Price = price,
+                FeeSize = feeSize,
+                FeeType = feeType
             };
         }
     }

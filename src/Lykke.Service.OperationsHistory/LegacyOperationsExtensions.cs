@@ -82,7 +82,9 @@ namespace Lykke.Service.OperationsHistory
                 volume,
                 operation.AssetId,
                 operation.AssetPairId,
-                operation.Price);
+                operation.Price,
+                operation.FeeSize,
+                operation.FeeType);
         }
 
         public static HistoryOperation ConvertToHistoryOperation(this ILimitTradeEvent operation, Asset asset)
