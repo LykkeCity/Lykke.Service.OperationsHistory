@@ -33,7 +33,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
         #region consts
 
-        private const int _cacheBatchPieceSize = 15;
+        private const int CacheBatchPieceSize = 15;
 
         #endregion
 
@@ -96,7 +96,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             var result = new List<HistoryOperation>();
 
-            foreach (var piece in walletIds.ToPieces(_cacheBatchPieceSize))
+            foreach (var piece in walletIds.ToPieces(CacheBatchPieceSize))
             {
                 await Task.WhenAll(
                     piece.Select(x => _cache.GetAsync(x, operationType, assetId)
@@ -123,6 +123,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         /// <param name="dateFrom">The date of the operation will be equal or greater than</param>
         /// <param name="dateTo">The date of the operation will be less than</param>
         /// <param name="operationType">The type of the operation, possible values: CashIn, CashOut, Trade</param>
+        /// <param name="assetId">Id of the asset</param>
         /// <returns></returns>
         [HttpGet]
         [SwaggerOperation("GetByDates")]
@@ -213,7 +214,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             var walletOperations = await _cache.GetAsync(id);
 
-            var operation = walletOperations.Where(x => x.Id.Equals(operationId)).FirstOrDefault();
+            var operation = walletOperations.FirstOrDefault(x => x.Id.Equals(operationId));
 
             if (operation == null)
             {

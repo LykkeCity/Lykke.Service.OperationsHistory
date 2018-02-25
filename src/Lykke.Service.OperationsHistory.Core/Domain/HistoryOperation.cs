@@ -41,6 +41,7 @@ namespace Lykke.Service.OperationsHistory.Core
         public string AssetPair { get; set; }
         public double? Price { get; set; }
         public double FeeSize { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public FeeType FeeType { get; set; }
 
         public static HistoryOperation Create(
