@@ -26,7 +26,9 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
         /// 'Trade', 'LimitTrade', 'LimitOrderEvent'</param>
         /// <param name="state">Possible values include: 'InProgress',
         /// 'Finished', 'Canceled', 'Failed'</param>
-        public HistoryOperation(System.DateTime dateTime, HistoryOperationType type, HistoryOperationState state, double amount, string id = default(string), string asset = default(string), string assetPair = default(string), double? price = default(double?))
+        /// <param name="feeType">Possible values include: 'Unknown',
+        /// 'Absolute', 'Relative'</param>
+        public HistoryOperation(System.DateTime dateTime, HistoryOperationType type, HistoryOperationState state, double amount, double feeSize, FeeType feeType, string id = default(string), string asset = default(string), string assetPair = default(string), double? price = default(double?))
         {
             Id = id;
             DateTime = dateTime;
@@ -36,6 +38,8 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
             Asset = asset;
             AssetPair = assetPair;
             Price = price;
+            FeeSize = feeSize;
+            FeeType = feeType;
             CustomInit();
         }
 
@@ -87,6 +91,18 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
         /// </summary>
         [JsonProperty(PropertyName = "Price")]
         public double? Price { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "FeeSize")]
+        public double FeeSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets possible values include: 'Unknown', 'Absolute',
+        /// 'Relative'
+        /// </summary>
+        [JsonProperty(PropertyName = "FeeType")]
+        public FeeType FeeType { get; set; }
 
         /// <summary>
         /// Validate the object.
