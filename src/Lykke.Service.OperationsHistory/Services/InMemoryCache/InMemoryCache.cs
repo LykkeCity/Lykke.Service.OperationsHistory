@@ -57,6 +57,16 @@ namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
             cachedCollection?.Records.AddOrUpdate(item.Id, item, (key, oldValue) => item);
         }
 
+        public async Task RemoveIfLoaded(string walletId, string operationId)
+        {
+            if (!_cache.TryGetValue(walletId, out CacheModel cachedCollection))
+            {
+                return;
+            }
+
+            cachedCollection?.Records.TryRemove(operationId, out HistoryOperation _);
+        }
+
         public async Task WarmUp(string walletId)
         {
             if (!_cache.ContainsKey(walletId))

@@ -88,5 +88,14 @@ namespace Lykke.Service.OperationsHistory.Client
 
             return response.Body as HistoryOperation;
         }
+
+        public async Task<HistoryOperation> DeleteByClientIdOperationId(string clientId, string operationId)
+        {
+            var response =
+                await _apiClient.ApiOperationsHistoryClientByClientIdOperationByOperationIdDeleteWithHttpMessagesAsync(
+                    clientId, operationId);
+            
+            return response.Body as HistoryOperation;
+        }
     }
 }

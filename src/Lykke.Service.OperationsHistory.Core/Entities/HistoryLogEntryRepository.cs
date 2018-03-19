@@ -112,6 +112,13 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
             return data;
         }
 
+        public async Task DeleteIfExistsAsync(string walletId, string operationId)
+        {
+            await _tableStorage.DeleteIfExistAsync(
+                HistoryLogEntryEntity.ByWalletId.GeneratePartitionKey(walletId),
+                HistoryLogEntryEntity.ByWalletId.GenerateRowKey(operationId));
+        }
+
         public async Task<IList<HistoryLogEntryEntity>> GetByWalletsAsync(IEnumerable<string> walletIds)
         {
             var result = new List<HistoryLogEntryEntity>();
