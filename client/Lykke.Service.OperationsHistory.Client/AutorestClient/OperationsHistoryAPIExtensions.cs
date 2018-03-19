@@ -123,6 +123,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// 'LimitOrderEvent'
             /// </param>
             /// <param name='assetId'>
+            /// Id of the asset
             /// </param>
             public static object GetByDates(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string))
             {
@@ -147,6 +148,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// 'LimitOrderEvent'
             /// </param>
             /// <param name='assetId'>
+            /// Id of the asset
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
@@ -256,6 +258,36 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             public static async Task<HistoryOperation> GetByOperationIdAsync(this IOperationsHistoryAPI operations, string walletId, string operationId, CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetByOperationIdWithHttpMessagesAsync(walletId, operationId, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='clientId'>
+            /// </param>
+            /// <param name='operationId'>
+            /// </param>
+            public static HistoryOperation ApiOperationsHistoryClientByClientIdOperationByOperationIdDelete(this IOperationsHistoryAPI operations, string clientId, string operationId)
+            {
+                return operations.ApiOperationsHistoryClientByClientIdOperationByOperationIdDeleteAsync(clientId, operationId).GetAwaiter().GetResult();
+            }
+
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='clientId'>
+            /// </param>
+            /// <param name='operationId'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<HistoryOperation> ApiOperationsHistoryClientByClientIdOperationByOperationIdDeleteAsync(this IOperationsHistoryAPI operations, string clientId, string operationId, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.ApiOperationsHistoryClientByClientIdOperationByOperationIdDeleteWithHttpMessagesAsync(clientId, operationId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

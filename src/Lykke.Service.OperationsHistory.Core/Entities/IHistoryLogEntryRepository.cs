@@ -18,5 +18,7 @@ namespace Lykke.Service.OperationsHistory.Core.Entities
         Task<IList<HistoryLogEntryEntity>> GetByWalletsAsync(IEnumerable<string> walletIds);
 
         Task<IList<HistoryLogEntryEntity>> GetByDatesAsync(DateTime dateFrom, DateTime dateTo);
+
+        Task DeleteIfExistsAsync(string clientId, string operationId);
     }
 }
