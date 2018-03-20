@@ -223,5 +223,52 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             return Ok(operation);
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <param name="operationId"></param>
+        /// <returns></returns>
+        [HttpDelete("client/{clientId}/operation/{operationId}")]
+        [ProducesResponseType(typeof(HistoryOperation), (int) HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(void), (int) HttpStatusCode.NotFound)]
+        public async Task<IActionResult> DeleteOperationId(string clientId, string operationId)
+        {
+            var wallets = await _clientAccountService.GetWalletsByClientIdAsync(clientId);
+            
+            if (wallets == null || !wallets.Any())
+            {
+                return NotFound();
+            }
+
+            var operation = new HistoryOperation();
+            string walletId = null;
+
+            foreach (var wallet in wallets)
+            {
+                var id = wallet.Type == nameof(WalletType.Trading) ? wallet.ClientId : wallet.Id;
+                
+                var walletOperations = await _cache.GetAsync(id);
+
+                operation = walletOperations.FirstOrDefault(x => x.Id.Equals(operationId));
+
+                if (operation == null) continue;
+                
+                walletId = id;
+                break;
+            }
+
+            if (walletId == null)
+            {
+                return NotFound();
+            }
+
+            await _repository.DeleteIfExistsAsync(walletId, operationId);
+
+            await _cache.RemoveIfLoaded(walletId, operationId);
+
+            return Ok(operation);
+        }
     }
 }

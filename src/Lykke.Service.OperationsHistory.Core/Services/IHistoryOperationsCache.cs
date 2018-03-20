@@ -10,6 +10,8 @@ namespace Lykke.Service.OperationsHistory.Core
 
         Task AddOrUpdate(string walletId, TItem item);
 
+        Task RemoveIfLoaded(string walletId, string operationId);
+
         Task WarmUp(string walletId);
     }
 

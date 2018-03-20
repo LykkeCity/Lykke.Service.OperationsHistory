@@ -46,5 +46,13 @@ namespace Lykke.Service.OperationsHistory.Client
         /// <param name="operationId">operation identifier</param>
         /// <returns></returns>
         Task<HistoryOperation> GetByOperationId(string walletId, string operationId);
+
+        /// <summary>
+        /// Deletes history record by clientId and operation Id
+        /// </summary>
+        /// <param name="clientId">Client Id</param>
+        /// <param name="operationId">Operation Id</param>
+        /// <returns></returns>
+        Task<HistoryOperation> DeleteByClientIdOperationId(string clientId, string operationId);
     }
 }

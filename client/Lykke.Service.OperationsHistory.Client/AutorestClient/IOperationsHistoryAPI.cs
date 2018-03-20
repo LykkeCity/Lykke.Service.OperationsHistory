@@ -89,6 +89,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// 'LimitTrade', 'LimitOrderEvent'
         /// </param>
         /// <param name='assetId'>
+        /// Id of the asset
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -142,6 +143,18 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// The cancellation token.
         /// </param>
         Task<HttpOperationResponse<HistoryOperation>> GetByOperationIdWithHttpMessagesAsync(string walletId, string operationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <param name='clientId'>
+        /// </param>
+        /// <param name='operationId'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<HistoryOperation>> ApiOperationsHistoryClientByClientIdOperationByOperationIdDeleteWithHttpMessagesAsync(string clientId, string operationId, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
     }
 }
