@@ -100,7 +100,7 @@ namespace Lykke.Service.OperationsHistory.Modules
         private void RegisterAzureRepositories(ContainerBuilder builder)
         {
             builder.RegisterInstance(new HistoryLogEntryRepository(AzureTableStorage<HistoryLogEntryEntity>.Create(
-                    _dbSettings.ConnectionString(x => x.LogsConnString), "OperationsHistory", _log)))
+                    _dbSettings.ConnectionString(x => x.DataConnString), "OperationsHistory", _log)))
                 .As<IHistoryLogEntryRepository>();
         }
 
