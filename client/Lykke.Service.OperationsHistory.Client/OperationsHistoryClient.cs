@@ -56,28 +56,28 @@ namespace Lykke.Service.OperationsHistory.Client
         }
 
         public async Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType? operationType = null, 
-            string assetId = null, int take = 100, int skip = 0)
+            string assetId = null, string assetPairId = null, int take = 100, int skip = 0)
         {
             var response =
-                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId);
+                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId, assetPairId);
 
             return PrepareResponseMultiple(response);
         }
 
         public async Task<OperationsHistoryResponse> GetByDateRange(DateTime dateFrom, DateTime? dateTo,
-            HistoryOperationType? operationType = null, string assetId = null)
+            HistoryOperationType? operationType = null, string assetId = null, string assetPairId = null)
         {
             var actualDateTo = dateTo ?? DateTime.UtcNow;
 
-            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, actualDateTo, operationType, assetId);
+            var response = await _apiClient.GetByDatesWithHttpMessagesAsync(dateFrom, actualDateTo, operationType, assetId, assetPairId);
 
             return PrepareResponseMultiple(response);
         }
 
-        public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, HistoryOperationType? operationType = null, string assetId = null, int take = 100, int skip = 0)
+        public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, HistoryOperationType? operationType = null, string assetId = null, string assetPairId = null, int take = 100, int skip = 0)
         {
             var response =
-                await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId);
+                await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId, assetPairId);
 
             return PrepareResponseMultiple(response);
         }
