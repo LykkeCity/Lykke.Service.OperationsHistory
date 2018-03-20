@@ -26,6 +26,7 @@ namespace Lykke.Service.OperationsHistory.Core.Settings.Api
     public class DbSettings
     {
         public string LogsConnString { get; set; }
+        public string DataConnString { get; set; }
     }
 
     public class SlackNotificationsSettings
