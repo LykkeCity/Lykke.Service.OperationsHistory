@@ -66,9 +66,11 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='assetId'>
             /// Asset identifier
             /// </param>
-            public static object GetByClientId(this IOperationsHistoryAPI operations, string clientId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string))
+            /// <param name='assetPairId'>
+            /// </param>
+            public static object GetByClientId(this IOperationsHistoryAPI operations, string clientId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string))
             {
-                return operations.GetByClientIdAsync(clientId, take, skip, operationType, assetId).GetAwaiter().GetResult();
+                return operations.GetByClientIdAsync(clientId, take, skip, operationType, assetId, assetPairId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -94,12 +96,14 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='assetId'>
             /// Asset identifier
             /// </param>
+            /// <param name='assetPairId'>
+            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetByClientIdAsync(this IOperationsHistoryAPI operations, string clientId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetByClientIdAsync(this IOperationsHistoryAPI operations, string clientId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId, assetPairId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -125,9 +129,11 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='assetId'>
             /// Id of the asset
             /// </param>
-            public static object GetByDates(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string))
+            /// <param name='assetPairId'>
+            /// </param>
+            public static object GetByDates(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string))
             {
-                return operations.GetByDatesAsync(dateFrom, dateTo, operationType, assetId).GetAwaiter().GetResult();
+                return operations.GetByDatesAsync(dateFrom, dateTo, operationType, assetId, assetPairId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -150,12 +156,14 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='assetId'>
             /// Id of the asset
             /// </param>
+            /// <param name='assetPairId'>
+            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetByDatesAsync(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetByDatesAsync(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetByDatesWithHttpMessagesAsync(dateFrom, dateTo, operationType, assetId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetByDatesWithHttpMessagesAsync(dateFrom, dateTo, operationType, assetId, assetPairId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -184,9 +192,11 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='assetId'>
             /// Asset identifier
             /// </param>
-            public static object GetByWalletId(this IOperationsHistoryAPI operations, string walletId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string))
+            /// <param name='assetPairId'>
+            /// </param>
+            public static object GetByWalletId(this IOperationsHistoryAPI operations, string walletId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string))
             {
-                return operations.GetByWalletIdAsync(walletId, take, skip, operationType, assetId).GetAwaiter().GetResult();
+                return operations.GetByWalletIdAsync(walletId, take, skip, operationType, assetId, assetPairId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -212,12 +222,14 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='assetId'>
             /// Asset identifier
             /// </param>
+            /// <param name='assetPairId'>
+            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetByWalletIdAsync(this IOperationsHistoryAPI operations, string walletId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetByWalletIdAsync(this IOperationsHistoryAPI operations, string walletId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId, assetPairId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

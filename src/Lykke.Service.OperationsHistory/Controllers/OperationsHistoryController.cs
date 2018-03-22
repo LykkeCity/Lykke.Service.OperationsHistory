@@ -71,7 +71,8 @@ namespace Lykke.Service.OperationsHistory.Controllers
         public async Task<IActionResult> GetByClientId(
             string clientId, 
             [FromQuery] HistoryOperationType? operationType,
-            [FromQuery] string assetId, 
+            [FromQuery] string assetId,
+            [FromQuery] string assetPairId,
             [FromQuery] int take, 
             [FromQuery] int skip)
         {
@@ -99,7 +100,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
             foreach (var piece in walletIds.ToPieces(CacheBatchPieceSize))
             {
                 await Task.WhenAll(
-                    piece.Select(x => _cache.GetAsync(x, operationType, assetId)
+                    piece.Select(x => _cache.GetAsync(x, operationType, assetId, assetPairId)
                         .ContinueWith(t =>
                         {
                             lock (result)
@@ -133,7 +134,8 @@ namespace Lykke.Service.OperationsHistory.Controllers
             [FromQuery] DateTime dateFrom, 
             [FromQuery] DateTime dateTo,
             [FromQuery] HistoryOperationType? operationType,
-            [FromQuery] string assetId)
+            [FromQuery] string assetId,
+            [FromQuery] string assetPairId)
         {
             if (dateFrom >= dateTo)
             {
@@ -146,7 +148,8 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             return Ok(adaptedOperations
                 .Where(HistoryOperationFilterPredicates.IfTypeEquals(operationType))
-                .Where(HistoryOperationFilterPredicates.IfAssetEquals(assetId)));
+                .Where(HistoryOperationFilterPredicates.IfAssetEquals(assetId))
+                .Where(HistoryOperationFilterPredicates.IfAssetPairEquals(assetPairId)));
         }
 
         /// <summary>
@@ -166,6 +169,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         public async Task<IActionResult> GetByWalletId(string walletId,
             [FromQuery] HistoryOperationType? operationType,
             [FromQuery] string assetId,
+            [FromQuery] string assetPairId,
             [FromQuery] int take,
             [FromQuery] int skip)
         {
@@ -187,7 +191,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
             var id = wallet.Type == nameof(WalletType.Trading) ? wallet.ClientId : wallet.Id;
 
             var result =
-                await _cache.GetAsync(id, operationType, assetId, new PaginationInfo {Take = take, Skip = skip});
+                await _cache.GetAsync(id, operationType, assetId, assetPairId, new PaginationInfo {Take = take, Skip = skip});
 
             return Ok(result);
         }

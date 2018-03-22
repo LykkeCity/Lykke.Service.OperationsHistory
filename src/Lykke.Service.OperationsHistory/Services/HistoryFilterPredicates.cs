@@ -19,5 +19,15 @@ namespace Lykke.Service.OperationsHistory.Services
                 return operation.Asset == assetId;
             };
         }
+
+        public static Func<HistoryOperation, bool> IfAssetPairEquals(string assetPairId)
+        {
+            return operation =>
+            {
+                if (string.IsNullOrWhiteSpace(assetPairId)) return true;
+                
+                return operation.AssetPair == assetPairId;
+            };
+        }
     }
 }
