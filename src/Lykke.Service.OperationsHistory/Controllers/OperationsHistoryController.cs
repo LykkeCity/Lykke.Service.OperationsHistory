@@ -9,7 +9,9 @@ using Lykke.Service.ClientAccount.Client.AutorestClient.Models;
 using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Domain;
 using Lykke.Service.OperationsHistory.Core.Entities;
+using Lykke.Service.OperationsHistory.Core.Entities.MigrationFlag;
 using Lykke.Service.OperationsHistory.Core.Services;
+using Lykke.Service.OperationsHistory.Mongo;
 using Lykke.Service.OperationsHistory.Services;
 using Lykke.Service.OperationsHistory.Validation;
 using Microsoft.AspNetCore.Mvc;
@@ -38,20 +40,26 @@ namespace Lykke.Service.OperationsHistory.Controllers
         #endregion
 
         private readonly IHistoryOperationsCache _cache;
-        private readonly IHistoryLogEntryRepository _repository;
+        private readonly IHistoryLogEntryRepository _historyLogRepository;
         private readonly IClientAccountClient _clientAccountService;
         private readonly IHistoryOperationAdapter _adapter;
+        private readonly IOperationsHistoryRepository _historyOperationsRepository;
+        private readonly IMigrationFlagsRepository _migrationFlagsRepository;
 
         public OperationsHistoryController(
             IHistoryOperationsCache cache, 
-            IHistoryLogEntryRepository repository, 
+            IHistoryLogEntryRepository historyLogRepository, 
             IClientAccountClient clientAccountService,
-            IHistoryOperationAdapter adapter)
+            IHistoryOperationAdapter adapter,
+            IOperationsHistoryRepository historyOperationsRepository,
+            IMigrationFlagsRepository migrationFlagsRepository)
         {
             _cache = cache;
-            _repository = repository;
+            _historyLogRepository = historyLogRepository;
             _clientAccountService = clientAccountService;
             _adapter = adapter;
+            _historyOperationsRepository = historyOperationsRepository;
+            _migrationFlagsRepository = migrationFlagsRepository;
         }
 
         /// <summary>
@@ -90,6 +98,24 @@ namespace Lykke.Service.OperationsHistory.Controllers
             {
                 return NotFound();
             }
+
+            if (await _migrationFlagsRepository.ClientWasMigrated(clientId))
+            {
+                Console.WriteLine("reading from mongo");
+                
+                var mongoresult = await _historyOperationsRepository.GetByClientIdAsync(
+                    clientId,
+                    null,
+                    operationType,
+                    assetId,
+                    assetPairId,
+                    take,
+                    skip);
+
+                return Ok(mongoresult.Select(x => x.ToHistoryOperation()));
+            }
+            
+            Console.WriteLine("reading from cache");
 
             var wallets = await _clientAccountService.GetWalletsByClientIdAsync(clientId);
 
@@ -142,7 +168,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(DateRangeError));
             }
 
-            var dateRangeResult = (await _repository.GetByDatesAsync(dateFrom, dateTo)).OrderByDescending(r => r.DateTime);
+            var dateRangeResult = (await _historyLogRepository.GetByDatesAsync(dateFrom, dateTo)).OrderByDescending(r => r.DateTime);
 
             var adaptedOperations = await Task.WhenAll(dateRangeResult.Select(x => _adapter.ExecuteAsync(x)));
 
@@ -187,9 +213,23 @@ namespace Lykke.Service.OperationsHistory.Controllers
             {
                 return NotFound();
             }
+            
+            if (await _migrationFlagsRepository.ClientWasMigrated(wallet.ClientId))
+            {
+                var mongoresult = await _historyOperationsRepository.GetByClientIdAsync(
+                    wallet.ClientId,
+                    walletId,
+                    operationType,
+                    assetId,
+                    assetPairId,
+                    take,
+                    skip);
+
+                return Ok(mongoresult.Select(x => x.ToHistoryOperation()));
+            }
 
             var id = wallet.Type == nameof(WalletType.Trading) ? wallet.ClientId : wallet.Id;
-
+            
             var result =
                 await _cache.GetAsync(id, operationType, assetId, assetPairId, new PaginationInfo {Take = take, Skip = skip});
 
@@ -212,6 +252,11 @@ namespace Lykke.Service.OperationsHistory.Controllers
             if (wallet == null)
             {
                 return NotFound();
+            }
+
+            if (await _migrationFlagsRepository.ClientWasMigrated(wallet.ClientId))
+            {
+                return Ok((await _historyOperationsRepository.GetByIdAsync(operationId)).ToHistoryOperation());
             }
 
             var id = wallet.Type == nameof(WalletType.Trading) ? wallet.ClientId : wallet.Id;
@@ -268,9 +313,11 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return NotFound();
             }
 
-            await _repository.DeleteIfExistsAsync(walletId, operationId);
+            await _historyLogRepository.DeleteIfExistsAsync(walletId, operationId);
 
             await _cache.RemoveIfLoaded(walletId, operationId);
+
+            await _historyOperationsRepository.DeleteIfExistsAsync(operationId);
 
             return Ok(operation);
         }

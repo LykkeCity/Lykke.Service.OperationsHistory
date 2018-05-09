@@ -5,7 +5,7 @@ using Lykke.Service.OperationsRepository.Contract;
 using Lykke.Service.OperationsRepository.Contract.Abstractions;
 using System;
 
-namespace Lykke.Service.OperationsHistory
+namespace Lykke.Service.OperationsHistory.Core
 {
     public static class LegacyOperationsExtensions
     {
@@ -119,6 +119,14 @@ namespace Lykke.Service.OperationsHistory
                 operation.AssetId,
                 null,
                 null);
+        }
+    }
+    
+    public static class AssetExtensions
+    {
+        public static int GetDisplayAccuracy(this Asset asset)
+        {
+            return asset.DisplayAccuracy ?? asset.Accuracy;
         }
     }
 }

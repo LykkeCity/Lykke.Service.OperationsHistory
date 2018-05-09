@@ -4,5 +4,6 @@
     {
         public DbSettings Db { get; set; }
         public RabbitMqSettings Rabbit { get; set; }
+        public MongoSettings Mongo { get; set; }
     }
 }
