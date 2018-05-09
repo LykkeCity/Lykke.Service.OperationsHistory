@@ -2,6 +2,6 @@
 {
     public class MongoSettings
     {
-        public string ConnString { set; get; }
+        public string ConnectionString { set; get; }
     }
 }

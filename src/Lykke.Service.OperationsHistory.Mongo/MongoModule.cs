@@ -29,7 +29,7 @@ namespace Lykke.Service.OperationsHistory.Mongo
 
         private void RegisterOperationsCollection(ContainerBuilder builder)
         {
-            var client = new MongoClient(_settings.ConnString);
+            var client = new MongoClient(_settings.ConnectionString);
             var db = client.GetDatabase(DatabaseName);
             var coll = db.GetCollection<OperationsHistoryEntity>(CollectionName);
             

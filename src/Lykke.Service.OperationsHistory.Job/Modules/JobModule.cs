@@ -80,7 +80,7 @@ namespace Lykke.Service.OperationsHistory.Job.Modules
                 .SingleInstance()
                 .WithParameter(TypedParameter.From(_settings.OperationsHistoryJob.Rabbit));
             
-            builder.RegisterType<MongoSubscriber>()
+            builder.RegisterType<MongoDbSubscriber>()
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance()

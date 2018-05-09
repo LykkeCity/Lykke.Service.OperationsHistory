@@ -11,5 +11,6 @@ namespace Lykke.Service.OperationsHistory.Core.Settings.Job
         public AssetsServiceClientSettings AssetsServiceClient { get; set; }
         public ClientAccountServiceClientSettings ClientAccountServiceClient { get; set; }
         public SlackNotificationsSettings SlackNotifications { get; set; }
+        public MongoSettings OperationsHistoryMongo { get; set; }
     }
 }

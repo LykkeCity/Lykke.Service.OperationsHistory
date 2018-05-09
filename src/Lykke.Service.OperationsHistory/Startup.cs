@@ -59,7 +59,7 @@ namespace Lykke.Service.OperationsHistory
                 builder.RegisterModule(new ServiceModule(appSettings.CurrentValue,
                     appSettings.Nested(x => x.OperationsHistoryService.Db), Log));
                 
-                builder.RegisterModule(new MongoModule(appSettings.CurrentValue.OperationsHistoryService.Mongo));
+                builder.RegisterModule(new MongoModule(appSettings.CurrentValue.OperationsHistoryMongo));
 
                 builder.Populate(services);
                 ApplicationContainer = builder.Build();

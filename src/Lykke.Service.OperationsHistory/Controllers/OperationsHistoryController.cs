@@ -43,7 +43,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         private readonly IHistoryLogEntryRepository _historyLogRepository;
         private readonly IClientAccountClient _clientAccountService;
         private readonly IHistoryOperationAdapter _adapter;
-        private readonly IOperationsHistoryRepository _historyOperationsRepository;
+        private readonly IOperationsHistoryRepository _operationsHistoryRepository;
         private readonly IMigrationFlagsRepository _migrationFlagsRepository;
 
         public OperationsHistoryController(
@@ -51,14 +51,14 @@ namespace Lykke.Service.OperationsHistory.Controllers
             IHistoryLogEntryRepository historyLogRepository, 
             IClientAccountClient clientAccountService,
             IHistoryOperationAdapter adapter,
-            IOperationsHistoryRepository historyOperationsRepository,
+            IOperationsHistoryRepository operationsHistoryRepository,
             IMigrationFlagsRepository migrationFlagsRepository)
         {
             _cache = cache;
             _historyLogRepository = historyLogRepository;
             _clientAccountService = clientAccountService;
             _adapter = adapter;
-            _historyOperationsRepository = historyOperationsRepository;
+            _operationsHistoryRepository = operationsHistoryRepository;
             _migrationFlagsRepository = migrationFlagsRepository;
         }
 
@@ -101,9 +101,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             if (await _migrationFlagsRepository.ClientWasMigrated(clientId))
             {
-                Console.WriteLine("reading from mongo");
-                
-                var mongoresult = await _historyOperationsRepository.GetByClientIdAsync(
+                var mongoresult = await _operationsHistoryRepository.GetByClientIdAsync(
                     clientId,
                     null,
                     operationType,
@@ -114,8 +112,6 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
                 return Ok(mongoresult.Select(x => x.ToHistoryOperation()));
             }
-            
-            Console.WriteLine("reading from cache");
 
             var wallets = await _clientAccountService.GetWalletsByClientIdAsync(clientId);
 
@@ -216,7 +212,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
             
             if (await _migrationFlagsRepository.ClientWasMigrated(wallet.ClientId))
             {
-                var mongoresult = await _historyOperationsRepository.GetByClientIdAsync(
+                var mongoresult = await _operationsHistoryRepository.GetByClientIdAsync(
                     wallet.ClientId,
                     walletId,
                     operationType,
@@ -256,7 +252,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             if (await _migrationFlagsRepository.ClientWasMigrated(wallet.ClientId))
             {
-                return Ok((await _historyOperationsRepository.GetByIdAsync(operationId)).ToHistoryOperation());
+                return Ok((await _operationsHistoryRepository.GetByIdAsync(operationId)).ToHistoryOperation());
             }
 
             var id = wallet.Type == nameof(WalletType.Trading) ? wallet.ClientId : wallet.Id;
@@ -317,7 +313,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             await _cache.RemoveIfLoaded(walletId, operationId);
 
-            await _historyOperationsRepository.DeleteIfExistsAsync(operationId);
+            await _operationsHistoryRepository.DeleteIfExistsAsync(operationId);
 
             return Ok(operation);
         }

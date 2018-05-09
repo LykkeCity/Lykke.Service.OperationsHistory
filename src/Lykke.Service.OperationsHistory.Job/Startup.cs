@@ -66,7 +66,7 @@ namespace Lykke.Service.OperationsHistory.Job
 
                 builder.RegisterModule(new JobModule(appSettings.CurrentValue, appSettings.Nested(x => x.OperationsHistoryJob.Db), Log));
                 
-                builder.RegisterModule(new MongoModule(appSettings.CurrentValue.OperationsHistoryJob.Mongo));
+                builder.RegisterModule(new MongoModule(appSettings.CurrentValue.OperationsHistoryMongo));
 
                 builder.Populate(services);
 

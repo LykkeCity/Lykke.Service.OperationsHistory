@@ -19,7 +19,7 @@ using Lykke.Service.OperationsRepository.Contract;
 
 namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
 {
-    public class MongoSubscriber : IStartable, IStopable
+    public class MongoDbSubscriber : IStartable, IStopable
     {
         private readonly ILog _log;
         private RabbitMqSubscriber<OperationsHistoryMessage> _subscriber;
@@ -29,7 +29,7 @@ namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
         private readonly IClientAccountClient _clientAccountClient;
         private readonly IHistoryMessageAdapter _historyMessageAdapter;
 
-        public MongoSubscriber(
+        public MongoDbSubscriber(
             ILog log,
             RabbitMqSettings rabbitSettings,
             IOperationsHistoryRepository operationsHistoryRepository,
@@ -48,7 +48,7 @@ namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
         public void Start()
         {
             var settings = RabbitMqSubscriptionSettings.CreateForSubscriber(_rabbitSettings.ConnectionString,
-                _rabbitSettings.ExchangeOperationsHistory, "mongoupdater");
+                _rabbitSettings.ExchangeOperationsHistory, "mongodbupdater");
 
             settings.MakeDurable();
 
