@@ -9,6 +9,7 @@ namespace Lykke.Service.OperationsHistory.Core.Settings.Api
         public SlackNotificationsSettings SlackNotifications { get; set; }
         public ClientAccountServiceClientSettings ClientAccountServiceClient { get; set; }
         public AssetsServiceClientSettings AssetsServiceClient { get; set; }
+        public MongoSettings OperationsHistoryMongo { get; set; }
     }
 
     public class OperationsHistorySettings

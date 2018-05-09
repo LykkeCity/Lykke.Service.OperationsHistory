@@ -10,7 +10,7 @@ using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsRepository.Contract;
 
-namespace Lykke.Service.OperationsHistory.Services.InMemoryCache
+namespace Lykke.Service.OperationsHistory.Services
 {
     public class InMemoryCache: IHistoryOperationsCache
     {

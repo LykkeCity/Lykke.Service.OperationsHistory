@@ -3,7 +3,7 @@ using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsRepository.Contract.History;
 
-namespace Lykke.Service.OperationsHistory.Job.Services
+namespace Lykke.Service.OperationsHistory.Services
 {
     public class HistoryWriter : IHistoryWriter
     {

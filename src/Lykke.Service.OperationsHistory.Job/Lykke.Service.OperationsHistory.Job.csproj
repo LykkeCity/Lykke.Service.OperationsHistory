@@ -23,6 +23,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0" />
@@ -30,6 +31,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
+    <ProjectReference Include="..\Lykke.Service.OperationsHistory.Mongo\Lykke.Service.OperationsHistory.Mongo.csproj" />
+    <ProjectReference Include="..\Lykke.Service.OperationsHistory.Services\Lykke.Service.OperationsHistory.Services.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Dockerfile">

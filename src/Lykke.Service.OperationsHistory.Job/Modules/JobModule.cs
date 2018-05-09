@@ -1,26 +1,34 @@
-﻿using Autofac;
+﻿using System;
+using System.Linq;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AzureStorage.Tables;
+using Common;
 using Common.Log;
+using Lykke.Service.Assets.Client;
+using Lykke.Service.Assets.Client.Models;
+using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsHistory.Core.Settings.Job;
-using Lykke.Service.OperationsHistory.Job.Services;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.DependencyInjection;
 using Lykke.Service.OperationsHistory.Job.RabbitSubscribers;
+using Lykke.Service.OperationsHistory.Services;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Redis;
 
 namespace Lykke.Service.OperationsHistory.Job.Modules
 {
     public class JobModule : Module
     {
-        private readonly OperationsHistoryJobSettings _settings;
+        private readonly AppSettings _settings;
         private readonly IReloadingManager<DbSettings> _dbSettingsManager;
         private readonly ILog _log;
         // NOTE: you can remove it if you don't need to use IServiceCollection extensions to register service specific dependencies
         private readonly IServiceCollection _services;
 
-        public JobModule(OperationsHistoryJobSettings settings, IReloadingManager<DbSettings> dbSettingsManager, ILog log)
+        public JobModule(AppSettings settings, IReloadingManager<DbSettings> dbSettingsManager, ILog log)
         {
             _settings = settings;
             _log = log;
@@ -53,6 +61,12 @@ namespace Lykke.Service.OperationsHistory.Job.Modules
 
             RegisterRabbitMqSubscribers(builder);
 
+            RegisterServiceClients(builder);
+
+            RegisterDictionaryEntities(builder);
+            
+            RegisterCache(builder);
+
             builder.Populate(_services);
         }
 
@@ -64,7 +78,13 @@ namespace Lykke.Service.OperationsHistory.Job.Modules
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.Rabbit));
+                .WithParameter(TypedParameter.From(_settings.OperationsHistoryJob.Rabbit));
+            
+            builder.RegisterType<MongoDbSubscriber>()
+                .As<IStartable>()
+                .AutoActivate()
+                .SingleInstance()
+                .WithParameter(TypedParameter.From(_settings.OperationsHistoryJob.Rabbit));
         }
 
         private void RegisterApplicationServices(ContainerBuilder builder)
@@ -72,6 +92,21 @@ namespace Lykke.Service.OperationsHistory.Job.Modules
             builder.RegisterType<HistoryWriter>()
                 .As<IHistoryWriter>()
                 .SingleInstance();
+            
+            builder.RegisterType<HistoryOperationAdapter>()
+                .As<IHistoryOperationAdapter>()
+                .SingleInstance();
+
+            builder.RegisterType<HistoryMessageAdapter>()
+                .As<IHistoryMessageAdapter>()
+                .SingleInstance();
+        }
+        
+        private void RegisterServiceClients(ContainerBuilder builder)
+        {
+            builder.RegisterLykkeServiceClient(_settings.ClientAccountServiceClient.ServiceUrl);
+            
+            _services.RegisterAssetsClient(AssetServiceSettings.Create(new Uri(_settings.AssetsServiceClient.ServiceUrl), TimeSpan.FromMinutes(3)));
         }
 
         private void RegisterAzureRepositories(ContainerBuilder builder)
@@ -80,6 +115,40 @@ namespace Lykke.Service.OperationsHistory.Job.Modules
                     AzureTableStorage<HistoryLogEntryEntity>.Create(
                         _dbSettingsManager.ConnectionString(x => x.DataConnString), "OperationsHistory", _log)))
                 .As<IHistoryLogEntryRepository>();
+        }
+        
+        private void RegisterDictionaryEntities(ContainerBuilder builder)
+        {
+            builder.Register(c =>
+            {
+                var ctx = c.Resolve<IComponentContext>();
+                return new CachedDataDictionary<string, Asset>(
+                    async () =>
+                        (await ctx.Resolve<IAssetsService>().AssetGetAllAsync()).ToDictionary(itm => itm.Id));
+            }).SingleInstance();
+
+            builder.Register(c =>
+            {
+                var ctx = c.Resolve<IComponentContext>();
+                return new CachedDataDictionary<string, AssetPair>(
+                    async () =>
+                        (await ctx.Resolve<IAssetsService>().AssetPairGetAllAsync())
+                        .ToDictionary(itm => itm.Id));
+            }).SingleInstance();
+        }
+
+        private void RegisterCache(ContainerBuilder builder)
+        {
+            var cache = new RedisCache(new RedisCacheOptions
+            {
+                Configuration = _settings.RedisSettings.Configuration,
+                InstanceName = "OperationsHistoryCache"
+            });
+            
+            builder.RegisterInstance(cache)
+                .As<IDistributedCache>()
+                .Keyed<IDistributedCache>("operationsHistoryCache")
+                .SingleInstance();
         }
     }
 }
