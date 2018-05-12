@@ -72,7 +72,8 @@ namespace Lykke.Service.OperationsHistory.Modules
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.OperationsHistoryService.RabbitOperations));
+                .WithParameter(TypedParameter.From(_settings.OperationsHistoryService.RabbitOperations))
+                .WithParameter(TypedParameter.From(_settings.OperationsHistoryService.ClientsToIgnore));
 
             builder.RegisterType<AuthSubscriber>()
                 .As<IStartable>()

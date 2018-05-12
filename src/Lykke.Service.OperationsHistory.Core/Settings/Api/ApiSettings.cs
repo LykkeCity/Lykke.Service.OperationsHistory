@@ -1,4 +1,5 @@
-﻿using Lykke.Service.ClientAccount.Client;
+﻿using System.Collections.Generic;
+using Lykke.Service.ClientAccount.Client;
 using Lykke.SettingsReader.Attributes;
 
 namespace Lykke.Service.OperationsHistory.Core.Settings.Api
@@ -17,6 +18,7 @@ namespace Lykke.Service.OperationsHistory.Core.Settings.Api
         public DbSettings Db { get; set; }
         public RabbitMqSettings RabbitOperations { get; set; }
         public RabbitMqSettings RabbitRegistration { get; set; }
+        public string[] ClientsToIgnore { get; set; }
 
         /// <summary>
         /// The maximum amout of values returned per 1 page

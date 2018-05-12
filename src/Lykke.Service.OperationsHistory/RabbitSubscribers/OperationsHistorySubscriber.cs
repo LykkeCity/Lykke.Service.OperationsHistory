@@ -5,6 +5,7 @@ using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsRepository.Contract.History;
@@ -20,17 +21,20 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
         private readonly RabbitMqSettings _rabbitSettings;
         private readonly IHistoryOperationsCache _historyCache;
         private readonly IHistoryMessageAdapter _adapter;
+        private readonly string[] _clientsToIgnore;
 
         public OperationsHistorySubscriber(
             RabbitMqSettings rabbitSettings, 
             IHistoryOperationsCache historyCache,
             IHistoryMessageAdapter adapter,
+            string[] clientsToIgnore,
             ILog log)
         {
             _log = log;
             _rabbitSettings = rabbitSettings;
             _historyCache = historyCache;
             _adapter = adapter;
+            _clientsToIgnore = clientsToIgnore;
         }
 
         public void Start()
@@ -59,6 +63,9 @@ namespace Lykke.Service.OperationsHistory.RabbitSubscribers
 
         private async Task ProcessMessageAsync(OperationsHistoryMessage arg)
         {
+            if (_clientsToIgnore.Contains(arg.ClientId))
+                return;
+            
             var operation = await _adapter.ExecuteAsync(arg);
 
             await _historyCache.AddOrUpdate(arg.ClientId, operation);
