@@ -113,7 +113,7 @@ namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
             if (walletId != null)
                 return walletId;
 
-            walletId = (await _clientAccountClient.GetClientWalletsByTypeAsync(clientId, WalletType.Trading))
+            walletId = (await _clientAccountClient.GetClientWalletsFiltered(clientId, WalletType.Trading, OwnerType.Spot))
                 .Single()
                 .Id;
             
