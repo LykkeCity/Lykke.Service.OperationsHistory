@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Common.Log;
 using Lykke.Service.OperationsHistory.Core.Settings;
 using Lykke.Service.OperationsHistory.Core.Settings.Job;
@@ -6,6 +7,9 @@ using Lykke.SettingsReader;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 namespace Lykke.Service.OperationsHistory.Mongo
@@ -24,6 +28,12 @@ namespace Lykke.Service.OperationsHistory.Mongo
 
         protected override void Load(ContainerBuilder builder)
         {
+            BsonSerializer.RegisterSerializer(
+                typeof(DateTime),
+                new DateTimeSerializer(
+                    DateTimeKind.Utc,
+                    BsonType.Document));
+            
             RegisterOperationsCollection(builder);
         }
 
