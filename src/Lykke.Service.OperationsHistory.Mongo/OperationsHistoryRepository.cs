@@ -26,6 +26,7 @@ namespace Lykke.Service.OperationsHistory.Mongo
             {
                 await _collection.InsertOneAsync(
                     OperationsHistoryEntity.Create(clientId, walletId, operation, customData));
+                return;
             }
             catch (MongoWriteException writeException)
             {
