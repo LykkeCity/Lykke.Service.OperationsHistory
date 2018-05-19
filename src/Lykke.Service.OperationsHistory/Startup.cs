@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core.Services;
+using Lykke.Service.OperationsHistory.Mongo;
 
 namespace Lykke.Service.OperationsHistory
 {
@@ -57,6 +58,8 @@ namespace Lykke.Service.OperationsHistory
 
                 builder.RegisterModule(new ServiceModule(appSettings.CurrentValue,
                     appSettings.Nested(x => x.OperationsHistoryService.Db), Log));
+                
+                builder.RegisterModule(new MongoModule(appSettings.CurrentValue.OperationsHistoryMongo));
 
                 builder.Populate(services);
                 ApplicationContainer = builder.Build();

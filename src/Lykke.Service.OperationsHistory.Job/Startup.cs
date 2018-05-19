@@ -19,6 +19,7 @@ using Lykke.Service.OperationsHistory.Job.Model;
 using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.JobTriggers.Triggers;
+using Lykke.Service.OperationsHistory.Mongo;
 
 namespace Lykke.Service.OperationsHistory.Job
 {
@@ -63,8 +64,9 @@ namespace Lykke.Service.OperationsHistory.Job
 
                 Log = CreateLogWithSlack(services, appSettings);
 
-                builder.RegisterModule(new JobModule(appSettings.CurrentValue.OperationsHistoryJob,
-                    appSettings.Nested(x => x.OperationsHistoryJob.Db), Log));
+                builder.RegisterModule(new JobModule(appSettings.CurrentValue, appSettings.Nested(x => x.OperationsHistoryJob.Db), Log));
+                
+                builder.RegisterModule(new MongoModule(appSettings.CurrentValue.OperationsHistoryMongo));
 
                 builder.Populate(services);
 

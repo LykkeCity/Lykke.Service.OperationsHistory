@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <PackageId>Lykke.Service.OperationsHistory.Services</PackageId>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Lykke.Service.Assets.Client" Version="3.3.2" />
+  </ItemGroup>
+</Project>

@@ -3,11 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D7259EBD-E023-4BFB-86C6-50F8EA1D414A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0F8A67BF-09A3-4E72-A4DB-56055D8AED4B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{C09F92FC-42CB-49F0-B18D-0A1374C69C68}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Job", "src\Lykke.Service.OperationsHistory.Job\Lykke.Service.OperationsHistory.Job.csproj", "{D66F0978-098B-447D-AD62-F3F0D57A8A0B}"
 EndProject
@@ -15,11 +11,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHis
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Core", "src\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj", "{E43E6323-8622-45C6-97A7-8C48FE5B3FBE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{F757458C-772F-47CE-B0EB-D9B7F85D9E85}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory", "src\Lykke.Service.OperationsHistory\Lykke.Service.OperationsHistory.csproj", "{F88B1171-B104-4EA6-8B45-AE654FC83070}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.OperationsHistory.Client", "client\Lykke.Service.OperationsHistory.Client\Lykke.Service.OperationsHistory.Client.csproj", "{30633AD2-9721-457D-B499-5597D19B81CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.OperationsHistory.Mongo", "src\Lykke.Service.OperationsHistory.Mongo\Lykke.Service.OperationsHistory.Mongo.csproj", "{84D29F6F-8271-4E1C-B7D3-C32A6C546BA7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.OperationsHistory.Services", "src\Lykke.Service.OperationsHistory.Services\Lykke.Service.OperationsHistory.Services.csproj", "{3A4FE748-F1CD-40BB-B9CE-2B1897DCC644}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Infrastructure", "1. Infrastructure", "{CBEE283C-BB52-4990-B092-FB8AEA9216F0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Repositories", "2. Repositories", "{2758B54F-EEEB-42DB-8C0C-44EA1E5BC5A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Client", "3. Client", "{B97E0F0C-C935-42F9-A5C2-10B3C903F945}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Tests", "4. Tests", "{6C22CC83-CBFF-44D8-96C4-1FDE868FD36C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,16 +53,24 @@ Global
 		{30633AD2-9721-457D-B499-5597D19B81CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30633AD2-9721-457D-B499-5597D19B81CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30633AD2-9721-457D-B499-5597D19B81CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84D29F6F-8271-4E1C-B7D3-C32A6C546BA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84D29F6F-8271-4E1C-B7D3-C32A6C546BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84D29F6F-8271-4E1C-B7D3-C32A6C546BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84D29F6F-8271-4E1C-B7D3-C32A6C546BA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A4FE748-F1CD-40BB-B9CE-2B1897DCC644}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A4FE748-F1CD-40BB-B9CE-2B1897DCC644}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A4FE748-F1CD-40BB-B9CE-2B1897DCC644}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A4FE748-F1CD-40BB-B9CE-2B1897DCC644}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{D66F0978-098B-447D-AD62-F3F0D57A8A0B} = {D7259EBD-E023-4BFB-86C6-50F8EA1D414A}
-		{F3C285F1-FD40-4190-AC09-F4491AF3F276} = {C09F92FC-42CB-49F0-B18D-0A1374C69C68}
-		{E43E6323-8622-45C6-97A7-8C48FE5B3FBE} = {D7259EBD-E023-4BFB-86C6-50F8EA1D414A}
-		{F88B1171-B104-4EA6-8B45-AE654FC83070} = {D7259EBD-E023-4BFB-86C6-50F8EA1D414A}
-		{30633AD2-9721-457D-B499-5597D19B81CC} = {F757458C-772F-47CE-B0EB-D9B7F85D9E85}
+		{E43E6323-8622-45C6-97A7-8C48FE5B3FBE} = {CBEE283C-BB52-4990-B092-FB8AEA9216F0}
+		{3A4FE748-F1CD-40BB-B9CE-2B1897DCC644} = {CBEE283C-BB52-4990-B092-FB8AEA9216F0}
+		{84D29F6F-8271-4E1C-B7D3-C32A6C546BA7} = {2758B54F-EEEB-42DB-8C0C-44EA1E5BC5A0}
+		{30633AD2-9721-457D-B499-5597D19B81CC} = {B97E0F0C-C935-42F9-A5C2-10B3C903F945}
+		{F3C285F1-FD40-4190-AC09-F4491AF3F276} = {6C22CC83-CBFF-44D8-96C4-1FDE868FD36C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CA597F16-0AAC-40E6-B29F-D15A378D45D0}

@@ -12,11 +12,11 @@ using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using Lykke.Service.OperationsHistory.RabbitSubscribers;
 using Lykke.Service.OperationsHistory.Services;
-using Lykke.Service.OperationsHistory.Services.InMemoryCache;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using Lykke.Service.OperationsHistory.Core.Entities.MigrationFlag;
 
 namespace Lykke.Service.OperationsHistory.Modules
 {
@@ -72,7 +72,8 @@ namespace Lykke.Service.OperationsHistory.Modules
                 .As<IStartable>()
                 .AutoActivate()
                 .SingleInstance()
-                .WithParameter(TypedParameter.From(_settings.OperationsHistoryService.RabbitOperations));
+                .WithParameter(TypedParameter.From(_settings.OperationsHistoryService.RabbitOperations))
+                .WithParameter(TypedParameter.From(_settings.OperationsHistoryService.ClientsToIgnore));
 
             builder.RegisterType<AuthSubscriber>()
                 .As<IStartable>()
@@ -102,6 +103,10 @@ namespace Lykke.Service.OperationsHistory.Modules
             builder.RegisterInstance(new HistoryLogEntryRepository(AzureTableStorage<HistoryLogEntryEntity>.Create(
                     _dbSettings.ConnectionString(x => x.DataConnString), "OperationsHistory", _log)))
                 .As<IHistoryLogEntryRepository>();
+            
+            builder.RegisterInstance(new MigrationFlagsRepository(AzureTableStorage<MigrationFlagEntity>.Create(
+                    _dbSettings.ConnectionString(x => x.DataConnString), MigrationFlagsRepository.TableName, _log)))
+                .As<IMigrationFlagsRepository>();
         }
 
         private void RegisterServiceClients(ContainerBuilder builder)

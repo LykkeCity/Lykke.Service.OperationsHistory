@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Lykke.Service.OperationsRepository.Contract.Cash;
+using Lykke.Service.OperationsHistory.Core;
 
 namespace Lykke.Service.OperationsHistory.Services
 {
