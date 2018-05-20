@@ -252,7 +252,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             if (await _migrationFlagsRepository.ClientWasMigrated(wallet.ClientId))
             {
-                return Ok((await _operationsHistoryRepository.GetByIdAsync(operationId)).ToHistoryOperation());
+                return Ok((await _operationsHistoryRepository.GetByIdAsync(wallet.ClientId, operationId)).ToHistoryOperation());
             }
 
             var id = wallet.Type == nameof(WalletType.Trading) ? wallet.ClientId : wallet.Id;
@@ -313,7 +313,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
 
             await _cache.RemoveIfLoaded(walletId, operationId);
 
-            await _operationsHistoryRepository.DeleteIfExistsAsync(operationId);
+            await _operationsHistoryRepository.DeleteIfExistsAsync(clientId, operationId);
 
             return Ok(operation);
         }
