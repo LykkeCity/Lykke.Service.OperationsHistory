@@ -28,12 +28,6 @@ namespace Lykke.Service.OperationsHistory.Mongo
 
         protected override void Load(ContainerBuilder builder)
         {
-            BsonSerializer.RegisterSerializer(
-                typeof(DateTime),
-                new DateTimeSerializer(
-                    DateTimeKind.Utc,
-                    BsonType.Document));
-            
             RegisterOperationsCollection(builder);
         }
 
