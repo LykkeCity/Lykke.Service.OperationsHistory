@@ -10,7 +10,7 @@ namespace Lykke.Service.OperationsHistory.Mongo
     {
         Task AddOrUpdateAsync(string clientId, string walletId, HistoryOperation operation, string customData);
 
-        Task<OperationsHistoryEntity> GetByIdAsync(string id);
+        Task<OperationsHistoryEntity> GetByIdAsync(string clientId, string id);
         
         Task<IEnumerable<OperationsHistoryEntity>> GetByClientIdAsync(
             string clientId,
@@ -21,6 +21,6 @@ namespace Lykke.Service.OperationsHistory.Mongo
             int take, 
             int skip);
 
-        Task DeleteIfExistsAsync(string id);
+        Task DeleteIfExistsAsync(string clientId, string id);
     }
 }
