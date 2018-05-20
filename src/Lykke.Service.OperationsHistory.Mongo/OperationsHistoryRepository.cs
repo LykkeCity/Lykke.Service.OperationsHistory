@@ -35,16 +35,18 @@ namespace Lykke.Service.OperationsHistory.Mongo
             }
 
             await _collection.UpdateOneAsync(
-                x => x.Id == operation.Id,
+                x =>
+                    x.ClientId == clientId &&
+                    x.Id == operation.Id,
                 Builders<OperationsHistoryEntity>
                     .Update
                         .Set(s => s.CustomData, customData)
                         .Set(x => x.State, operation.State));
         }
 
-        public async Task<OperationsHistoryEntity> GetByIdAsync(string id)
+        public async Task<OperationsHistoryEntity> GetByIdAsync(string clientId, string id)
         {
-            return (await _collection.Find(x => x.Id == id).ToListAsync()).Single();
+            return (await _collection.Find(x => x.ClientId == clientId && x.Id == id).ToListAsync()).Single();
         }
 
         public async Task<IEnumerable<OperationsHistoryEntity>> GetByClientIdAsync(
@@ -84,9 +86,9 @@ namespace Lykke.Service.OperationsHistory.Mongo
 
         }
 
-        public async Task DeleteIfExistsAsync(string id)
+        public async Task DeleteIfExistsAsync(string clientId, string id)
         {
-            await _collection.DeleteOneAsync(x => x.Id == id);
+            await _collection.DeleteOneAsync(x => x.ClientId == clientId && x.Id == id);
         }
     }
 }
