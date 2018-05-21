@@ -57,15 +57,14 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='skip'>
         /// How many items skip before returning
         /// </param>
-        /// <param name='operationType'>
-        /// The type of the operation, possible values: CashIn, CashOut, Trade.
-        /// Possible values include: 'CashIn', 'CashOut', 'Trade',
-        /// 'LimitTrade', 'LimitOrderEvent'
+        /// <param name='operationTypes'>
+        /// The type of the operation, possible values: CashIn, CashOut, Trade
         /// </param>
         /// <param name='assetId'>
         /// Asset identifier
         /// </param>
         /// <param name='assetPairId'>
+        /// AssetPair identifier
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -73,7 +72,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Getting history by date range, note: internal cache is not used
@@ -94,6 +93,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// Id of the asset
         /// </param>
         /// <param name='assetPairId'>
+        /// AssetPair identifier
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -115,15 +115,14 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='skip'>
         /// How many items skip before returning
         /// </param>
-        /// <param name='operationType'>
-        /// The type of the operation, possible values: CashIn, CashOut, Trade.
-        /// Possible values include: 'CashIn', 'CashOut', 'Trade',
-        /// 'LimitTrade', 'LimitOrderEvent'
+        /// <param name='operationTypes'>
+        /// The type of the operation, possible values: CashIn, CashOut, Trade
         /// </param>
         /// <param name='assetId'>
         /// Asset identifier
         /// </param>
         /// <param name='assetPairId'>
+        /// AssetPair identifier
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -131,13 +130,13 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetByWalletIdWithHttpMessagesAsync(string walletId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetByWalletIdWithHttpMessagesAsync(string walletId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Getring history record by operation id
+        /// Getting history record by operation id
         /// </summary>
         /// <param name='walletId'>
-        /// Wallet identifie
+        /// Wallet identifier
         /// </param>
         /// <param name='operationId'>
         /// Operation identifier

@@ -75,12 +75,14 @@ namespace Lykke.Service.OperationsHistory.Services
             }
         }
 
-        public async Task<IEnumerable<HistoryOperation>> GetAsync(string walletId, HistoryOperationType? operationType = null, string assetId = null, string assetPairId = null, PaginationInfo paging = null)
+        public async Task<IEnumerable<HistoryOperation>> GetAsync(string walletId,
+            HistoryOperationType[] operationTypes = null, string assetId = null, string assetPairId = null,
+            PaginationInfo paging = null)
         {
             var walletRecords = await GetRecordsByWalletId(walletId);
             
             var result = walletRecords
-                .Where(HistoryOperationFilterPredicates.IfTypeEquals(operationType))
+                .Where(HistoryOperationFilterPredicates.IfTypeEquals(operationTypes))
                 .Where(HistoryOperationFilterPredicates.IfAssetEquals(assetId))
                 .Where(HistoryOperationFilterPredicates.IfAssetPairEquals(assetPairId))
                 .OrderByDescending(x => x.DateTime);

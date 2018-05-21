@@ -8,6 +8,7 @@ using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using Lykke.Service.OperationsHistory.RabbitSubscribers.Contract;
 using System;
 using System.Threading.Tasks;
+using Lykke.Service.OperationsHistory.Core.Services;
 
 namespace Lykke.Service.OperationsHistory.RabbitSubscribers
 {

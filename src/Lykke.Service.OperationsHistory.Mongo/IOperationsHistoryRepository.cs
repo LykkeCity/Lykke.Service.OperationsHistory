@@ -15,7 +15,7 @@ namespace Lykke.Service.OperationsHistory.Mongo
         Task<IEnumerable<OperationsHistoryEntity>> GetByClientIdAsync(
             string clientId,
             string walletId,
-            HistoryOperationType? operationType,
+            HistoryOperationType[] operationType,
             string assetId,
             string assetPairId,
             int take, 
