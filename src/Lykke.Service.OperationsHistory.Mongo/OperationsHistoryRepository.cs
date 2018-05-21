@@ -51,7 +51,7 @@ namespace Lykke.Service.OperationsHistory.Mongo
 
         public async Task<IEnumerable<OperationsHistoryEntity>> GetByClientIdAsync(string clientId,
             string walletId,
-            HistoryOperationType?[] operationTypes,
+            HistoryOperationType[] operationTypes,
             string assetId,
             string assetPairId,
             int take,
@@ -60,7 +60,7 @@ namespace Lykke.Service.OperationsHistory.Mongo
             var result = new List<OperationsHistoryEntity>();
 
             var queryByOperationType = operationTypes != null && operationTypes.Any();
-            var types = operationTypes ?? new HistoryOperationType?[] {HistoryOperationType.Trade};
+            var types = operationTypes ?? new[] {HistoryOperationType.Trade};
             
             var cursor = await _collection
                 .Find(x =>

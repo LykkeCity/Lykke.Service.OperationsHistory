@@ -80,7 +80,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByClientId(
             string clientId, 
-            [FromQuery] string[] operationTypes,
+            [FromQuery] HistoryOperationType[] operationTypes,
             [FromQuery] string assetId,
             [FromQuery] string assetPairId,
             [FromQuery] int take, 
@@ -95,7 +95,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(TakeOutOfRange));
             }
 
-            var opTypes = HistoryOperationTypeConverter.GetHistoryOperationTypes(operationTypes);
+            //var opTypes = HistoryOperationTypeConverter.GetHistoryOperationTypes(operationTypes);
 
             var client = await _clientAccountService.GetClientByIdAsync(clientId);
             if (client == null)
@@ -108,7 +108,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 var mongoresult = await _operationsHistoryRepository.GetByClientIdAsync(
                     clientId,
                     null,
-                    opTypes,
+                    operationTypes,
                     assetId,
                     assetPairId,
                     take,
@@ -126,7 +126,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
             foreach (var piece in walletIds.ToPieces(CacheBatchPieceSize))
             {
                 await Task.WhenAll(
-                    piece.Select(x => _cache.GetAsync(x, opTypes, assetId, assetPairId)
+                    piece.Select(x => _cache.GetAsync(x, operationTypes, assetId, assetPairId)
                         .ContinueWith(t =>
                         {
                             lock (result)
@@ -195,7 +195,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(void), (int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByWalletId(string walletId,
-            [FromQuery] string[] operationTypes,
+            [FromQuery] HistoryOperationType[] operationTypes,
             [FromQuery] string assetId,
             [FromQuery] string assetPairId,
             [FromQuery] int take,
@@ -210,7 +210,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(TakeOutOfRange));
             }
 
-            var opTypes = HistoryOperationTypeConverter.GetHistoryOperationTypes(operationTypes);
+            //var opTypes = HistoryOperationTypeConverter.GetHistoryOperationTypes(operationTypes);
 
             var wallet = await _clientAccountService.GetWalletAsync(walletId);
             if (wallet == null)
@@ -223,7 +223,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 var mongoresult = await _operationsHistoryRepository.GetByClientIdAsync(
                     wallet.ClientId,
                     walletId,
-                    opTypes,
+                    operationTypes,
                     assetId,
                     assetPairId,
                     take,
@@ -235,7 +235,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
             var id = wallet.Type == nameof(WalletType.Trading) ? wallet.ClientId : wallet.Id;
             
             var result =
-                await _cache.GetAsync(id, opTypes, assetId, assetPairId, new PaginationInfo {Take = take, Skip = skip});
+                await _cache.GetAsync(id, operationTypes, assetId, assetPairId, new PaginationInfo {Take = take, Skip = skip});
 
             return Ok(result);
         }

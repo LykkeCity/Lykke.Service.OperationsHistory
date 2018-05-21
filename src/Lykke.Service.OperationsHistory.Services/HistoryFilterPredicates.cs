@@ -31,7 +31,7 @@ namespace Lykke.Service.OperationsHistory.Services
             };
         }
 
-        public static Func<HistoryOperation, bool> IfTypeEquals(HistoryOperationType?[] operationTypes)
+        public static Func<HistoryOperation, bool> IfTypeEquals(HistoryOperationType[] operationTypes)
         {
             return operation => operationTypes == null || operationTypes.Any()  || operationTypes.Contains(operation.Type);
         }

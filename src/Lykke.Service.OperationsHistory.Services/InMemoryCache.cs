@@ -76,7 +76,7 @@ namespace Lykke.Service.OperationsHistory.Services
         }
 
         public async Task<IEnumerable<HistoryOperation>> GetAsync(string walletId,
-            HistoryOperationType?[] operationTypes = null, string assetId = null, string assetPairId = null,
+            HistoryOperationType[] operationTypes = null, string assetId = null, string assetPairId = null,
             PaginationInfo paging = null)
         {
             var walletRecords = await GetRecordsByWalletId(walletId);
