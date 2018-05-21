@@ -113,7 +113,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// </summary>
         private void Initialize()
         {
-            BaseUri = new System.Uri("http://localhost/");
+            BaseUri = new System.Uri("http://localhost");
             SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,
@@ -273,15 +273,14 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='skip'>
         /// How many items skip before returning
         /// </param>
-        /// <param name='operationType'>
-        /// The type of the operation, possible values: CashIn, CashOut, Trade.
-        /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
-        /// 'LimitOrderEvent'
+        /// <param name='operationTypes'>
+        /// The type of the operation, possible values: CashIn, CashOut, Trade
         /// </param>
         /// <param name='assetId'>
         /// Asset identifier
         /// </param>
         /// <param name='assetPairId'>
+        /// AssetPair identifier
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -304,7 +303,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (clientId == null)
             {
@@ -318,7 +317,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("clientId", clientId);
-                tracingParameters.Add("operationType", operationType);
+                tracingParameters.Add("operationTypes", operationTypes);
                 tracingParameters.Add("assetId", assetId);
                 tracingParameters.Add("assetPairId", assetPairId);
                 tracingParameters.Add("take", take);
@@ -331,9 +330,19 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/OperationsHistory/client/{clientId}").ToString();
             _url = _url.Replace("{clientId}", System.Uri.EscapeDataString(clientId));
             List<string> _queryParameters = new List<string>();
-            if (operationType != null)
+            if (operationTypes != null)
             {
-                _queryParameters.Add(string.Format("operationType={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(operationType, SerializationSettings).Trim('"'))));
+                if (operationTypes.Count == 0)
+                {
+                    _queryParameters.Add(string.Format("operationTypes={0}", System.Uri.EscapeDataString(string.Empty)));
+                }
+                else
+                {
+                    foreach (var _item in operationTypes)
+                    {
+                        _queryParameters.Add(string.Format("operationTypes={0}", System.Uri.EscapeDataString("" + _item)));
+                    }
+                }
             }
             if (assetId != null)
             {
@@ -472,6 +481,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// Id of the asset
         /// </param>
         /// <param name='assetPairId'>
+        /// AssetPair identifier
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -644,15 +654,14 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='skip'>
         /// How many items skip before returning
         /// </param>
-        /// <param name='operationType'>
-        /// The type of the operation, possible values: CashIn, CashOut, Trade.
-        /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
-        /// 'LimitOrderEvent'
+        /// <param name='operationTypes'>
+        /// The type of the operation, possible values: CashIn, CashOut, Trade
         /// </param>
         /// <param name='assetId'>
         /// Asset identifier
         /// </param>
         /// <param name='assetPairId'>
+        /// AssetPair identifier
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -675,7 +684,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetByWalletIdWithHttpMessagesAsync(string walletId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetByWalletIdWithHttpMessagesAsync(string walletId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (walletId == null)
             {
@@ -689,7 +698,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
                 tracingParameters.Add("walletId", walletId);
-                tracingParameters.Add("operationType", operationType);
+                tracingParameters.Add("operationTypes", operationTypes);
                 tracingParameters.Add("assetId", assetId);
                 tracingParameters.Add("assetPairId", assetPairId);
                 tracingParameters.Add("take", take);
@@ -702,9 +711,19 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/OperationsHistory/wallet/{walletId}").ToString();
             _url = _url.Replace("{walletId}", System.Uri.EscapeDataString(walletId));
             List<string> _queryParameters = new List<string>();
-            if (operationType != null)
+            if (operationTypes != null)
             {
-                _queryParameters.Add(string.Format("operationType={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(operationType, SerializationSettings).Trim('"'))));
+                if (operationTypes.Count == 0)
+                {
+                    _queryParameters.Add(string.Format("operationTypes={0}", System.Uri.EscapeDataString(string.Empty)));
+                }
+                else
+                {
+                    foreach (var _item in operationTypes)
+                    {
+                        _queryParameters.Add(string.Format("operationTypes={0}", System.Uri.EscapeDataString("" + _item)));
+                    }
+                }
             }
             if (assetId != null)
             {
@@ -826,10 +845,10 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         }
 
         /// <summary>
-        /// Getring history record by operation id
+        /// Getting history record by operation id
         /// </summary>
         /// <param name='walletId'>
-        /// Wallet identifie
+        /// Wallet identifier
         /// </param>
         /// <param name='operationId'>
         /// Operation identifier
