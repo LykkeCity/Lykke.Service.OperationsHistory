@@ -95,8 +95,6 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 return BadRequest(ErrorResponse.Create(TakeOutOfRange));
             }
 
-            //var opTypes = HistoryOperationTypeConverter.GetHistoryOperationTypes(operationTypes);
-
             var client = await _clientAccountService.GetClientByIdAsync(clientId);
             if (client == null)
             {
@@ -209,8 +207,6 @@ namespace Lykke.Service.OperationsHistory.Controllers
             {
                 return BadRequest(ErrorResponse.Create(TakeOutOfRange));
             }
-
-            //var opTypes = HistoryOperationTypeConverter.GetHistoryOperationTypes(operationTypes);
 
             var wallet = await _clientAccountService.GetWalletAsync(walletId);
             if (wallet == null)
