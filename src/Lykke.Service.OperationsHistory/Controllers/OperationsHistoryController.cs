@@ -14,6 +14,7 @@ using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsHistory.Mongo;
 using Lykke.Service.OperationsHistory.Services;
 using Lykke.Service.OperationsHistory.Validation;
+using Lykke.Service.OperationsRepository.Contract;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using ErrorResponse = Lykke.Service.OperationsHistory.Models.ErrorResponse;
@@ -66,8 +67,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         /// Getting history by clientId
         /// </summary>
         /// <param name="clientId">Client identifier</param>
-        /// <param name="operationType">The type of the operation, possible values: CashIn, CashOut, Trade</param>
-        /// <param name="assetId">Asset identifier</param> 
+        /// <param name="operationTypes">The type of the operation, possible values: CashIn, CashOut, Trade</param>
+        /// <param name="assetId">Asset identifier</param>
+        /// <param name="assetPairId">AssetPair identifier</param>
         /// <param name="take">How many maximum items have to be returned</param>
         /// <param name="skip">How many items skip before returning</param>
         /// <returns></returns>
@@ -78,7 +80,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByClientId(
             string clientId, 
-            [FromQuery] HistoryOperationType? operationType,
+            [FromQuery] HistoryOperationType[] operationTypes,
             [FromQuery] string assetId,
             [FromQuery] string assetPairId,
             [FromQuery] int take, 
@@ -104,7 +106,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 var mongoresult = await _operationsHistoryRepository.GetByClientIdAsync(
                     clientId,
                     null,
-                    operationType,
+                    operationTypes,
                     assetId,
                     assetPairId,
                     take,
@@ -122,7 +124,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
             foreach (var piece in walletIds.ToPieces(CacheBatchPieceSize))
             {
                 await Task.WhenAll(
-                    piece.Select(x => _cache.GetAsync(x, operationType, assetId, assetPairId)
+                    piece.Select(x => _cache.GetAsync(x, operationTypes, assetId, assetPairId)
                         .ContinueWith(t =>
                         {
                             lock (result)
@@ -147,6 +149,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         /// <param name="dateTo">The date of the operation will be less than</param>
         /// <param name="operationType">The type of the operation, possible values: CashIn, CashOut, Trade</param>
         /// <param name="assetId">Id of the asset</param>
+        /// <param name="assetPairId">AssetPair identifier</param>
         /// <returns></returns>
         [HttpGet]
         [SwaggerOperation("GetByDates")]
@@ -178,8 +181,9 @@ namespace Lykke.Service.OperationsHistory.Controllers
         /// Getting history by wallet identifier
         /// </summary>
         /// <param name="walletId">Wallet identifier</param>
-        /// <param name="operationType">The type of the operation, possible values: CashIn, CashOut, Trade</param>
+        /// <param name="operationTypes">The type of the operation, possible values: CashIn, CashOut, Trade</param>
         /// <param name="assetId">Asset identifier</param>
+        /// <param name="assetPairId">AssetPair identifier</param>
         /// <param name="take">How many maximum items have to be returned</param>
         /// <param name="skip">How many items skip before returning</param>
         /// <returns></returns>
@@ -189,7 +193,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int) HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(void), (int) HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetByWalletId(string walletId,
-            [FromQuery] HistoryOperationType? operationType,
+            [FromQuery] HistoryOperationType[] operationTypes,
             [FromQuery] string assetId,
             [FromQuery] string assetPairId,
             [FromQuery] int take,
@@ -215,7 +219,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 var mongoresult = await _operationsHistoryRepository.GetByClientIdAsync(
                     wallet.ClientId,
                     walletId,
-                    operationType,
+                    operationTypes,
                     assetId,
                     assetPairId,
                     take,
@@ -227,15 +231,15 @@ namespace Lykke.Service.OperationsHistory.Controllers
             var id = wallet.Type == nameof(WalletType.Trading) ? wallet.ClientId : wallet.Id;
             
             var result =
-                await _cache.GetAsync(id, operationType, assetId, assetPairId, new PaginationInfo {Take = take, Skip = skip});
+                await _cache.GetAsync(id, operationTypes, assetId, assetPairId, new PaginationInfo {Take = take, Skip = skip});
 
             return Ok(result);
         }
 
         /// <summary>
-        /// Getring history record by operation id
+        /// Getting history record by operation id
         /// </summary>
-        /// <param name="walletId">Wallet identifie</param>
+        /// <param name="walletId">Wallet identifier</param>
         /// <param name="operationId">Operation identifier</param>
         /// <returns></returns>
         [HttpGet("wallet/{walletId}/operation/{operationId}")]

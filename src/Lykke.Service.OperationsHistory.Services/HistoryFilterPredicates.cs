@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Lykke.Service.OperationsHistory.Core;
 
 namespace Lykke.Service.OperationsHistory.Services
@@ -28,6 +29,11 @@ namespace Lykke.Service.OperationsHistory.Services
                 
                 return operation.AssetPair == assetPairId;
             };
+        }
+
+        public static Func<HistoryOperation, bool> IfTypeEquals(HistoryOperationType[] operationTypes)
+        {
+            return operation => operationTypes == null || operationTypes.Any()  || operationTypes.Contains(operation.Type);
         }
     }
 }

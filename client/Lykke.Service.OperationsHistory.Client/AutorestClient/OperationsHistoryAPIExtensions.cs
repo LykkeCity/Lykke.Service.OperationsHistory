@@ -7,6 +7,8 @@
 namespace Lykke.Service.OperationsHistory.AutorestClient
 {
     using Models;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -58,19 +60,18 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='skip'>
             /// How many items skip before returning
             /// </param>
-            /// <param name='operationType'>
-            /// The type of the operation, possible values: CashIn, CashOut, Trade.
-            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
-            /// 'LimitOrderEvent'
+            /// <param name='operationTypes'>
+            /// The type of the operation, possible values: CashIn, CashOut, Trade
             /// </param>
             /// <param name='assetId'>
             /// Asset identifier
             /// </param>
             /// <param name='assetPairId'>
+            /// AssetPair identifier
             /// </param>
-            public static object GetByClientId(this IOperationsHistoryAPI operations, string clientId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string))
+            public static object GetByClientId(this IOperationsHistoryAPI operations, string clientId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string))
             {
-                return operations.GetByClientIdAsync(clientId, take, skip, operationType, assetId, assetPairId).GetAwaiter().GetResult();
+                return operations.GetByClientIdAsync(clientId, take, skip, operationTypes, assetId, assetPairId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -88,22 +89,21 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='skip'>
             /// How many items skip before returning
             /// </param>
-            /// <param name='operationType'>
-            /// The type of the operation, possible values: CashIn, CashOut, Trade.
-            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
-            /// 'LimitOrderEvent'
+            /// <param name='operationTypes'>
+            /// The type of the operation, possible values: CashIn, CashOut, Trade
             /// </param>
             /// <param name='assetId'>
             /// Asset identifier
             /// </param>
             /// <param name='assetPairId'>
+            /// AssetPair identifier
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetByClientIdAsync(this IOperationsHistoryAPI operations, string clientId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetByClientIdAsync(this IOperationsHistoryAPI operations, string clientId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId, assetPairId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationTypes, assetId, assetPairId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -130,6 +130,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// Id of the asset
             /// </param>
             /// <param name='assetPairId'>
+            /// AssetPair identifier
             /// </param>
             public static object GetByDates(this IOperationsHistoryAPI operations, System.DateTime dateFrom, System.DateTime dateTo, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string))
             {
@@ -157,6 +158,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// Id of the asset
             /// </param>
             /// <param name='assetPairId'>
+            /// AssetPair identifier
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
@@ -184,19 +186,18 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='skip'>
             /// How many items skip before returning
             /// </param>
-            /// <param name='operationType'>
-            /// The type of the operation, possible values: CashIn, CashOut, Trade.
-            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
-            /// 'LimitOrderEvent'
+            /// <param name='operationTypes'>
+            /// The type of the operation, possible values: CashIn, CashOut, Trade
             /// </param>
             /// <param name='assetId'>
             /// Asset identifier
             /// </param>
             /// <param name='assetPairId'>
+            /// AssetPair identifier
             /// </param>
-            public static object GetByWalletId(this IOperationsHistoryAPI operations, string walletId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string))
+            public static object GetByWalletId(this IOperationsHistoryAPI operations, string walletId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string))
             {
-                return operations.GetByWalletIdAsync(walletId, take, skip, operationType, assetId, assetPairId).GetAwaiter().GetResult();
+                return operations.GetByWalletIdAsync(walletId, take, skip, operationTypes, assetId, assetPairId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -214,35 +215,34 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='skip'>
             /// How many items skip before returning
             /// </param>
-            /// <param name='operationType'>
-            /// The type of the operation, possible values: CashIn, CashOut, Trade.
-            /// Possible values include: 'CashIn', 'CashOut', 'Trade', 'LimitTrade',
-            /// 'LimitOrderEvent'
+            /// <param name='operationTypes'>
+            /// The type of the operation, possible values: CashIn, CashOut, Trade
             /// </param>
             /// <param name='assetId'>
             /// Asset identifier
             /// </param>
             /// <param name='assetPairId'>
+            /// AssetPair identifier
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetByWalletIdAsync(this IOperationsHistoryAPI operations, string walletId, int take, int skip, HistoryOperationType? operationType = default(HistoryOperationType?), string assetId = default(string), string assetPairId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetByWalletIdAsync(this IOperationsHistoryAPI operations, string walletId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId, assetPairId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationTypes, assetId, assetPairId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
             }
 
             /// <summary>
-            /// Getring history record by operation id
+            /// Getting history record by operation id
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='walletId'>
-            /// Wallet identifie
+            /// Wallet identifier
             /// </param>
             /// <param name='operationId'>
             /// Operation identifier
@@ -253,13 +253,13 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             }
 
             /// <summary>
-            /// Getring history record by operation id
+            /// Getting history record by operation id
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
             /// <param name='walletId'>
-            /// Wallet identifie
+            /// Wallet identifier
             /// </param>
             /// <param name='operationId'>
             /// Operation identifier
