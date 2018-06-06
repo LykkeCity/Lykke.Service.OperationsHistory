@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Common;
@@ -74,8 +76,25 @@ namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
                     : await GetClientTradingWalletIdAsync(clientId);
 
             var operation = await _historyMessageAdapter.ExecuteAsync(arg);
+
+            if ((operation.Type == HistoryOperationType.CashIn ||
+                 operation.Type == HistoryOperationType.CashOut) &&
+                !Guid.TryParse(operation.Id, out _))
+                operation.Id = MakeGuidFromPair(walletId, operation.Id).ToString();
             
             await _operationsHistoryRepository.AddOrUpdateAsync(clientId, walletId, operation, arg.Data);
+        }
+        
+        private static Guid MakeGuidFromPair(string s1, string s2)
+        {
+            var arr = new byte[16];
+
+            Array.Copy(new SHA256Managed()
+                .ComputeHash(
+                    Encoding.ASCII.GetBytes(
+                        string.Concat(s1, s2))), 0, arr, 0, 16);
+            
+            return new Guid(arr);
         }
 
         public void Dispose()
