@@ -4,6 +4,8 @@ using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsRepository.Contract;
 using Lykke.Service.OperationsRepository.Contract.Abstractions;
 using System;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Lykke.Service.OperationsHistory.Core
 {
@@ -111,7 +113,7 @@ namespace Lykke.Service.OperationsHistory.Core
             var type = amount > 0 ? HistoryOperationType.CashIn : HistoryOperationType.CashOut;
             
             return HistoryOperation.Create(
-                operation.Id,
+                MakeGuidFromPair(operation.ClientId, operation.Id).ToString(),
                 operation.DateTime,
                 type,
                 type == HistoryOperationType.CashIn ? HistoryOperationState.Finished : GetState(operation.State),
@@ -119,6 +121,18 @@ namespace Lykke.Service.OperationsHistory.Core
                 operation.AssetId,
                 null,
                 null);
+        }
+        
+        private static Guid MakeGuidFromPair(string s1, string s2)
+        {
+            var arr = new byte[16];
+
+            Array.Copy(new SHA256Managed()
+                .ComputeHash(
+                    Encoding.ASCII.GetBytes(
+                        string.Concat(s1, s2))), 0, arr, 0, 16);
+            
+            return new Guid(arr);
         }
     }
     
