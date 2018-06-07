@@ -59,7 +59,7 @@ namespace Lykke.Service.OperationsHistory.Mongo
         {
             var result = new List<OperationsHistoryEntity>();
 
-            var queryByOperationType = operationTypes != null;
+            var queryByOperationType = operationTypes != null && operationTypes.Any();
             var types = operationTypes != null && operationTypes.Any() ? operationTypes : new[] {HistoryOperationType.Trade};
             
             var cursor = await _collection
