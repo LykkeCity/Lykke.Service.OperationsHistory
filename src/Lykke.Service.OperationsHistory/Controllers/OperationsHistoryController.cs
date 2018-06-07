@@ -106,7 +106,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 var mongoresult = await _operationsHistoryRepository.GetByClientIdAsync(
                     clientId,
                     null,
-                    operationTypes,
+                    operationTypes ?? new HistoryOperationType[0],
                     assetId,
                     assetPairId,
                     take,
@@ -219,7 +219,7 @@ namespace Lykke.Service.OperationsHistory.Controllers
                 var mongoresult = await _operationsHistoryRepository.GetByClientIdAsync(
                     wallet.ClientId,
                     walletId,
-                    operationTypes,
+                    operationTypes ?? new HistoryOperationType[0],
                     assetId,
                     assetPairId,
                     take,
