@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Service.OperationsHistory.AutorestClient;
@@ -58,8 +59,20 @@ namespace Lykke.Service.OperationsHistory.Client
         public async Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType? operationType = null, 
             string assetId = null, string assetPairId = null, int take = 100, int skip = 0)
         {
+            var types = operationType.HasValue ? new List<string> { operationType.Value.ToString("G") } : null;
+
             var response =
-                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationType, assetId, assetPairId);
+                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, types, assetId, assetPairId);
+
+            return PrepareResponseMultiple(response);
+        }
+
+        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType[] operationTypes = null,
+            string assetId = null, string assetPairId = null, int take = 100, int skip = 0)
+        {
+            var types = operationTypes?.Select(s => s.ToString("G")).ToList();
+            var response =
+                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, types, assetId, assetPairId);
 
             return PrepareResponseMultiple(response);
         }
@@ -76,8 +89,19 @@ namespace Lykke.Service.OperationsHistory.Client
 
         public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, HistoryOperationType? operationType = null, string assetId = null, string assetPairId = null, int take = 100, int skip = 0)
         {
+            var types = operationType.HasValue ? new List<string> {operationType.Value.ToString("G")} : null;
             var response =
-                await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, operationType, assetId, assetPairId);
+                await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, types, assetId, assetPairId);
+
+            return PrepareResponseMultiple(response);
+        }
+
+        public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, HistoryOperationType[] operationTypes = null, string assetId = null, string assetPairId = null, int take = 100, int skip = 0)
+        {
+            var types = operationTypes?.Select(s => s.ToString("G")).ToList();
+
+            var response =
+                await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip,  types, assetId, assetPairId);
 
             return PrepareResponseMultiple(response);
         }

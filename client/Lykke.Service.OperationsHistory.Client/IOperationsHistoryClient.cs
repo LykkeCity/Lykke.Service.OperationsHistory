@@ -17,6 +17,17 @@ namespace Lykke.Service.OperationsHistory.Client
         /// <param name="skip">How many items skip before returning</param>
         /// <returns></returns>
         Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType? operationType, string assetId, string assetPairId, int take, int skip);
+ 
+        /// <summary>
+        /// Getting history for particular client identifier
+        /// </summary>
+        /// <param name="clientId">Client identifier</param>
+        /// <param name="operationTypes">The type of the operation</param>
+        /// <param name="assetId">Asset identifier</param>
+        /// <param name="take">How many maximum items have to be returned</param>
+        /// <param name="skip">How many items skip before returning</param>
+        /// <returns></returns>
+        Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType[] operationTypes, string assetId, string assetPairId, int take, int skip);
 
         /// <summary>
         /// Getting history by date range, note: internal cache is not used in this case
@@ -38,6 +49,16 @@ namespace Lykke.Service.OperationsHistory.Client
         /// <param name="skip">How many items skip before returning</param>
         /// <returns></returns>
         Task<OperationsHistoryResponse> GetByWalletId(string walletId, HistoryOperationType? operationType, string assetId, string assetPairId, int take, int skip);
+
+        /// <summary>
+        /// Getting history by wallet identifier
+        /// </summary>
+        /// <param name="walletId">Wallet identifier</param>
+        /// <param name="operationTypes">The types of the operation</param>
+        /// <param name="assetId">Asset identifier</param>
+        /// <param name="take">How many maximum items have to be returned</param>
+        /// <param name="skip">How many items skip before returning</param>
+        Task<OperationsHistoryResponse> GetByWalletId(string walletId, HistoryOperationType[] operationTypes, string assetId, string assetPairId, int take, int skip);
 
         /// <summary>
         /// Getting history record by operation identifier

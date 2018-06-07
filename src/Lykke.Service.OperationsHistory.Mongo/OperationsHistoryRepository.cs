@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core;
 using MongoDB.Driver;
-using Lykke.Service.OperationsRepository.Contract;
 
 namespace Lykke.Service.OperationsHistory.Mongo
 {
@@ -49,25 +45,21 @@ namespace Lykke.Service.OperationsHistory.Mongo
             return (await _collection.Find(x => x.ClientId == clientId && x.Id == id).ToListAsync()).Single();
         }
 
-        public async Task<IEnumerable<OperationsHistoryEntity>> GetByClientIdAsync(
-            string clientId,
+        public async Task<IEnumerable<OperationsHistoryEntity>> GetByClientIdAsync(string clientId,
             string walletId,
-            HistoryOperationType? operationType,
+            HistoryOperationType[] operationTypes,
             string assetId,
             string assetPairId,
-            int take, 
+            int take,
             int skip)
         {
             var result = new List<OperationsHistoryEntity>();
-
-            var queryByOperationType = operationType.HasValue;
-            var type = operationType ?? HistoryOperationType.Trade;
             
             var cursor = await _collection
                 .Find(x =>
                     x.ClientId == clientId &&
                     (walletId == null || x.WalletId == walletId) &&
-                    (!queryByOperationType || x.Type == type) &&
+                    (!operationTypes.Any() || operationTypes.Contains(x.Type)) &&
                     (assetId == null || x.AssetId == assetId) &&
                     (assetPairId == null || x.AssetPairId == assetPairId),
                     new FindOptions
