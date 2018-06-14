@@ -51,7 +51,7 @@ namespace Lykke.Service.OperationsHistory.Core
                 operation.DateTime,
                 type,
                 type == HistoryOperationType.CashIn ? HistoryOperationState.Finished : GetState(operation.State),
-                Math.Abs(amount),
+                amount,
                 operation.AssetId,
                 null,
                 null);
@@ -66,7 +66,7 @@ namespace Lykke.Service.OperationsHistory.Core
                 operation.DateTime,
                 HistoryOperationType.CashOut,
                 GetState(operation.State),
-                Math.Abs(amount),
+                amount,
                 operation.AssetId,
                 null,
                 null);
@@ -117,7 +117,7 @@ namespace Lykke.Service.OperationsHistory.Core
                 operation.DateTime,
                 type,
                 type == HistoryOperationType.CashIn ? HistoryOperationState.Finished : GetState(operation.State),
-                Math.Abs(amount),
+                amount,
                 operation.AssetId,
                 null,
                 null);
