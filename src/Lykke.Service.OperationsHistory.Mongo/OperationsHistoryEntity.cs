@@ -75,6 +75,11 @@ namespace Lykke.Service.OperationsHistory.Mongo
         {
             if (entity == null)
                 return null;
+
+            if (entity.Type == HistoryOperationType.CashOut)
+            {
+                entity.Amount = -Math.Abs(entity.Amount);
+            }
             
             return HistoryOperation.Create(
                 entity.Id,
