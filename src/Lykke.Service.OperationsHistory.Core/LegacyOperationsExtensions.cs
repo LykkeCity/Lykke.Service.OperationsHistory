@@ -52,7 +52,9 @@ namespace Lykke.Service.OperationsHistory.Core
                 amount,
                 operation.AssetId,
                 null,
-                null);
+                null,
+                operation.FeeSize,
+                operation.FeeType);
         }
         
         public static HistoryOperation ConvertToHistoryOperation(this ICashOutRequest operation, Asset asset)
@@ -67,7 +69,9 @@ namespace Lykke.Service.OperationsHistory.Core
                 amount,
                 operation.AssetId,
                 null,
-                null);
+                null,
+                operation.FeeSize,
+                operation.FeeType);
         }
 
         public static HistoryOperation ConvertToHistoryOperation(this IClientTrade operation, Asset asset)
@@ -118,7 +122,9 @@ namespace Lykke.Service.OperationsHistory.Core
                 amount,
                 operation.AssetId,
                 null,
-                null);
+                null,
+                operation.FeeSize,
+                operation.FeeType);
         }
     }
     
