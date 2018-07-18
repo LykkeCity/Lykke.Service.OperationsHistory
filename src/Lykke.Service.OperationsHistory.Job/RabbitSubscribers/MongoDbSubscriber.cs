@@ -77,12 +77,32 @@ namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
 
             var operation = await _historyMessageAdapter.ExecuteAsync(arg);
 
-            if ((operation.Type == HistoryOperationType.CashIn ||
-                 operation.Type == HistoryOperationType.CashOut) &&
-                !Guid.TryParse(operation.Id, out _))
-                operation.Id = MakeGuidFromPair(walletId, operation.Id).ToString();
+            var validId = IsValidId(operation.Id)
+                ? operation.Id
+                : MakeGuidFromPair(walletId, operation.Id).ToString();
+
+            var existingEntry = 
+                (await Task.WhenAll(
+                    _operationsHistoryRepository.GetByIdAsync(clientId, operation.Id),
+                    _operationsHistoryRepository.GetByIdAsync(clientId, validId)))
+                .FirstOrDefault(x => x != null);
             
+            if (existingEntry != null)
+            {
+                if (IsValidId(existingEntry.Id)) // entity was either migrated or had acceptable id in the first place
+                    operation.Id = validId;
+            }
+            else
+            {
+                operation.Id = validId; // operation is a new entry
+            }
+
             await _operationsHistoryRepository.AddOrUpdateAsync(clientId, walletId, operation, arg.Data);
+        }
+        
+        private static bool IsValidId(string s)
+        {
+            return Guid.TryParse(s, out var parsedString) && parsedString.ToString() == s;
         }
         
         private static Guid MakeGuidFromPair(string s1, string s2)
