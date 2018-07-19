@@ -4,8 +4,6 @@ using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsRepository.Contract;
 using Lykke.Service.OperationsRepository.Contract.Abstractions;
 using System;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace Lykke.Service.OperationsHistory.Core
 {

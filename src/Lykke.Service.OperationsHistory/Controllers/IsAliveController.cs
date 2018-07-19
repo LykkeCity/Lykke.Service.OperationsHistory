@@ -2,6 +2,7 @@
 using Lykke.Service.OperationsHistory.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Lykke.Service.OperationsHistory.Controllers
 {
@@ -18,7 +19,8 @@ namespace Lykke.Service.OperationsHistory.Controllers
         {
             return new IsAliveResponse
             {
-                Version = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion,
+                Name = PlatformServices.Default.Application.ApplicationName,
+                Version = PlatformServices.Default.Application.ApplicationVersion,
                 Env = Environment.GetEnvironmentVariable("ENV_INFO")
             };
         }
