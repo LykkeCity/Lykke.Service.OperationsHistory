@@ -1,10 +1,10 @@
 ﻿using System;
-using Lykke.Service.OperationsHistory.Models;
+using Lykke.Service.OperationsHistory.Job.Model;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.Extensions.PlatformAbstractions;
 
-namespace Lykke.Service.OperationsHistory.Controllers
+namespace Lykke.Service.OperationsHistory.Job.Controllers
 {
     [Route("api/[controller]")]
     public class IsAliveController : Controller

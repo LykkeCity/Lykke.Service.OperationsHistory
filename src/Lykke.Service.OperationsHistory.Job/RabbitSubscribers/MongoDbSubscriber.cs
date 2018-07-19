@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Common;
@@ -75,7 +77,45 @@ namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
 
             var operation = await _historyMessageAdapter.ExecuteAsync(arg);
             
+            var validId = IsValidId(operation.Id)
+                ? operation.Id
+                : MakeGuidFromPair(walletId, operation.Id).ToString();
+
+            var existingEntry = 
+                (await Task.WhenAll(
+                    _operationsHistoryRepository.GetByIdAsync(clientId, operation.Id),
+                    _operationsHistoryRepository.GetByIdAsync(clientId, validId)))
+                .FirstOrDefault(x => x != null);
+            
+            if (existingEntry != null)
+            {
+                if (IsValidId(existingEntry.Id)) // entity was either migrated or had acceptable id in the first place
+                    operation.Id = validId;
+            }
+            else
+            {
+                operation.Id = validId; // operation is a new entry
+            }
+
+
             await _operationsHistoryRepository.AddOrUpdateAsync(clientId, walletId, operation, arg.Data);
+        }
+
+        private static bool IsValidId(string s)
+        {
+            return Guid.TryParse(s, out var parsedString) && parsedString.ToString() == s;
+        }
+        
+        private static Guid MakeGuidFromPair(string s1, string s2)
+        {
+            var arr = new byte[16];
+
+            Array.Copy(new SHA256Managed()
+                .ComputeHash(
+                    Encoding.ASCII.GetBytes(
+                        string.Concat(s1, s2))), 0, arr, 0, 16);
+            
+            return new Guid(arr);
         }
 
         public void Dispose()

@@ -42,7 +42,7 @@ namespace Lykke.Service.OperationsHistory.Mongo
 
         public async Task<OperationsHistoryEntity> GetByIdAsync(string clientId, string id)
         {
-            return (await _collection.Find(x => x.ClientId == clientId && x.Id == id).ToListAsync()).Single();
+            return (await _collection.Find(x => x.ClientId == clientId && x.Id == id).ToListAsync()).FirstOrDefault();
         }
 
         public async Task<IEnumerable<OperationsHistoryEntity>> GetByClientIdAsync(string clientId,
