@@ -2,11 +2,12 @@
 using Lykke.Service.OperationsHistory.Job.Model;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.Extensions.PlatformAbstractions;
 
-namespace Lykke.Service.OperationsHistory.Job.Controller
+namespace Lykke.Service.OperationsHistory.Job.Controllers
 {
     [Route("api/[controller]")]
-    public class IsAliveController : Microsoft.AspNetCore.Mvc.Controller
+    public class IsAliveController : Controller
     {
         /// <summary>
         /// Checks service is alive
@@ -18,7 +19,8 @@ namespace Lykke.Service.OperationsHistory.Job.Controller
         {
             return new IsAliveResponse
             {
-                Version = Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationVersion,
+                Name = PlatformServices.Default.Application.ApplicationName,
+                Version = PlatformServices.Default.Application.ApplicationVersion,
                 Env = Environment.GetEnvironmentVariable("ENV_INFO")
             };
         }
