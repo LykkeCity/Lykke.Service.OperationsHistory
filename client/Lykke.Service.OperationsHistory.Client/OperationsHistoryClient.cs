@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Common.Log;
 using Lykke.Service.OperationsHistory.AutorestClient;
 using Lykke.Service.OperationsHistory.AutorestClient.Models;
 using Lykke.Service.OperationsHistory.Client.Models;
@@ -12,12 +11,10 @@ namespace Lykke.Service.OperationsHistory.Client
 {
     public class OperationsHistoryClient : IOperationsHistoryClient, IDisposable
     {
-        private readonly ILog _log;
         private OperationsHistoryAPI _apiClient;
 
-        public OperationsHistoryClient(string serviceUrl, ILog log)
+        public OperationsHistoryClient(string serviceUrl)
         {
-            _log = log;
             _apiClient = new OperationsHistoryAPI(new Uri(serviceUrl));
         }
 
@@ -56,7 +53,7 @@ namespace Lykke.Service.OperationsHistory.Client
             throw new ArgumentException("Unknown response object");
         }
 
-        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType? operationType = null, 
+        public async Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType? operationType = null,
             string assetId = null, string assetPairId = null, int take = 100, int skip = 0)
         {
             var types = operationType.HasValue ? new List<string> { operationType.Value.ToString("G") } : null;
@@ -89,7 +86,7 @@ namespace Lykke.Service.OperationsHistory.Client
 
         public async Task<OperationsHistoryResponse> GetByWalletId(string walletId, HistoryOperationType? operationType = null, string assetId = null, string assetPairId = null, int take = 100, int skip = 0)
         {
-            var types = operationType.HasValue ? new List<string> {operationType.Value.ToString("G")} : null;
+            var types = operationType.HasValue ? new List<string> { operationType.Value.ToString("G") } : null;
             var response =
                 await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, types, assetId, assetPairId);
 
@@ -101,7 +98,7 @@ namespace Lykke.Service.OperationsHistory.Client
             var types = operationTypes?.Select(s => s.ToString("G")).ToList();
 
             var response =
-                await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip,  types, assetId, assetPairId);
+                await _apiClient.GetByWalletIdWithHttpMessagesAsync(walletId, take, skip, types, assetId, assetPairId);
 
             return PrepareResponseMultiple(response);
         }
@@ -118,7 +115,7 @@ namespace Lykke.Service.OperationsHistory.Client
             var response =
                 await _apiClient.ApiOperationsHistoryClientByClientIdOperationByOperationIdDeleteWithHttpMessagesAsync(
                     clientId, operationId);
-            
+
             return response.Body as HistoryOperation;
         }
     }
