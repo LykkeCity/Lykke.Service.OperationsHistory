@@ -106,7 +106,7 @@ namespace Lykke.Service.OperationsHistory.Job.Modules
         {
             builder.RegisterLykkeServiceClient(_settings.ClientAccountServiceClient.ServiceUrl);
             
-            _services.RegisterAssetsClient(AssetServiceSettings.Create(new Uri(_settings.AssetsServiceClient.ServiceUrl), TimeSpan.FromMinutes(3)));
+            _services.RegisterAssetsClient(AssetServiceSettings.Create(new Uri(_settings.AssetsServiceClient.ServiceUrl), TimeSpan.FromMinutes(3)), _log);
         }
 
         private void RegisterAzureRepositories(ContainerBuilder builder)

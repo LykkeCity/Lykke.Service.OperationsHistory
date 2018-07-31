@@ -57,7 +57,7 @@ namespace Lykke.Service.OperationsHistory.Modules
 
             RegisterServiceClients(builder);
             
-            _services.RegisterAssetsClient(AssetServiceSettings.Create(new Uri(_settings.AssetsServiceClient.ServiceUrl), TimeSpan.FromMinutes(3)));
+            _services.RegisterAssetsClient(AssetServiceSettings.Create(new Uri(_settings.AssetsServiceClient.ServiceUrl), TimeSpan.FromMinutes(3)), _log);
 
             RegisterDictionaryEntities(builder);
 
