@@ -8,6 +8,6 @@
     <ProjectReference Include="..\Lykke.Service.OperationsHistory.Core\Lykke.Service.OperationsHistory.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lykke.Service.Assets.Client" Version="4.0.2" />
+    <PackageReference Include="Lykke.Service.Assets.Client" Version="4.4.0" />
   </ItemGroup>
 </Project>
