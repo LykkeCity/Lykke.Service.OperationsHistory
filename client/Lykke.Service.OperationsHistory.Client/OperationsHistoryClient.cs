@@ -54,12 +54,12 @@ namespace Lykke.Service.OperationsHistory.Client
         }
 
         public async Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType? operationType = null,
-            string assetId = null, string assetPairId = null, int take = 100, int skip = 0)
+            string assetId = null, string assetPairId = null, int? take = null, int skip = 0)
         {
             var types = operationType.HasValue ? new List<string> { operationType.Value.ToString("G") } : null;
 
             var response =
-                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, types, assetId, assetPairId);
+                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, skip, types, assetId, assetPairId, take);
 
             return PrepareResponseMultiple(response);
         }
@@ -69,7 +69,7 @@ namespace Lykke.Service.OperationsHistory.Client
         {
             var types = operationTypes?.Select(s => s.ToString("G")).ToList();
             var response =
-                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, types, assetId, assetPairId);
+                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, types, assetId, assetPairId, take);
 
             return PrepareResponseMultiple(response);
         }

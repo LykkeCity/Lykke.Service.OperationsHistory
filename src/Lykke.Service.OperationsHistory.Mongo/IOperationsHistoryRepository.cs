@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core;
@@ -18,7 +18,7 @@ namespace Lykke.Service.OperationsHistory.Mongo
             HistoryOperationType[] operationType,
             string assetId,
             string assetPairId,
-            int take, 
+            int? take, 
             int skip);
 
         Task DeleteIfExistsAsync(string clientId, string id);

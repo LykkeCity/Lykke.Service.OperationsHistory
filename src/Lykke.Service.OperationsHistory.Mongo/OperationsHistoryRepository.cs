@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core;
@@ -50,26 +50,42 @@ namespace Lykke.Service.OperationsHistory.Mongo
             HistoryOperationType[] operationTypes,
             string assetId,
             string assetPairId,
-            int take,
+            int? take,
             int skip)
         {
             var result = new List<OperationsHistoryEntity>();
             
-            var cursor = await _collection
-                .Find(x =>
-                    x.ClientId == clientId &&
-                    (walletId == null || x.WalletId == walletId) &&
-                    (!operationTypes.Any() || operationTypes.Contains(x.Type)) &&
-                    (assetId == null || x.AssetId == assetId) &&
-                    (assetPairId == null || x.AssetPairId == assetPairId),
-                    new FindOptions
-                    {
-                        BatchSize = 1000
-                    })
-                .Sort(Builders<OperationsHistoryEntity>.Sort.Descending(x => x.DateTime))
-                .Skip(skip)
-                .Limit(take)
-                .ToCursorAsync();
+            var cursor =
+                take.HasValue
+                    ? await _collection
+                        .Find(x =>
+                            x.ClientId == clientId &&
+                            (walletId == null || x.WalletId == walletId) &&
+                            (!operationTypes.Any() || operationTypes.Contains(x.Type)) &&
+                            (assetId == null || x.AssetId == assetId) &&
+                            (assetPairId == null || x.AssetPairId == assetPairId),
+                            new FindOptions
+                            {
+                                BatchSize = 1000
+                            })
+                        .Sort(Builders<OperationsHistoryEntity>.Sort.Descending(x => x.DateTime))
+                        .Skip(skip)
+                        .Limit(take)
+                        .ToCursorAsync()
+                    : await _collection
+                        .Find(x =>
+                                x.ClientId == clientId &&
+                                (walletId == null || x.WalletId == walletId) &&
+                                (!operationTypes.Any() || operationTypes.Contains(x.Type)) &&
+                                (assetId == null || x.AssetId == assetId) &&
+                                (assetPairId == null || x.AssetPairId == assetPairId),
+                            new FindOptions
+                            {
+                                BatchSize = 1000
+                            })
+                        .Sort(Builders<OperationsHistoryEntity>.Sort.Descending(x => x.DateTime))
+                        .Skip(skip)
+                        .ToCursorAsync();
             
             while (await cursor.MoveNextAsync())
                 result.AddRange(cursor.Current);

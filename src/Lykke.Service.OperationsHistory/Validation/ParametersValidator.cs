@@ -1,4 +1,4 @@
-﻿namespace Lykke.Service.OperationsHistory.Validation
+namespace Lykke.Service.OperationsHistory.Validation
 {
     public static class ParametersValidator
     {

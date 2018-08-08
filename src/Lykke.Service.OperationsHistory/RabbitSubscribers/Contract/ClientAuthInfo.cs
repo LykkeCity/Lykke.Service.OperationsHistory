@@ -1,4 +1,4 @@
-﻿namespace Lykke.Service.OperationsHistory.RabbitSubscribers.Contract
+namespace Lykke.Service.OperationsHistory.RabbitSubscribers.Contract
 {
     public class ClientAuthInfo
     {

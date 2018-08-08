@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Common.Log;
 using Lykke.Service.Assets.Client.Models;
 using Lykke.Service.OperationsHistory.Core;

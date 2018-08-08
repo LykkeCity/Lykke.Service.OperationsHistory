@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using Autofac.Extensions.DependencyInjection;
 using Lykke.Service.OperationsHistory.Core.Settings.Job;
 using Microsoft.Extensions.Configuration;

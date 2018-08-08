@@ -1,4 +1,4 @@
-﻿namespace Lykke.Service.OperationsHistory.Core.Domain
+namespace Lykke.Service.OperationsHistory.Core.Domain
 {
     public class PaginationInfo
     {

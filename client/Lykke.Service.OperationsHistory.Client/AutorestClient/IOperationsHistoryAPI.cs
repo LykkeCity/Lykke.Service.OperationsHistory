@@ -51,9 +51,6 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='clientId'>
         /// Client identifier
         /// </param>
-        /// <param name='take'>
-        /// How many maximum items have to be returned
-        /// </param>
         /// <param name='skip'>
         /// How many items skip before returning
         /// </param>
@@ -66,13 +63,16 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='assetPairId'>
         /// AssetPair identifier
         /// </param>
+        /// <param name='take'>
+        /// How many maximum items have to be returned
+        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), int? take = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Getting history by date range, note: internal cache is not used

@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsRepository.Contract.History;

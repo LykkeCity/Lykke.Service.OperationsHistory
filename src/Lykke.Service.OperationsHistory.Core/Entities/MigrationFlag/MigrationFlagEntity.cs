@@ -1,4 +1,4 @@
-﻿using AzureStorage.Tables;
+using AzureStorage.Tables;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.OperationsHistory.Core.Entities.MigrationFlag
