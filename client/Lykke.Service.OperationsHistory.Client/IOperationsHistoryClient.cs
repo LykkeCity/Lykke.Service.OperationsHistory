@@ -27,7 +27,7 @@ namespace Lykke.Service.OperationsHistory.Client
         /// <param name="take">How many maximum items have to be returned</param>
         /// <param name="skip">How many items skip before returning</param>
         /// <returns></returns>
-        Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType[] operationTypes, string assetId, string assetPairId, int take, int skip);
+        Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType[] operationTypes, string assetId, string assetPairId, int? take, int skip);
 
         /// <summary>
         /// Getting history by date range, note: internal cache is not used in this case

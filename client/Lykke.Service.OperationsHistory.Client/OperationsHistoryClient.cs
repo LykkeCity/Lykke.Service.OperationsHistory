@@ -65,11 +65,11 @@ namespace Lykke.Service.OperationsHistory.Client
         }
 
         public async Task<OperationsHistoryResponse> GetByClientId(string clientId, HistoryOperationType[] operationTypes = null,
-            string assetId = null, string assetPairId = null, int take = 100, int skip = 0)
+            string assetId = null, string assetPairId = null, int? take = null, int skip = 0)
         {
             var types = operationTypes?.Select(s => s.ToString("G")).ToList();
             var response =
-                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, take, types, assetId, assetPairId, take);
+                await _apiClient.GetByClientIdWithHttpMessagesAsync(clientId, skip, types, assetId, assetPairId, take);
 
             return PrepareResponseMultiple(response);
         }
