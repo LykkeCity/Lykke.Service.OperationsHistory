@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Common;
 using Common.Log;
 using Lykke.RabbitMqBroker;

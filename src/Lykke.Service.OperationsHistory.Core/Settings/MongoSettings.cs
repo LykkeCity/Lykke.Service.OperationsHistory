@@ -1,4 +1,4 @@
-﻿using Lykke.SettingsReader.Attributes;
+using Lykke.SettingsReader.Attributes;
 
 namespace Lykke.Service.OperationsHistory.Core.Settings
 {

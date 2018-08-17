@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using AzureStorage;
 
 namespace Lykke.Service.OperationsHistory.Core.Entities.MigrationFlag

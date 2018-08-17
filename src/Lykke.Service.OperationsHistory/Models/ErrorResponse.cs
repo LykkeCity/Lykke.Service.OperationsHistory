@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +8,9 @@ namespace Lykke.Service.OperationsHistory.Models
 {
     public class ErrorResponse
     {
-        public string ErrorMessage { get; }
+        public string ErrorMessage { get; set; }
 
-        public Dictionary<string, List<string>> ModelErrors { get; }
+        public Dictionary<string, List<string>> ModelErrors { get; set; }
 
         private ErrorResponse() :
             this(null)

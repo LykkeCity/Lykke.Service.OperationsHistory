@@ -54,9 +54,6 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='clientId'>
             /// Client identifier
             /// </param>
-            /// <param name='take'>
-            /// How many maximum items have to be returned
-            /// </param>
             /// <param name='skip'>
             /// How many items skip before returning
             /// </param>
@@ -69,9 +66,12 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='assetPairId'>
             /// AssetPair identifier
             /// </param>
-            public static object GetByClientId(this IOperationsHistoryAPI operations, string clientId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string))
+            /// <param name='take'>
+            /// How many maximum items have to be returned
+            /// </param>
+            public static object GetByClientId(this IOperationsHistoryAPI operations, string clientId, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), int? take = default(int?))
             {
-                return operations.GetByClientIdAsync(clientId, take, skip, operationTypes, assetId, assetPairId).GetAwaiter().GetResult();
+                return operations.GetByClientIdAsync(clientId, skip, operationTypes, assetId, assetPairId, take).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -83,9 +83,6 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='clientId'>
             /// Client identifier
             /// </param>
-            /// <param name='take'>
-            /// How many maximum items have to be returned
-            /// </param>
             /// <param name='skip'>
             /// How many items skip before returning
             /// </param>
@@ -98,12 +95,15 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             /// <param name='assetPairId'>
             /// AssetPair identifier
             /// </param>
+            /// <param name='take'>
+            /// How many maximum items have to be returned
+            /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetByClientIdAsync(this IOperationsHistoryAPI operations, string clientId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetByClientIdAsync(this IOperationsHistoryAPI operations, string clientId, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), int? take = default(int?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetByClientIdWithHttpMessagesAsync(clientId, take, skip, operationTypes, assetId, assetPairId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetByClientIdWithHttpMessagesAsync(clientId, skip, operationTypes, assetId, assetPairId, take, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

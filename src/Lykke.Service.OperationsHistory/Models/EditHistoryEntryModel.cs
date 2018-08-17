@@ -1,4 +1,4 @@
-﻿namespace Lykke.Service.OperationsHistory.Models
+namespace Lykke.Service.OperationsHistory.Models
 {
     public class EditHistoryEntryModel
     {

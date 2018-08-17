@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Lykke.Service.OperationsHistory.Core.Entities

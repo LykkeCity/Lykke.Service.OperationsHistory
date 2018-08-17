@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Lykke.Service.OperationsHistory.Models;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;

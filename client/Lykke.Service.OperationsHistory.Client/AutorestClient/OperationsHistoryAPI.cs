@@ -113,7 +113,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// </summary>
         private void Initialize()
         {
-            BaseUri = new System.Uri("http://localhost");
+            BaseUri = new System.Uri("http://localhost/");
             SerializationSettings = new JsonSerializerSettings
             {
                 Formatting = Newtonsoft.Json.Formatting.Indented,
@@ -267,9 +267,6 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <param name='clientId'>
         /// Client identifier
         /// </param>
-        /// <param name='take'>
-        /// How many maximum items have to be returned
-        /// </param>
         /// <param name='skip'>
         /// How many items skip before returning
         /// </param>
@@ -281,6 +278,9 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// </param>
         /// <param name='assetPairId'>
         /// AssetPair identifier
+        /// </param>
+        /// <param name='take'>
+        /// How many maximum items have to be returned
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -303,7 +303,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int take, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetByClientIdWithHttpMessagesAsync(string clientId, int skip, IList<string> operationTypes = default(IList<string>), string assetId = default(string), string assetPairId = default(string), int? take = default(int?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (clientId == null)
             {
@@ -352,7 +352,10 @@ namespace Lykke.Service.OperationsHistory.AutorestClient
             {
                 _queryParameters.Add(string.Format("assetPairId={0}", System.Uri.EscapeDataString(assetPairId)));
             }
-            _queryParameters.Add(string.Format("take={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(take, SerializationSettings).Trim('"'))));
+            if (take != null)
+            {
+                _queryParameters.Add(string.Format("take={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(take, SerializationSettings).Trim('"'))));
+            }
             _queryParameters.Add(string.Format("skip={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(skip, SerializationSettings).Trim('"'))));
             if (_queryParameters.Count > 0)
             {

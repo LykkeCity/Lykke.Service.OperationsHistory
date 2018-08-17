@@ -1,4 +1,4 @@
-﻿namespace Lykke.Service.OperationsHistory.Core.Entities.MigrationFlag
+namespace Lykke.Service.OperationsHistory.Core.Entities.MigrationFlag
 {
     public interface IMigrationFlag
     {

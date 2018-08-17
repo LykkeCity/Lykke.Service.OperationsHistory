@@ -1,4 +1,4 @@
-﻿using Lykke.Service.OperationsRepository.Contract;
+using Lykke.Service.OperationsRepository.Contract;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;

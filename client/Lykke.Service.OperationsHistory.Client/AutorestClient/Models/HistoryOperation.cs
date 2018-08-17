@@ -6,6 +6,7 @@
 
 namespace Lykke.Service.OperationsHistory.AutorestClient.Models
 {
+    using Microsoft.Rest;
     using Newtonsoft.Json;
     using System.Linq;
 
@@ -28,7 +29,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
         /// 'Finished', 'Canceled', 'Failed'</param>
         /// <param name="feeType">Possible values include: 'Unknown',
         /// 'Absolute', 'Relative'</param>
-        public HistoryOperation(System.DateTime dateTime, HistoryOperationType type, HistoryOperationState state, double amount, double feeSize, FeeType feeType, string id = default(string), string asset = default(string), string assetPair = default(string), double? price = default(double?))
+        public HistoryOperation(string id, System.DateTime dateTime, HistoryOperationType type, HistoryOperationState state, double amount, string asset, string assetPair, double price, double feeSize, FeeType feeType)
         {
             Id = id;
             DateTime = dateTime;
@@ -90,7 +91,7 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
         /// <summary>
         /// </summary>
         [JsonProperty(PropertyName = "Price")]
-        public double? Price { get; set; }
+        public double Price { get; set; }
 
         /// <summary>
         /// </summary>
@@ -107,11 +108,23 @@ namespace Lykke.Service.OperationsHistory.AutorestClient.Models
         /// <summary>
         /// Validate the object.
         /// </summary>
-        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// <exception cref="ValidationException">
         /// Thrown if validation fails
         /// </exception>
         public virtual void Validate()
         {
+            if (Id == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "Id");
+            }
+            if (Asset == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "Asset");
+            }
+            if (AssetPair == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "AssetPair");
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Lykke.Service.ClientAccount.Client;
+using Lykke.Service.ClientAccount.Client;
 using Lykke.Service.OperationsHistory.Core.Settings.Api;
 using SlackNotificationsSettings = Lykke.Service.OperationsHistory.Core.Settings.Job.SlackNotifications.SlackNotificationsSettings;
 

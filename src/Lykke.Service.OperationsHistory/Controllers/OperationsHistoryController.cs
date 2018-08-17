@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -83,14 +83,14 @@ namespace Lykke.Service.OperationsHistory.Controllers
             [FromQuery] HistoryOperationType[] operationTypes,
             [FromQuery] string assetId,
             [FromQuery] string assetPairId,
-            [FromQuery] int take, 
+            [FromQuery] int? take, 
             [FromQuery] int skip)
         {
             if (!ParametersValidator.ValidateSkip(skip))
             {
                 return BadRequest(ErrorResponse.Create(SkipOutOfRange));
             }
-            if (!ParametersValidator.ValidateTake(take))
+            if (take.HasValue && !ParametersValidator.ValidateTake(take.Value))
             {
                 return BadRequest(ErrorResponse.Create(TakeOutOfRange));
             }
@@ -134,12 +134,11 @@ namespace Lykke.Service.OperationsHistory.Controllers
                         })));
             }
 
-            var pagedResult = result
+            var pagedResultWithoutTake = result
                 .OrderByDescending(x => x.DateTime)
-                .Skip(skip)
-                .Take(take);
+                .Skip(skip);
 
-            return Ok(pagedResult);
+            return Ok(take.HasValue ? pagedResultWithoutTake.Take(take.Value) : pagedResultWithoutTake);
         }
 
         /// <summary>

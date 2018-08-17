@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Lykke.Service.OperationsHistory.Core;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
