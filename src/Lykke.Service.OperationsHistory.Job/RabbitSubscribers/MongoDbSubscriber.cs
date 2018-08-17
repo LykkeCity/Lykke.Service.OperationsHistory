@@ -136,8 +136,9 @@ namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
 
             if (clientId != null)
                 return clientId;
-            
-            clientId = await _clientAccountClient.GetClientByWalletAsync(walletId);
+
+            clientId = await _clientAccountClient.GetClientByWalletAsync(walletId)
+                ?? walletId;
 
             await _distributedCache.SetStringAsync(key, clientId);
 
