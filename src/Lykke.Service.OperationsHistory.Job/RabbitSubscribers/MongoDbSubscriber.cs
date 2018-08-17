@@ -154,10 +154,12 @@ namespace Lykke.Service.OperationsHistory.Job.RabbitSubscribers
             if (walletId != null)
                 return walletId;
 
-            walletId = (await _clientAccountClient.GetClientWalletsFiltered(clientId, WalletType.Trading, OwnerType.Spot))
-                .Single()
-                .Id;
-            
+            var tradeWallets = await _clientAccountClient.GetClientWalletsFiltered(clientId, WalletType.Trading, OwnerType.Spot);
+            if (tradeWallets != null && tradeWallets.Any())
+                walletId = tradeWallets.First().Id;
+            else
+                walletId = clientId;
+
             await _distributedCache.SetStringAsync(key, walletId);
 
             return walletId;
