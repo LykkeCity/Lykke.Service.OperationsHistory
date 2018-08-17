@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +7,6 @@ using Common.Log;
 using Lykke.Service.OperationsHistory.Core.Domain;
 using Lykke.Service.OperationsHistory.Core;
 using Lykke.Service.OperationsHistory.Core.Services;
-using Lykke.Service.OperationsRepository.Contract;
 
 namespace Lykke.Service.OperationsHistory.Services
 {
@@ -105,7 +103,10 @@ namespace Lykke.Service.OperationsHistory.Services
                 return null;
 
             if (records.Count >= 1000)
+            {
+                _log.WriteWarning(nameof(Load), null, $"ClientId/WalletId {walletId} has {records.Count} items - skipping.");
                 return null;
+            }
 
             var adaptedOperations = await Task.WhenAll(records.Select(x => _adapter.ExecuteAsync(x)));
 
