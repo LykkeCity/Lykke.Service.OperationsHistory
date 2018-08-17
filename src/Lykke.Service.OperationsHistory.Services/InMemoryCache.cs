@@ -103,7 +103,10 @@ namespace Lykke.Service.OperationsHistory.Services
             
             if (!records.Any())
                 return null;
-            
+
+            if (records.Count >= 1000)
+                return null;
+
             var adaptedOperations = await Task.WhenAll(records.Select(x => _adapter.ExecuteAsync(x)));
 
             var cacheModel = new CacheModel

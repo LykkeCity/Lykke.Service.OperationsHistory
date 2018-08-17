@@ -6,11 +6,9 @@ using Lykke.Service.OperationsHistory.Core.Entities;
 using Lykke.Service.OperationsHistory.Core.Services;
 using Lykke.Service.OperationsRepository.Contract;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Lykke.Service.OperationsRepository.Contract.Cash;
-using Lykke.Service.OperationsHistory.Core;
 
 namespace Lykke.Service.OperationsHistory.Services
 {
@@ -63,19 +61,17 @@ namespace Lykke.Service.OperationsHistory.Services
         private async Task<Asset> GetAssetByIdAsync(string assetId)
         {
             if (string.IsNullOrEmpty(assetId)) return null;
-            
-            var cachedValues = await _assetsCache.Values();
 
-            return cachedValues.FirstOrDefault(x => x.Id == assetId);
+            var asset = await _assetsCache.GetItemAsync(assetId);
+            return asset;
         }
 
         private async Task<AssetPair> GetAssetPairByIdAsync(string assetPairId)
         {
             if (string.IsNullOrEmpty(assetPairId)) return null;
 
-            var cachedValues = await _assetPairsCache.Values();
-
-            return cachedValues.FirstOrDefault(x => x.Id == assetPairId);
+            var assetPair = await _assetPairsCache.GetItemAsync(assetPairId);
+            return assetPair;
         }
     }
 }
