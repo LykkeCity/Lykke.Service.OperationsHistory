@@ -102,7 +102,7 @@ namespace Lykke.Service.OperationsHistory.Services
             if (!records.Any())
                 return null;
 
-            if (records.Count >= 1000)
+            if (records.Count >= 3000)
             {
                 _log.WriteWarning(nameof(Load), null, $"ClientId/WalletId {walletId} has {records.Count} items - skipping.");
                 return null;
